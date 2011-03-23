@@ -1,0 +1,14 @@
+= Downloads =
+You can download via maven central repositories by specifying below dependency to your pom.xml file.
+
+{{{
+<dependencies>
+    ...
+    <dependency>
+        <groupId>org.nucleus8583</groupId>
+        <artifactId>nucleus8583-core</artifactId>
+        <version>2.3.0</version>
+    </dependency>
+    ...
+</dependencies>
+}}}

@@ -1,30 +1,18 @@
-Q: how to create maven repository bundle?
-A: > mvn clean source:jar javadoc:jar repository:bundle-create -P sonatype-oss
-Q: setting for sonatype-oss profile?
-A:  <profile>
-        <id>sonatype</id>
+Q: how to release the artifact?
+A: > mvn clean source:jar javadoc:jar deploy -P releases -DrepositoryId=oss-sonatype-releases
 
-        <activation>
-            <activeByDefault>true</activeByDefault>
-        </activation>
+Q: how to deploy the artifact's snapshot?
+A: > mvn clean source:jar javadoc:jar deploy -P snaphosts -DrepositoryId=oss-sonatype-snapshots
 
-        <build>
-            <plugins>
-			    <plugin>
-				    <groupId>org.apache.maven.plugins</groupId>
-				    <artifactId>maven-gpg-plugin</artifactId>
-				    <version>1.1</version>
-				    <executions>
-					    <execution>
-						    <id>sign-artifacts</id>
-						    <phase>package</phase>
-						    <goals>
-							    <goal>sign</goal>
-						    </goals>
-					    </execution>
-				    </executions>
-			    </plugin>
-            </plugins>
-        </build>
-    </profile>
+Q: maven settings?
+A:
+    <server>      <id>oss-sonatype-snapshots</id>
+      <username>robbi.kurniawan</username>
+      <password></password>
+    </server>
+
+    <server>      <id>oss-sonatype-releases</id>
+      <username>robbi.kurniawan</username>
+      <password></password>
+    </server>
 
