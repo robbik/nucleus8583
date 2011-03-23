@@ -34,9 +34,9 @@
     </issueManagement>
     
     <scm>
-        <url>http://nucleus8583.googlecode.com/svn/nucleus8583-core/trunk/</url>
-        <connection>scm:https://nucleus8583.googlecode.com/svn/nucleus8583-core/trunk/</connection>
-        <developerConnection>scm:https://nucleus8583.googlecode.com/svn/nucleus8583-core/trunk/</developerConnection>
+        <url>git@github.com:robbik/nucleus8583.git</url>
+        <connection>scm:git:git@github.com:robbik/nucleus8583.git</connection>
+        <developerConnection>scm:git:git@github.com:robbik/nucleus8583.git</developerConnection>
     </scm>
     
     <developers>
