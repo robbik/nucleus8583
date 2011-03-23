@@ -1,0 +1,30 @@
+Q: how to create maven repository bundle?
+A: > mvn clean source:jar javadoc:jar repository:bundle-create -P sonatype-oss
+Q: setting for sonatype-oss profile?
+A:  <profile>
+        <id>sonatype</id>
+
+        <activation>
+            <activeByDefault>true</activeByDefault>
+        </activation>
+
+        <build>
+            <plugins>
+			    <plugin>
+				    <groupId>org.apache.maven.plugins</groupId>
+				    <artifactId>maven-gpg-plugin</artifactId>
+				    <version>1.1</version>
+				    <executions>
+					    <execution>
+						    <id>sign-artifacts</id>
+						    <phase>package</phase>
+						    <goals>
+							    <goal>sign</goal>
+						    </goals>
+					    </execution>
+				    </executions>
+			    </plugin>
+            </plugins>
+        </build>
+    </profile>
+

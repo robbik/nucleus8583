@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns="http://www.nucleus8583.org/schema/iso-message"
+	        xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	        targetNamespace="http://www.nucleus8583.org/schema/iso-message"
+	        elementFormDefault="qualified"
+	        attributeFormDefault="unqualified">
+
+	<xsd:simpleType name="align">
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="left" />
+			<xsd:enumeration value="l" />
+
+			<xsd:enumeration value="right" />
+			<xsd:enumeration value="r" />
+
+			<xsd:enumeration value="none" />
+			<xsd:enumeration value="n" />
+		</xsd:restriction>
+	</xsd:simpleType>
+
+	<xsd:simpleType name="char">
+		<xsd:restriction base="xsd:string">
+			<xsd:minLength value="1" />
+			<xsd:maxLength value="1" />
+		</xsd:restriction>
+	</xsd:simpleType>
+
+	<xsd:complexType name="iso-message">
+		<xsd:sequence>
+			<xsd:element name="iso-field" type="iso-field" minOccurs="1" maxOccurs="unbounded" />
+		</xsd:sequence>
+
+		<xsd:attribute name="encoding" type="xsd:string" default="ASCII" />
+	</xsd:complexType>
+
+	<xsd:complexType name="iso-field">
+		<xsd:attribute name="id" use="required" type="xsd:unsignedInt" />
+		<xsd:attribute name="type" use="required" type="xsd:string" />
+
+		<xsd:attribute name="length" type="xsd:unsignedLong" default="0" />
+		<xsd:attribute name="align" type="align" default="none" />
+		<xsd:attribute name="pad-with" type="char" default=" " />
+		<xsd:attribute name="empty-value" type="xsd:string" default="" />
+	</xsd:complexType>
+
+	<xsd:element name="iso-message" type="iso-message" />
+</xsd:schema>

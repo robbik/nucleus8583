@@ -1,0 +1,51 @@
+= Performance Benchmarking =
+
+For performance benchmarking, we use standard desktop PC with specifications:
+ # Hardware
+   * Processor            : Intel Dual Core 2.66GHz 32-bit
+   * Memory               : 2 GB
+ # Software
+   * Operating System     : Microsoft Windows XP Service Pack 2
+   * Java Virtual Machine : Sun Java VM 1.6.0 Update 10 (32-bit)
+
+In our small testing program which you can download [BenchmarkCodeNucleus8583 here] for nucleus8583 or [BenchmarkCodeJPos here] for jPOS, we do `N` `write`/`pack` operations and `read`/`unpack` operations and measure its average performance, average CPU, and average memory usage. In this benchmark we use jPOS 1.7.1 as our comparison.
+
+== Test Case ==
+We use following data for our benchmarking process:
+{{{
+'0200423800080A010000133125         01041324310000011324310104C010000001762745214  0003701000abcdefghijkl                    '
+}}}
+
+or if we want to breakdown into details:
+|| *iso bit number* || *value* ||
+|| `0` || `'0200'` ||
+|| `1` || `'423800080A01000013'` ||
+|| `2` || `'3125         '` ||
+|| `7` || `'0104132431'` ||
+|| `11` || `'000001'` ||
+|| `12` || `'132431'` ||
+|| `13` || `'0104'` ||
+|| `29` || `'C01000000'` ||
+|| `37` || `'1762745214  '` ||
+|| `39` || `'00'` ||
+|| `48` || `'01000abcdefghijkl                    '` ||
+
+== Benchmarking Result ==
+Performance measured how many operations can be done in one second.
+
+=== Read/Unpack ===
+|| *total operations count (N)* || *nucleus8583* || *jPOS* ||
+|| 10,000 || 128,205 || 58,139 ||
+|| 100,000 || 120,772 || 54,704 ||
+|| 1,000,000 || 119,846 || 53,837 ||
+|| 10,000,000 || 116,808 || 53,551 ||
+
+=== Write/Pack ===
+|| *total operations count (N)* || *nucleus8583* || *jPOS* ||
+|| 10,000 || 128,205 || 26,666 ||
+|| 100,000 || 118,483 || 26,123 ||
+|| 1,000,000 || 115,727 || 25,827 ||
+|| 10,000,000 || 117,172 || 25,948 ||
+
+=== Conclusion ===
+As you can see in two tables above, nucleus8583 significantly faster than jPOS in any test case. The data tells us that nucleus8583 performs 5 times compared to jPOS in write/pack operation and performs 2 times compared to jPOS in read/unpack operation.

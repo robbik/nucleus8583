@@ -1,0 +1,2 @@
+ASCII=org.nucleus8583.core.charset.spi.AsciiProvider
+UTF-8=org.nucleus8583.core.charset.spi.Utf8Provider
