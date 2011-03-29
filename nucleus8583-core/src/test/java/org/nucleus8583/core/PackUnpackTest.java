@@ -1,6 +1,7 @@
 package org.nucleus8583.core;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -18,6 +19,8 @@ public class PackUnpackTest {
 
 	private Iso8583Message unpacked;
 
+	private Iso8583Message draftUnpacked;
+
 	@Before
 	public void initialize() throws Exception {
 		messageFactory = new Iso8583MessageFactory(
@@ -31,6 +34,13 @@ public class PackUnpackTest {
 		unpacked.set(48, "9998");
 		unpacked.set(64, new BitSet());
 		unpacked.set(70, "301");
+
+		draftUnpacked = new Iso8583Message();
+		draftUnpacked.setMti("0200");
+		draftUnpacked.set(2, "030000");
+		draftUnpacked.set(48, "9998");
+		draftUnpacked.set(64, new BitSet());
+		draftUnpacked.set(70, "301");
 	}
 
 	@Test
@@ -45,7 +55,20 @@ public class PackUnpackTest {
 	public void unpackFromStringTest() throws Exception {
 		Iso8583Message unpacked = messageFactory.createMessage();
 		unpacked.unpack(packed);
+		assertEquals(this.unpacked, unpacked);
 
+		unpacked = new Iso8583Message();
+
+		boolean error = false;
+		try {
+			unpacked.unpack("");
+		} catch (Throwable t) {
+			error = true;
+		}
+		assertTrue(error);
+
+		unpacked.attach(messageFactory);
+		unpacked.unpack(packed);
 		assertEquals(this.unpacked, unpacked);
 	}
 
@@ -53,7 +76,20 @@ public class PackUnpackTest {
 	public void unpackFromEmptyStringTest() throws Exception {
 		Iso8583Message unpacked = messageFactory.createMessage();
 		unpacked.unpack("");
+		assertEquals(messageFactory.createMessage(), unpacked);
 
+		unpacked = new Iso8583Message();
+
+		boolean error = false;
+		try {
+			unpacked.unpack("");
+		} catch (Throwable t) {
+			error = true;
+		}
+		assertTrue(error);
+
+		unpacked.attach(messageFactory);
+		unpacked.unpack("");
 		assertEquals(messageFactory.createMessage(), unpacked);
 	}
 
@@ -72,7 +108,7 @@ public class PackUnpackTest {
 				new ByteArrayInputStream(out.toByteArray()));
 		unpacked = (Iso8583Message) deserializer.readObject();
 
-		unpacked.reattach(messageFactory);
+		unpacked.attach(messageFactory);
 		unpacked.unpack(packed.getBytes());
 
 		assertEquals(this.unpacked, unpacked);
@@ -81,6 +117,18 @@ public class PackUnpackTest {
 	@Test
 	public void packTest() throws Exception {
 		byte[] packed = unpacked.pack();
+		assertEquals(this.packed, new String(packed));
+
+		boolean error = false;
+		try {
+			draftUnpacked.pack();
+		} catch (Throwable t) {
+			error = true;
+		}
+		assertTrue(error);
+
+		draftUnpacked.attach(messageFactory);
+		packed = draftUnpacked.pack();
 		assertEquals(this.packed, new String(packed));
 	}
 
@@ -97,7 +145,7 @@ public class PackUnpackTest {
 				new ByteArrayInputStream(out.toByteArray()));
 		unpacked = (Iso8583Message) deserializer.readObject();
 
-		unpacked.reattach(messageFactory);
+		unpacked.attach(messageFactory);
 
 		byte[] packed = unpacked.pack();
 		assertEquals(this.packed, new String(packed));

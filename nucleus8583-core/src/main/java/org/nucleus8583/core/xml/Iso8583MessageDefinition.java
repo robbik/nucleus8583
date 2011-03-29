@@ -49,7 +49,7 @@ public class Iso8583MessageDefinition {
 	public Iso8583Field[] getFields() {
 		return tpl_fields;
 	}
-	
+
 	public boolean[] getBinaries() {
 		return tpl_binaries;
 	}
@@ -75,7 +75,7 @@ public class Iso8583MessageDefinition {
 	}
 
 	public Iso8583Message createMessage() {
-		return new Iso8583Message(tpl_fields, tpl_fields_count, tpl_binaries,
-				tpl_provider);
+		return new Iso8583Message(tpl_fields, tpl_binaries, tpl_provider,
+				tpl_fields_count);
 	}
 }

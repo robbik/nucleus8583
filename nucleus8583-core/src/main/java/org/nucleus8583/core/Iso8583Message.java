@@ -18,37 +18,37 @@ import org.nucleus8583.core.util.FastStringReader;
 /**
  * This class represents an ISO-8583 message. You can read, manipulate, and
  * write ISO-8583 message using this class.
- * 
+ *
  * To read ISO-8583 message, you can simply use: <code>
  * InputStream config = ...
- * 
+ *
  * Iso8583MessageFactory factory = Iso8583MessageFactory.create(config);
  * Iso8583Message msg = factory.createMessage();
- * 
+ *
  * InputStream raw = ...
  * msg.unpack(raw);
  * </code>
- * 
+ *
  * To write ISO-8583 message, you can simply use: <code>
  * Iso8583Message msg = ...
- * 
+ *
  * OutputStream raw = ...
  * msg.pack(raw);
  * </code>
- * 
+ *
  * @author Robbi Kurniawan
- * 
+ *
  */
 public final class Iso8583Message implements Serializable {
 	private static final long serialVersionUID = -1503040549193848604L;
 
 	private transient Iso8583Field[] fields;
 
-	private transient int count;
-
 	private transient boolean[] binaries;
 
 	private transient CharsetProvider charsetProvider;
+
+	private int count;
 
 	private String mti;
 
@@ -60,27 +60,70 @@ public final class Iso8583Message implements Serializable {
 
 	private final BitSet bits129To192;
 
-	public Iso8583Message(Iso8583Field[] fields, int count, boolean[] binaries,
-			CharsetProvider charsetProvider) {
+	/**
+	 * create a new instance of this class with 192 number of fields defined.
+	 *
+	 * same as <code>Iso8583Message(192)</code>.
+	 */
+	public Iso8583Message() {
+		this(192);
+	}
+
+	/**
+	 * create a new instance of this class by specifying number of fields
+	 * defined.
+	 *
+	 * @param count
+	 *            the number of fields.
+	 */
+	public Iso8583Message(int count) {
+		if ((count < 64) || (count > 192)) {
+			throw new IllegalArgumentException(
+					"number of fields must in range 64-192");
+		}
+
+		this.fields = null;
+		this.binaries = null;
+		this.charsetProvider = null;
+
+		this.count = count + 1;
+
+		this.mti = "";
+		this.stringValues = new String[this.count];
+		this.binaryValues = new BitSet[this.count];
+
+		this.bits1To128 = new BitSet(128);
+		this.bits129To192 = new BitSet(64);
+	}
+
+	/**
+	 * This constructor is for internal use only.
+	 *
+	 * @param fields
+	 * @param count
+	 * @param binaries
+	 * @param charsetProvider
+	 */
+	public Iso8583Message(Iso8583Field[] fields, boolean[] binaries,
+			CharsetProvider charsetProvider, int count) {
 		this.fields = fields;
+		this.binaries = binaries;
+		this.charsetProvider = charsetProvider;
+
 		this.count = count;
 
-		this.binaries = binaries;
+		this.mti = "";
 		this.stringValues = new String[count];
 		this.binaryValues = new BitSet[count];
 
 		this.bits1To128 = new BitSet(128);
 		this.bits129To192 = new BitSet(64);
-
-		this.charsetProvider = charsetProvider;
-
-		this.mti = "";
 	}
 
 	/**
 	 * set MTI field value, field number 0 in standard ISO-8583 message
-	 * 
-	 * @param value
+	 *
+	 * @param mti
 	 *            new MTI field value
 	 */
 	public void setMti(String mti) {
@@ -100,7 +143,7 @@ public final class Iso8583Message implements Serializable {
 
 	/**
 	 * retrieve MTI field value, field number 0 in standard ISO-8583 message
-	 * 
+	 *
 	 * @return MTI field value
 	 */
 	public String getMti() {
@@ -109,7 +152,7 @@ public final class Iso8583Message implements Serializable {
 
 	/**
 	 * set binary (<code>b</code> data element) field value.
-	 * 
+	 *
 	 * @param no
 	 *            number of field to be set, should in range <code>2-192</code>,
 	 *            exclude <code>65<code>.
@@ -123,12 +166,12 @@ public final class Iso8583Message implements Serializable {
 	 *             or the field is a string field. otherwise <code>true</code>
 	 */
 	public void set(int no, BitSet value) {
-		if ((no <= 1) || (no > 192) || (no == 65) || (no >= fields.length)) {
+		if ((no <= 1) || (no > 192) || (no == 65) || (no >= count)) {
 			throw new IllegalArgumentException("field no must be in range 2-"
-					+ (fields.length - 1) + " and not equals to 65");
+					+ (count - 1) + " and not equals to 65");
 		}
 
-		if (!binaries[no]) {
+		if ((binaries != null) && !binaries[no]) {
 			throw new IllegalArgumentException("field " + no
 					+ " is a string field.");
 		}
@@ -149,7 +192,7 @@ public final class Iso8583Message implements Serializable {
 
 	/**
 	 * set string-based (non <code>b</code> data element) field value.
-	 * 
+	 *
 	 * @param no
 	 *            number of field to be set, should in range <code>2-192</code>,
 	 *            exclude <code>65<code>.
@@ -168,12 +211,12 @@ public final class Iso8583Message implements Serializable {
 			return;
 		}
 
-		if ((no <= 1) || (no > 192) || (no == 65) || (no >= fields.length)) {
+		if ((no <= 1) || (no > 192) || (no == 65) || (no >= count)) {
 			throw new IllegalArgumentException("field no must be in range 2-"
-					+ (fields.length - 1) + " and not equals to 65");
+					+ (count - 1) + " and not equals to 65");
 		}
 
-		if (binaries[no]) {
+		if ((binaries != null) && binaries[no]) {
 			throw new IllegalArgumentException("field " + no
 					+ " is a binary field.");
 		}
@@ -194,10 +237,10 @@ public final class Iso8583Message implements Serializable {
 
 	/**
 	 * set binary (<code>b</code> data element) field value.
-	 * 
+	 *
 	 * this is unsafe method since no range checking performed so <b>PLEASE USE
 	 * THIS METHOD WITH CARE</b>.
-	 * 
+	 *
 	 * @param no
 	 *            number of field to be set, should in range <code>2-192</code>,
 	 *            exclude <code>65<code>.
@@ -217,10 +260,10 @@ public final class Iso8583Message implements Serializable {
 
 	/**
 	 * set string-based (non <code>b</code> data element) field value.
-	 * 
+	 *
 	 * this is unsafe method since no range checking performed so <b>PLEASE USE
 	 * THIS METHOD WITH CARE</b>.
-	 * 
+	 *
 	 * @param no
 	 *            number of field to be set, should in range <code>2-192</code>,
 	 *            exclude <code>65<code>.
@@ -240,7 +283,7 @@ public final class Iso8583Message implements Serializable {
 
 	/**
 	 * clear field value
-	 * 
+	 *
 	 * @param no
 	 *            number of field to be cleared, should in range
 	 *            <code>2-192</code>, exclude <code>65<code>.
@@ -252,9 +295,9 @@ public final class Iso8583Message implements Serializable {
 	 *             otherwise <code>true</code>
 	 */
 	public void unset(int no) {
-		if ((no <= 1) || (no > 192) || (no == 65) || (no >= fields.length)) {
+		if ((no <= 1) || (no > 192) || (no == 65) || (no >= count)) {
 			throw new IllegalArgumentException("field no must be in range 2-"
-					+ (fields.length - 1) + " and not equals to 65");
+					+ (count - 1) + " and not equals to 65");
 		}
 
 		if (no > 128) {
@@ -270,15 +313,13 @@ public final class Iso8583Message implements Serializable {
 
 	/**
 	 * clear field value.
-	 * 
+	 *
 	 * this is unsafe method since no range checking performed so <b>PLEASE USE
 	 * THIS METHOD WITH CARE</b>.
-	 * 
+	 *
 	 * @param no
 	 *            number of field to be cleared, should in range
 	 *            <code>2-192</code>, exclude <code>65<code>.
-	 * @param value
-	 *            new value
 	 */
 	public void unsafeUnset(int no) {
 		if (no > 128) {
@@ -294,7 +335,7 @@ public final class Iso8583Message implements Serializable {
 
 	/**
 	 * retrieve field value
-	 * 
+	 *
 	 * @param no
 	 *            number of field to be get, should in range <code>2-192</code>,
 	 *            exclude <code>65<code>.
@@ -311,9 +352,18 @@ public final class Iso8583Message implements Serializable {
 			return mti;
 		}
 
-		if ((no <= 1) || (no > 192) || (no == 65) || (no >= fields.length)) {
+		if ((no <= 1) || (no > 192) || (no == 65) || (no >= count)) {
 			throw new IllegalArgumentException("field no must be in range 2-"
-					+ (fields.length - 1) + " and not equals to 65");
+					+ (count - 1) + " and not equals to 65");
+		}
+
+		if (binaries == null) {
+			Object value = binaryValues[no];
+			if (value != null) {
+				return value;
+			}
+
+			return stringValues[no];
 		}
 
 		if (binaries[no]) {
@@ -325,7 +375,7 @@ public final class Iso8583Message implements Serializable {
 
 	/**
 	 * retrieve non <code>b</code> data element field value.
-	 * 
+	 *
 	 * @param no
 	 *            number of field to be get, should in range <code>2-192</code>,
 	 *            exclude <code>65<code>.
@@ -343,12 +393,12 @@ public final class Iso8583Message implements Serializable {
 			return mti;
 		}
 
-		if ((no <= 1) || (no > 192) || (no == 65) || (no >= fields.length)) {
+		if ((no <= 1) || (no > 192) || (no == 65) || (no >= count)) {
 			throw new IllegalArgumentException("field no must be in range 2-"
-					+ (fields.length - 1) + " and not equals to 65");
+					+ (count - 1) + " and not equals to 65");
 		}
 
-		if (binaries[no]) {
+		if ((binaries != null) && binaries[no]) {
 			throw new IllegalArgumentException("field " + no
 					+ " is a binary field");
 		}
@@ -358,7 +408,7 @@ public final class Iso8583Message implements Serializable {
 
 	/**
 	 * retrieve <code>b</code> data element field value.
-	 * 
+	 *
 	 * @param no
 	 *            number of field to be get, should in range <code>2-192</code>,
 	 *            exclude <code>65<code>.
@@ -370,12 +420,12 @@ public final class Iso8583Message implements Serializable {
 	 *         otherwise the field value.
 	 */
 	public BitSet getBinary(int no) {
-		if ((no <= 1) || (no > 192) || (no == 65) || (no >= fields.length)) {
+		if ((no <= 1) || (no > 192) || (no == 65) || (no >= count)) {
 			throw new IllegalArgumentException("field no must be in range 2-"
-					+ (fields.length - 1) + " and not equals to 65");
+					+ (count - 1) + " and not equals to 65");
 		}
 
-		if (!binaries[no]) {
+		if ((binaries != null) && !binaries[no]) {
 			throw new IllegalArgumentException("field " + no
 					+ " is a string field");
 		}
@@ -385,10 +435,10 @@ public final class Iso8583Message implements Serializable {
 
 	/**
 	 * retrieve non <code>b</code> data element field value.
-	 * 
+	 *
 	 * this is unsafe method since no range checking performed so <b>PLEASE USE
 	 * THIS METHOD WITH CARE</b>.
-	 * 
+	 *
 	 * @param no
 	 *            number of field to be get, should in range <code>2-192</code>,
 	 *            exclude <code>65<code>.
@@ -401,10 +451,10 @@ public final class Iso8583Message implements Serializable {
 
 	/**
 	 * retrieve <code>b</code> data element field value.
-	 * 
+	 *
 	 * this is unsafe method since no range checking performed so <b>PLEASE USE
 	 * THIS METHOD WITH CARE</b>.
-	 * 
+	 *
 	 * @param no
 	 *            number of field to be get, should in range <code>2-192</code>,
 	 *            exclude <code>65<code>.
@@ -419,7 +469,7 @@ public final class Iso8583Message implements Serializable {
 	 * clear all fields value
 	 */
 	public void clear() {
-		mti = null;
+		mti = "";
 
 		Arrays.fill(binaryValues, null);
 		Arrays.fill(stringValues, null);
@@ -432,7 +482,7 @@ public final class Iso8583Message implements Serializable {
 	 * convert this object into standard ISO-8583 message and return a byte
 	 * array containing the message. This method is slower than
 	 * <code>void pack(OutputStream)</code> method.
-	 * 
+	 *
 	 * @return the byte array containing the ISO-8583 message
 	 */
 	public byte[] pack() {
@@ -450,7 +500,7 @@ public final class Iso8583Message implements Serializable {
 	 * convert this object into ISO-8583 message and write to given
 	 * {@link OutputStream}. This method is slower than
 	 * <code>void pack(Writer)</code> method.
-	 * 
+	 *
 	 * @param out
 	 *            the {@link OutputStream}
 	 * @throws IOException
@@ -463,7 +513,7 @@ public final class Iso8583Message implements Serializable {
 	/**
 	 * convert this object into ISO-8583 message and write to given
 	 * {@link Writer}.
-	 * 
+	 *
 	 * @param writer
 	 *            the {@link Writer}
 	 * @throws IOException
@@ -510,7 +560,7 @@ public final class Iso8583Message implements Serializable {
 	 * read ISO-8583 message contained in given byte array and assign the fields
 	 * value to this object. This method is slower than
 	 * <code>void unpack(InputStream)</code> method.
-	 * 
+	 *
 	 * @param in
 	 *            the byte array
 	 */
@@ -527,9 +577,9 @@ public final class Iso8583Message implements Serializable {
 	 * value to this object. This method is slower than
 	 * <code>void unpack(Reader)</code> method but faster then
 	 * <code>void unpack(InputStream)</code> method.
-	 * 
-	 * @param in
-	 *            the byte array
+	 *
+	 * @param str
+	 *            the string
 	 */
 	public void unpack(String str) {
 		try {
@@ -543,7 +593,7 @@ public final class Iso8583Message implements Serializable {
 	 * read ISO-8583 message from given {@link InputStream} and assign the
 	 * fields value to this object. This method is slower than
 	 * <code>void unpack(Reader)</code> method.
-	 * 
+	 *
 	 * @param in
 	 *            the {@link InputStream}
 	 * @throws IOException
@@ -556,7 +606,7 @@ public final class Iso8583Message implements Serializable {
 	/**
 	 * read ISO-8583 message from given {@link Reader} and assign the fields
 	 * value to this object.
-	 * 
+	 *
 	 * @param in
 	 *            the {@link Reader}
 	 * @throws IOException
@@ -596,7 +646,7 @@ public final class Iso8583Message implements Serializable {
 	 * dump active fields value to a map. The map key is the field number and
 	 * the map value is the field value. This method <b>WILL NOT</b> clear the
 	 * map first.
-	 * 
+	 *
 	 * @param map
 	 *            the map
 	 */
@@ -608,18 +658,36 @@ public final class Iso8583Message implements Serializable {
 				// do nothing
 			} else if (i < 129) {
 				if (bits1To128.get(iMin1)) {
-					if (binaries[i]) {
-						map.put(Integer.valueOf(i), binaryValues[i]);
+					if (binaries == null) {
+						Object value = binaryValues[i];
+						if (value == null) {
+							map.put(Integer.valueOf(i), stringValues[i]);
+						} else {
+							map.put(Integer.valueOf(i), binaryValues[i]);
+						}
 					} else {
-						map.put(Integer.valueOf(i), stringValues[i]);
+						if (binaries[i]) {
+							map.put(Integer.valueOf(i), binaryValues[i]);
+						} else {
+							map.put(Integer.valueOf(i), stringValues[i]);
+						}
 					}
 				}
 			} else {
 				if (bits129To192.get(iMin129)) {
-					if (binaries[i]) {
-						map.put(Integer.valueOf(i), binaryValues[i]);
+					if (binaries == null) {
+						Object value = binaryValues[i];
+						if (value == null) {
+							map.put(Integer.valueOf(i), stringValues[i]);
+						} else {
+							map.put(Integer.valueOf(i), binaryValues[i]);
+						}
 					} else {
-						map.put(Integer.valueOf(i), stringValues[i]);
+						if (binaries[i]) {
+							map.put(Integer.valueOf(i), binaryValues[i]);
+						} else {
+							map.put(Integer.valueOf(i), stringValues[i]);
+						}
 					}
 				}
 			}
@@ -658,21 +726,23 @@ public final class Iso8583Message implements Serializable {
 		}
 
 		for (int i = this.count - 1; i >= 2; --i) {
-			if (i == 65) {
-				continue;
-			}
-
-			if (this.binaries[i] != another.binaries[i]) {
-				return false;
-			}
-
-			if (this.binaries[i]) {
+			if (i != 65) {
 				if (!equals(this.binaryValues[i], another.binaryValues[i])) {
 					return false;
 				}
-			} else {
+
 				if (!equals(this.stringValues[i], another.stringValues[i])) {
 					return false;
+				}
+			}
+		}
+
+		if ((this.binaries != null) && (another.binaries != null)) {
+			for (int i = this.count - 1; i >= 2; --i) {
+				if (i != 65) {
+					if (this.binaries[i] != another.binaries[i]) {
+						return false;
+					}
 				}
 			}
 		}
@@ -687,7 +757,7 @@ public final class Iso8583Message implements Serializable {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
@@ -708,10 +778,19 @@ public final class Iso8583Message implements Serializable {
 					sbuf.append(i);
 					sbuf.append("\" value=\"");
 
-					if (binaries[i]) {
-						sbuf.append(binaryValues[i]);
+					if (binaries == null) {
+						Object val = binaryValues[i];
+						if (val == null) {
+							sbuf.append(stringValues[i]);
+						} else {
+							sbuf.append(val);
+						}
 					} else {
-						sbuf.append(stringValues[i]);
+						if (binaries[i]) {
+							sbuf.append(binaryValues[i]);
+						} else {
+							sbuf.append(stringValues[i]);
+						}
 					}
 
 					sbuf.append("\" />\n");
@@ -722,10 +801,19 @@ public final class Iso8583Message implements Serializable {
 					sbuf.append(i);
 					sbuf.append("\" value=\"");
 
-					if (binaries[i]) {
-						sbuf.append(binaryValues[i]);
+					if (binaries == null) {
+						Object val = binaryValues[i];
+						if (val == null) {
+							sbuf.append(stringValues[i]);
+						} else {
+							sbuf.append(val);
+						}
 					} else {
-						sbuf.append(stringValues[i]);
+						if (binaries[i]) {
+							sbuf.append(binaryValues[i]);
+						} else {
+							sbuf.append(stringValues[i]);
+						}
 					}
 
 					sbuf.append("\" />\n");
@@ -739,16 +827,32 @@ public final class Iso8583Message implements Serializable {
 	}
 
 	/**
-	 * Re-attach this message to a message factory
-	 * 
+	 * attach this message to a message factory
+	 *
 	 * @param factory
 	 *            the message factory
 	 */
-	public void reattach(Iso8583MessageFactory factory) {
+	public void attach(Iso8583MessageFactory factory) {
 		this.fields = factory.getFields();
 		this.binaries = factory.getBinaries();
 		this.charsetProvider = factory.getCharsetProvider();
 
-		this.count = this.fields.length;
+		int count = this.fields.length;
+		if (count > this.binaryValues.length) {
+			this.count = this.binaryValues.length;
+		} else {
+			this.count = count;
+		}
+	}
+
+	/**
+	 * detach any message factory from this message
+	 */
+	public void detach() {
+		this.fields = null;
+		this.binaries = null;
+		this.charsetProvider = null;
+
+		this.count = this.binaryValues.length;
 	}
 }

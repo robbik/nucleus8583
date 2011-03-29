@@ -27,6 +27,7 @@ public class Iso8583MessageTest {
 				.create("classpath:META-INF/codec8583.xml");
 
 		msg = fact.createMessage();
+
 		msg2 = fact.createMessage();
 
 		fact = Iso8583MessageFactory
