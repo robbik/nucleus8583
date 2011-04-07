@@ -23,10 +23,9 @@ public class PackUnpackTest {
 
 	@Before
 	public void initialize() throws Exception {
-		messageFactory = new Iso8583MessageFactory(
-				"classpath:META-INF/codec8583.xml");
+		messageFactory = new Iso8583MessageFactory("classpath:META-INF/codec8583.xml");
 
-		packed = "02004000000000010001040000000000000006030000004999800000000301";
+		packed = "0200C00000000001000104000000000000000603000000499980000000000000000301";
 
 		unpacked = messageFactory.createMessage();
 		unpacked.setMti("0200");
@@ -112,6 +111,20 @@ public class PackUnpackTest {
 		unpacked.unpack(packed.getBytes());
 
 		assertEquals(this.unpacked, unpacked);
+	}
+
+	@Test
+	public void pack2Test() throws Exception {
+		Iso8583Message isoMsg;
+		String errorMsg = null;
+		
+		try {
+			isoMsg = new Iso8583MessageFactory("classpath:META-INF/codec8583-4.xml").createMessage();
+		} catch (IllegalArgumentException ex) {
+			errorMsg = ex.getMessage();
+		}
+		
+		assertEquals("field #28 is not defined", errorMsg);
 	}
 
 	@Test

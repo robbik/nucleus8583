@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <iso-message encoding="ASCIIZ" xmlns="http://www.nucleus8583.org/schema/iso-message">
 	<iso-field id="0" type="custom" length="4" align="none" />
-	<iso-field id="1" type="b" length="32" />
+	<iso-field id="1" type="b" length="16" />
 	<iso-field id="2" type="custom .." align="none" />
 	<iso-field id="3" type="custom" length="6" align="none" />
 	<iso-field id="4" type="custom" length="12" align="none" />

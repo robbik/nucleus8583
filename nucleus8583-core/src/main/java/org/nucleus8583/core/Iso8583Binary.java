@@ -13,7 +13,7 @@ public final class Iso8583Binary extends Iso8583Field {
 			'8', '9', 'A', 'B', 'C', 'D', 'E', 'F' };
 
 	public Iso8583Binary(int id, int length) {
-		super(id, 0, length, 'n', ' ', "");
+		super(id, 0, length << 1, 'n', ' ', "");
 	}
 
 	public void pack(Writer writer, BitSet value) throws IOException {

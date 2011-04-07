@@ -1,6 +1,8 @@
 package org.nucleus8583.core.xml;
 
 import java.io.UnsupportedEncodingException;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -20,6 +22,13 @@ import org.nucleus8583.core.charset.spi.CharsetProvider;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Iso8583MessageDefinition {
 
+	@XmlTransient
+	private static Comparator<Iso8583Field> byFieldId = new Comparator<Iso8583Field>() {
+		public int compare(Iso8583Field a, Iso8583Field b) {
+			return a.getId() - b.getId();
+		}
+	};
+
 	@XmlAttribute(name = "encoding", required = true)
 	private String encoding;
 
@@ -37,7 +46,7 @@ public class Iso8583MessageDefinition {
 
 	@XmlTransient
 	private CharsetProvider tpl_provider;
-
+	
 	public String getEncoding() {
 		return encoding;
 	}
@@ -62,6 +71,16 @@ public class Iso8583MessageDefinition {
 			tpl_fields[i] = fields.get(i).createField();
 		}
 
+		// sort fields by it's id
+		Arrays.sort(tpl_fields, byFieldId);
+		
+		// check for skipped fields
+		for (int i = 0; i < tpl_fields_count; ++i) {
+			if (tpl_fields[i].getId() != i) {
+				throw new IllegalArgumentException("field #" + i + " is not defined");
+			}
+		}
+		
 		tpl_binaries = new boolean[tpl_fields_count];
 		for (int i = tpl_fields_count - 1; i >= 0; --i) {
 			tpl_binaries[i] = (tpl_fields[i] instanceof Iso8583Binary);

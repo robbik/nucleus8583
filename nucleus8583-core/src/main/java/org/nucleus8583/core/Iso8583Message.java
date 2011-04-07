@@ -115,6 +115,9 @@ public final class Iso8583Message implements Serializable {
 		this.mti = "";
 		this.stringValues = new String[count];
 		this.binaryValues = new BitSet[count];
+		
+		Arrays.fill(this.stringValues, null);
+		Arrays.fill(this.binaryValues, null);
 
 		this.bits1To128 = new BitSet(128);
 		this.bits129To192 = new BitSet(64);
@@ -520,23 +523,28 @@ public final class Iso8583Message implements Serializable {
 	 *             thrown if an IO error occured while converting.
 	 */
 	public void pack(Writer writer) throws IOException {
+		// is bit 65 on?
 		if (bits129To192.isEmpty()) {
 			bits1To128.clear(64);
-
+			
 			binaryValues[65] = null;
 			stringValues[65] = null;
 		} else {
 			bits1To128.set(64);
-
+			
 			binaryValues[65] = bits129To192;
 			stringValues[65] = null;
 		}
+		
+		// bit 1 is always on
+		bits1To128.set(0);
 
+		// pack!
 		fields[0].pack(writer, mti);
 		fields[1].pack(writer, bits1To128);
 
-		for (int i = 2, j = 1; (i < count) && (i < 129); ++i) {
-			if (bits1To128.get(j++)) {
+		for (int i = 2, j = 1; (i < count) && (i < 129); ++i, ++j) {
+			if (bits1To128.get(j)) {
 				if (binaries[i]) {
 					fields[i].pack(writer, binaryValues[i]);
 				} else {
@@ -545,8 +553,8 @@ public final class Iso8583Message implements Serializable {
 			}
 		}
 
-		for (int i = 129, j = 0; i < count; ++i) {
-			if (bits129To192.get(j++)) {
+		for (int i = 129, j = 0; i < count; ++i, ++j) {
+			if (bits129To192.get(j)) {
 				if (binaries[i]) {
 					fields[i].pack(writer, binaryValues[i]);
 				} else {
