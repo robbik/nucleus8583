@@ -22,7 +22,7 @@ public final class Iso8583String extends Iso8583Field {
 	public void pack(Writer writer, String value) throws IOException {
 		int vlen = value.length();
 		if (vlen > length) {
-			throw new IllegalArgumentException("value too long, expected "
+			throw new IllegalArgumentException("value of field #" + id + " is too long, expected "
 					+ length + " but actual is " + vlen);
 		}
 
