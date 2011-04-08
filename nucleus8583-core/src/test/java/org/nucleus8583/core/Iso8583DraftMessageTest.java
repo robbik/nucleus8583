@@ -28,6 +28,16 @@ public class Iso8583DraftMessageTest {
 		msg = fact.createMessage();
 	}
 
+	@Test(expected = IllegalArgumentException.class)
+	public void testInstantiateCountOutOfRange1() {
+		new Iso8583Message(63);
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void testInstantiateCountOutOfRange2() {
+		new Iso8583Message(193);
+	}
+
 	@Test
 	public void testManipulateMti() {
 		draftMsg.setMti(null);

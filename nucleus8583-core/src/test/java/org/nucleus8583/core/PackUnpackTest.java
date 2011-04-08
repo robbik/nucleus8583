@@ -78,9 +78,19 @@ public class PackUnpackTest {
 		unpacked.unpack("");
 		assertEquals(messageFactory.createMessage(), unpacked);
 
-		unpacked = new Iso8583Message();
+		unpacked.detach();
 
 		boolean error = false;
+		try {
+			unpacked.unpack("");
+		} catch (Throwable t) {
+			error = true;
+		}
+		assertTrue(error);
+
+		unpacked = new Iso8583Message();
+
+		error = false;
 		try {
 			unpacked.unpack("");
 		} catch (Throwable t) {
@@ -144,6 +154,16 @@ public class PackUnpackTest {
 		draftUnpacked.attach(messageFactory);
 		packed = draftUnpacked.pack();
 		assertEquals(this.packed, new String(packed));
+
+		draftUnpacked.detach();
+
+		error = false;
+		try {
+			draftUnpacked.pack();
+		} catch (Throwable t) {
+			error = true;
+		}
+		assertTrue(error);
 	}
 
 	@Test
