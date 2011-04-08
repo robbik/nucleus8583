@@ -1,5 +1,7 @@
 package org.nucleus8583.core.xml;
 
+import java.lang.reflect.Constructor;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
@@ -9,6 +11,7 @@ import javax.xml.bind.annotation.XmlTransient;
 import org.nucleus8583.core.Iso8583Binary;
 import org.nucleus8583.core.Iso8583Field;
 import org.nucleus8583.core.Iso8583String;
+import org.nucleus8583.core.util.FieldTypes;
 
 @XmlRootElement(name = "iso-field", namespace = "http://www.nucleus8583.org/schema/iso-message")
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -26,13 +29,13 @@ public class Iso8583FieldDefinition {
 	private int length;
 
 	@XmlAttribute(name = "align")
-	private Iso8583FieldAlignments align;
+	private final Iso8583FieldAlignments align;
 
 	@XmlAttribute(name = "pad-with")
-	private String padWith;
+	private final String padWith;
 
 	@XmlAttribute(name = "empty-value")
-	private String emptyValue;
+	private final String emptyValue;
 
 	public Iso8583FieldDefinition() {
 		lcount = 0;
@@ -132,6 +135,22 @@ public class Iso8583FieldDefinition {
 
 			return new Iso8583String(id, lcount, length, align.symbolicValue(),
 					cpadWith, emptyValue);
+		}
+
+		Constructor<?> ctor = FieldTypes.getConstructor(type);
+		if (ctor != null) {
+			char cpadWith = ' ';
+			if (padWith.length() > 0) {
+				cpadWith = padWith.charAt(0);
+			}
+
+			try {
+				return (Iso8583Field) ctor.newInstance(id, lcount, length,
+						align.symbolicValue(), cpadWith, emptyValue);
+			} catch (Throwable t) {
+				throw new RuntimeException("unable to instantiate field type "
+						+ type, t);
+			}
 		}
 
 		throw new RuntimeException("unknown type " + type);

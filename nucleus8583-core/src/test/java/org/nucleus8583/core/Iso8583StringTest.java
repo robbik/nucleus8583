@@ -16,8 +16,6 @@ import org.nucleus8583.core.xml.Iso8583FieldDefinition;
 
 public class Iso8583StringTest {
 	private Iso8583String stringFieldAlignL;
-	
-	private Iso8583String stringFieldAlignL2;
 
 	private Iso8583String stringFieldAlignR;
 
@@ -31,11 +29,6 @@ public class Iso8583StringTest {
 		stringFieldAlignL = (Iso8583String) ((Iso8583FieldDefinition) unmarshaller
 				.unmarshal(new ByteArrayInputStream(
 						("<iso-field id=\"39\" type=\"a\" length=\"2\" xmlns=\"http://www.nucleus8583.org/schema/iso-message\" />")
-								.getBytes()))).createField();
-
-		stringFieldAlignL2 = (Iso8583String) ((Iso8583FieldDefinition) unmarshaller
-				.unmarshal(new ByteArrayInputStream(
-						("<iso-field id=\"36\" type=\"ans ...\" length=\"104\" xmlns=\"http://www.nucleus8583.org/schema/iso-message\" />")
 								.getBytes()))).createField();
 
 		stringFieldAlignR = (Iso8583String) ((Iso8583FieldDefinition) unmarshaller
@@ -58,14 +51,16 @@ public class Iso8583StringTest {
 	public void packStringTooLong() throws Exception {
 		StringWriter sw = new StringWriter();
 		String errorMsg = null;
-		
+
 		try {
 			stringFieldAlignL.pack(sw, "1124134=2343434");
 		} catch (IllegalArgumentException ex) {
 			errorMsg = ex.getMessage();
 		}
-		
-		assertEquals("value of field #39 is too long, expected 2 but actual is 15", errorMsg);
+
+		assertEquals(
+				"value of field #39 is too long, expected 2 but actual is 15",
+				errorMsg);
 	}
 
 	@Test
