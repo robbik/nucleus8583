@@ -69,7 +69,7 @@
                         <Bundle-DocURL>${project.url}</Bundle-DocURL>
 						<Import-Package>*</Import-Package>
 						<DynamicImport-Package>*</DynamicImport-Package>
-						<Export-Package>*</Export-Package>
+						<Export-Package>org.nucleus8583.*</Export-Package>
 						<Private-Package></Private-Package>
 					</instructions>
 				</configuration>
