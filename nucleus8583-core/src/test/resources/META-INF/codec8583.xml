@@ -65,7 +65,7 @@
 	<iso-field id="62" type="custom ..." align="none" />
 	<iso-field id="63" type="custom ..." align="none" />
 	<iso-field id="64" type="b" length="8" />
-	<iso-field id="65" type="b" length="1" />
+	<iso-field id="65" type="b" length="16" />
 	<iso-field id="66" type="custom" length="1" align="none" />
 	<iso-field id="67" type="custom" length="2" align="none" />
 	<iso-field id="68" type="custom" length="3" align="none" />
