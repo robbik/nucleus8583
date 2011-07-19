@@ -12,10 +12,10 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Unmarshaller;
 
 import org.junit.Test;
-import org.nucleus8583.core.field.type.Iso8583AbstractBinaryFieldType;
-import org.nucleus8583.core.field.type.Iso8583AbstractStringFieldType;
-import org.nucleus8583.core.field.type.Iso8583FieldType;
-import org.nucleus8583.core.field.type.Iso8583FieldTypes;
+import org.nucleus8583.core.field.type.AbstractHexBinFieldType;
+import org.nucleus8583.core.field.type.AbstractStringFieldType;
+import org.nucleus8583.core.field.type.FieldType;
+import org.nucleus8583.core.field.type.FieldTypes;
 
 public class Iso8583FieldTypesTest {
 	private static String[] binaryTypes = new String[] { "b" };
@@ -29,9 +29,9 @@ public class Iso8583FieldTypesTest {
 		assertTrue(x instanceof Iso8583FieldDefinition);
 
 		Iso8583FieldDefinition def = (Iso8583FieldDefinition) x;
-		Iso8583FieldType field = Iso8583FieldTypes.getType(def);
+		FieldType field = FieldTypes.getType(def);
 
-		assertTrue(field instanceof Iso8583AbstractStringFieldType);
+		assertTrue(field instanceof AbstractStringFieldType);
 		assertEquals(id, field.getId());
 
 		Field f = null;
@@ -53,9 +53,9 @@ public class Iso8583FieldTypesTest {
 		assertTrue(x instanceof Iso8583FieldDefinition);
 
 		Iso8583FieldDefinition def = (Iso8583FieldDefinition) x;
-		Iso8583FieldType field = Iso8583FieldTypes.getType(def);
+		FieldType field = FieldTypes.getType(def);
 
-		assertTrue(field instanceof Iso8583AbstractBinaryFieldType);
+		assertTrue(field instanceof AbstractHexBinFieldType);
 		assertEquals(id, field.getId());
 
 		Field f = null;
@@ -149,7 +149,7 @@ public class Iso8583FieldTypesTest {
 			assertNotNull(x);
 			assertTrue(x instanceof Iso8583FieldDefinition);
 
-			Iso8583FieldTypes.getType((Iso8583FieldDefinition) x);
+			FieldTypes.getType((Iso8583FieldDefinition) x);
 		}
 	}
 
@@ -167,7 +167,7 @@ public class Iso8583FieldTypesTest {
 			assertNotNull(x);
 			assertTrue(x instanceof Iso8583FieldDefinition);
 
-			Iso8583FieldTypes.getType((Iso8583FieldDefinition) x);
+			FieldTypes.getType((Iso8583FieldDefinition) x);
 		}
 	}
 
@@ -184,6 +184,6 @@ public class Iso8583FieldTypesTest {
 		assertNotNull(x);
 		assertTrue(x instanceof Iso8583FieldDefinition);
 
-		Iso8583FieldTypes.getType((Iso8583FieldDefinition) x);
+		FieldTypes.getType((Iso8583FieldDefinition) x);
 	}
 }

@@ -5,22 +5,31 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.io.ByteArrayInputStream;
-import java.io.StringWriter;
+import java.io.ByteArrayOutputStream;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Unmarshaller;
 
+import org.junit.Before;
 import org.junit.Test;
-import org.nucleus8583.core.field.type.Iso8583FieldType;
-import org.nucleus8583.core.field.type.Iso8583FieldTypes;
+import org.nucleus8583.core.charset.CharsetEncoder;
+import org.nucleus8583.core.charset.Charsets;
+import org.nucleus8583.core.field.type.FieldType;
+import org.nucleus8583.core.field.type.FieldTypes;
 import org.nucleus8583.core.xml.Iso8583FieldDefinition;
 
 public class CustomFieldTypeTest {
 
+	private CharsetEncoder encoder;
+
+	@Before
+	public void before() throws Exception {
+		encoder = Charsets.getProvider("ASCII").getEncoder();
+	}
+
 	@Test
 	public void testDummyField() throws Exception {
-		Unmarshaller unmarshaller = JAXBContext.newInstance(
-				Iso8583FieldDefinition.class).createUnmarshaller();
+		Unmarshaller unmarshaller = JAXBContext.newInstance(Iso8583FieldDefinition.class).createUnmarshaller();
 
 		Object x = unmarshaller
 				.unmarshal(new ByteArrayInputStream(
@@ -30,26 +39,26 @@ public class CustomFieldTypeTest {
 		assertNotNull(x);
 		assertTrue(x instanceof Iso8583FieldDefinition);
 
-		Iso8583FieldType f = Iso8583FieldTypes.getType((Iso8583FieldDefinition) x);
+		FieldType f = FieldTypes.getType((Iso8583FieldDefinition) x);
 
 		assertNotNull(f);
 		assertTrue(f instanceof DummyField);
 
-		StringWriter sw = new StringWriter();
-		((DummyField) f).write(sw, "abcdefg");
-		assertEquals("ab", sw.toString());
+		ByteArrayOutputStream out = new ByteArrayOutputStream();
+		((DummyField) f).write(out, encoder, "abcdefg");
+		assertEquals("ab", out.toString());
 
-		sw = new StringWriter();
-		((DummyField) f).write(sw, "a");
-		assertEquals("xa", sw.toString());
+		out = new ByteArrayOutputStream();
+		((DummyField) f).write(out, encoder, "a");
+		assertEquals("xa", out.toString());
 
-		sw = new StringWriter();
-		((DummyField) f).write(sw, "");
-		assertEquals("xx", sw.toString());
+		out = new ByteArrayOutputStream();
+		((DummyField) f).write(out, encoder, "");
+		assertEquals("xx", out.toString());
 
-		sw = new StringWriter();
-		((DummyField) f).write(sw, (String) null);
-		assertEquals("xx", sw.toString());
+		out = new ByteArrayOutputStream();
+		((DummyField) f).write(out, encoder, (String) null);
+		assertEquals("xx", out.toString());
 	}
 
 	@Test(expected = RuntimeException.class)
@@ -65,7 +74,7 @@ public class CustomFieldTypeTest {
 		assertNotNull(x);
 		assertTrue(x instanceof Iso8583FieldDefinition);
 
-		Iso8583FieldTypes.getType((Iso8583FieldDefinition) x);
+		FieldTypes.getType((Iso8583FieldDefinition) x);
 	}
 
 	@Test(expected = RuntimeException.class)
@@ -81,6 +90,6 @@ public class CustomFieldTypeTest {
 		assertNotNull(x);
 		assertTrue(x instanceof Iso8583FieldDefinition);
 
-		Iso8583FieldTypes.getType((Iso8583FieldDefinition) x);
+		FieldTypes.getType((Iso8583FieldDefinition) x);
 	}
 }

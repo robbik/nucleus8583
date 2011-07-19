@@ -1,22 +1,11 @@
-package org.nucleus8583.core.charset.spi;
+package org.nucleus8583.core.charset;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.Reader;
 
-public class AsciiDecoder extends Reader {
-	private final InputStream in;
+public class AsciiDecoder implements CharsetDecoder {
 
-	public AsciiDecoder(InputStream in) {
-		this.in = in;
-	}
-
-	public void close() throws IOException {
-		in.close();
-	}
-
-	@Override
-	public int read() throws IOException {
+	public int read(InputStream in) throws IOException {
 		int ubyte = in.read();
 		if (ubyte < 0) {
 			return -1;
@@ -25,7 +14,7 @@ public class AsciiDecoder extends Reader {
 		return ubyte & 0x7F;
 	}
 
-	public int read(char[] cbuf, int off, int len) throws IOException {
+	public int read(InputStream in, char[] cbuf, int off, int len) throws IOException {
 		int ubyte;
 		int total = 0;
 

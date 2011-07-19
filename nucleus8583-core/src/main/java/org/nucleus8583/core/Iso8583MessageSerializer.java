@@ -5,10 +5,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
-import java.io.Reader;
 import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
-import java.io.Writer;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.BitSet;
@@ -17,11 +15,12 @@ import java.util.List;
 
 import javax.xml.bind.JAXBContext;
 
+import org.nucleus8583.core.charset.CharsetDecoder;
+import org.nucleus8583.core.charset.CharsetEncoder;
+import org.nucleus8583.core.charset.CharsetProvider;
 import org.nucleus8583.core.charset.Charsets;
-import org.nucleus8583.core.charset.spi.CharsetProvider;
-import org.nucleus8583.core.field.type.Iso8583FieldType;
-import org.nucleus8583.core.field.type.Iso8583FieldTypes;
-import org.nucleus8583.core.util.FastStringReader;
+import org.nucleus8583.core.field.type.FieldType;
+import org.nucleus8583.core.field.type.FieldTypes;
 import org.nucleus8583.core.util.ResourceUtils;
 import org.nucleus8583.core.xml.Iso8583FieldDefinition;
 import org.nucleus8583.core.xml.Iso8583MessageDefinition;
@@ -38,9 +37,9 @@ public final class Iso8583MessageSerializer {
 
 	private static final JAXBContext ctx;
 
-	private static final Comparator<Iso8583FieldType> sortByFieldId = new Comparator<Iso8583FieldType>() {
+	private static final Comparator<FieldType> sortByFieldId = new Comparator<FieldType>() {
 
-		public int compare(Iso8583FieldType a, Iso8583FieldType b) {
+		public int compare(FieldType a, FieldType b) {
 			return a.getId() - b.getId();
 		}
 	};
@@ -95,15 +94,17 @@ public final class Iso8583MessageSerializer {
 		return new Iso8583MessageSerializer(node);
 	}
 
-	private Iso8583FieldType[] fields;
+	private FieldType[] fields;
 
 	private boolean[] binaries;
 
+	private int fieldsCount;
+
 	private String encoding;
 
-	private CharsetProvider charsetProvider;
+	private CharsetEncoder charsetEncoder;
 
-	private int fieldsCount;
+	private CharsetDecoder charsetDecoder;
 
 	/**
 	 * create a new instance of {@link Iso8583MessageSerializer} using given
@@ -183,9 +184,9 @@ public final class Iso8583MessageSerializer {
 
 		this.fieldsCount = fields.size();
 
-		this.fields = new Iso8583FieldType[this.fieldsCount];
+		this.fields = new FieldType[this.fieldsCount];
 		for (int i = 0; i < fieldsCount; ++i) {
-			this.fields[i] = Iso8583FieldTypes.getType(fields.get(i));
+			this.fields[i] = FieldTypes.getType(fields.get(i));
 		}
 
 		// sort fields by it's id
@@ -205,10 +206,13 @@ public final class Iso8583MessageSerializer {
 
 		this.encoding = definition.getEncoding();
 
-		this.charsetProvider = Charsets.getProvider(this.encoding);
-		if (this.charsetProvider == null) {
+		CharsetProvider charsetProvider = Charsets.getProvider(this.encoding);
+		if (charsetProvider == null) {
 			throw new RuntimeException(new UnsupportedEncodingException(this.encoding));
 		}
+
+		charsetEncoder = charsetProvider.getEncoder();
+		charsetDecoder = charsetProvider.getDecoder();
 	}
 
 	/**
@@ -236,21 +240,6 @@ public final class Iso8583MessageSerializer {
 	}
 
 	/**
-	 * read serialized data from string and set it's values to given
-	 * {@link Iso8583Message} object
-	 *
-	 * @param str
-	 *            The string
-	 * @param out
-	 *            The {@link Iso8583Message} object
-	 * @throws IOException
-	 *             thrown if the string length is shorter than expected.
-	 */
-	public void read(String str, Iso8583Message out) throws IOException {
-		read(new FastStringReader(str), out);
-	}
-
-	/**
 	 * read serialized data from stream and set it's values to given
 	 * {@link Iso8583Message} object
 	 *
@@ -262,21 +251,6 @@ public final class Iso8583MessageSerializer {
 	 *             thrown if an IO error occurred while serializing.
 	 */
 	public void read(InputStream in, Iso8583Message out) throws IOException {
-		read(charsetProvider.createDecoder(in), out);
-	}
-
-	/**
-	 * read serialized data from stream and set it's values to given
-	 * {@link Iso8583Message} object
-	 *
-	 * @param reader
-	 *            The stream
-	 * @param out
-	 *            The {@link Iso8583Message} object
-	 * @throws IOException
-	 *             thrown if an IO error occurred while serializing.
-	 */
-	public void read(Reader reader, Iso8583Message out) throws IOException {
 		BitSet bits1To128 = out.directBits1To128();
 		BitSet bits129To192 = out.directBits129To192();
 
@@ -286,31 +260,31 @@ public final class Iso8583MessageSerializer {
 		}
 
 		// read bit-0
-		out.setMti(fields[0].readString(reader));
+		out.setMti(fields[0].readString(in, charsetDecoder));
 
 		// read bit-1
-		fields[1].read(reader, bits1To128);
+		fields[1].read(in, charsetDecoder, bits1To128);
 
 		// read bit-i
 		for (int i = 2, iMin1 = 1, iMin129 = -127; i < count; ++i, ++iMin1, ++iMin129) {
 			if (i == 65) {
 				if (bits1To128.get(64)) {
-					fields[i].read(reader, bits129To192);
+					fields[i].read(in, charsetDecoder, bits129To192);
 				}
 			} else if (i < 129) {
 				if (bits1To128.get(iMin1)) {
 					if (binaries[i]) {
-						out.unsafeSet(i, fields[i].readBinary(reader));
+						out.unsafeSet(i, fields[i].readBinary(in, charsetDecoder));
 					} else {
-						out.unsafeSet(i, fields[i].readString(reader));
+						out.unsafeSet(i, fields[i].readString(in, charsetDecoder));
 					}
 				}
 			} else {
 				if (bits129To192.get(iMin129)) {
 					if (binaries[i]) {
-						out.unsafeSet(i, fields[i].readBinary(reader));
+						out.unsafeSet(i, fields[i].readBinary(in, charsetDecoder));
 					} else {
-						out.unsafeSet(i, fields[i].readString(reader));
+						out.unsafeSet(i, fields[i].readString(in, charsetDecoder));
 					}
 				}
 			}
@@ -328,20 +302,6 @@ public final class Iso8583MessageSerializer {
 	 *             thrown if an IO error occurred while serializing.
 	 */
 	public void write(Iso8583Message msg, OutputStream out) throws IOException {
-		write(msg, charsetProvider.createEncoder(out));
-	}
-
-	/**
-	 * serialize {@link Iso8583Message} object into given stream
-	 *
-	 * @param msg
-	 *            The {@link Iso8583Message} object
-	 * @param writer
-	 *            The stream
-	 * @throws IOException
-	 *             thrown if an IO error occurred while serializing.
-	 */
-	public void write(Iso8583Message msg, Writer writer) throws IOException {
 		BitSet bits1To128 = msg.directBits1To128();
 		BitSet bits129To192 = msg.directBits129To192();
 
@@ -372,15 +332,15 @@ public final class Iso8583MessageSerializer {
 		}
 
 		// pack!
-		fields[0].write(writer, mti);
-		fields[1].write(writer, bits1To128);
+		fields[0].write(out, charsetEncoder, mti);
+		fields[1].write(out, charsetEncoder, bits1To128);
 
 		for (int i = 2, j = 1; (i < count) && (i < 129); ++i, ++j) {
 			if (bits1To128.get(j)) {
 				if (binaries[i]) {
-					fields[i].write(writer, binaryValues[i]);
+					fields[i].write(out, charsetEncoder, binaryValues[i]);
 				} else {
-					fields[i].write(writer, stringValues[i]);
+					fields[i].write(out, charsetEncoder, stringValues[i]);
 				}
 			}
 		}
@@ -388,9 +348,9 @@ public final class Iso8583MessageSerializer {
 		for (int i = 129, j = 0; i < count; ++i, ++j) {
 			if (bits129To192.get(j)) {
 				if (binaries[i]) {
-					fields[i].write(writer, binaryValues[i]);
+					fields[i].write(out, charsetEncoder, binaryValues[i]);
 				} else {
-					fields[i].write(writer, stringValues[i]);
+					fields[i].write(out, charsetEncoder, stringValues[i]);
 				}
 			}
 		}

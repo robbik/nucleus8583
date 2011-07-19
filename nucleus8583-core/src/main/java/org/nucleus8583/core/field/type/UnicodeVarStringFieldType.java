@@ -1,15 +1,17 @@
 package org.nucleus8583.core.field.type;
 
 import java.io.IOException;
-import java.io.Reader;
-import java.io.Writer;
+import java.io.InputStream;
+import java.io.OutputStream;
 
+import org.nucleus8583.core.charset.CharsetDecoder;
+import org.nucleus8583.core.charset.CharsetEncoder;
 import org.nucleus8583.core.util.FastInteger;
-import org.nucleus8583.core.util.ReaderUtils;
+import org.nucleus8583.core.util.IOUtils;
 import org.nucleus8583.core.xml.Iso8583FieldAlignments;
 import org.nucleus8583.core.xml.Iso8583FieldDefinition;
 
-public abstract class Iso8583UnicodeVarStringFieldType extends Iso8583AbstractStringFieldType {
+public abstract class UnicodeVarStringFieldType extends AbstractStringFieldType {
 	private static final long serialVersionUID = -5615324004502124085L;
 
 	private final int lcount;
@@ -18,7 +20,7 @@ public abstract class Iso8583UnicodeVarStringFieldType extends Iso8583AbstractSt
 
 	private final String emptyValue;
 
-	public Iso8583UnicodeVarStringFieldType(Iso8583FieldDefinition def, Iso8583FieldAlignments defaultAlign,
+	public UnicodeVarStringFieldType(Iso8583FieldDefinition def, Iso8583FieldAlignments defaultAlign,
 			String defaultPadWith, String defaultEmptyValue, int lcount, int length) {
 		super(def, defaultAlign, defaultPadWith, defaultEmptyValue);
 
@@ -36,26 +38,26 @@ public abstract class Iso8583UnicodeVarStringFieldType extends Iso8583AbstractSt
 		}
 	}
 
-	public String readString(Reader reader) throws IOException {
-		int vlen = FastInteger.readUint(reader, lcount);
+	public String readString(InputStream in, CharsetDecoder dec) throws IOException {
+		int vlen = FastInteger.readUint(in, dec, lcount);
 
 		if (vlen == 0) {
 			return emptyValue;
 		}
 
 		char[] cbuf = new char[vlen];
-		ReaderUtils.readFully(reader, cbuf, vlen);
+		IOUtils.readFully(in, dec, cbuf, vlen);
 
 		return new String(cbuf);
 	}
 
-	public void write(Writer writer, String value) throws IOException {
+	public void write(OutputStream out, CharsetEncoder enc, String value) throws IOException {
 		int vlen = value.length();
 		if (vlen > length) {
 			throw new IllegalArgumentException("value of field #" + id + " is too long, expected 0-" + length + " but actual is " + vlen);
 		}
 
-		FastInteger.writeUint(writer, vlen, lcount);
-		writer.write(value, 0, vlen);
+		FastInteger.writeUint(out, enc, vlen, lcount);
+		enc.write(out, value, 0, vlen);
 	}
 }

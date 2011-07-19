@@ -1,28 +1,14 @@
-package org.nucleus8583.core.charset.spi;
+package org.nucleus8583.core.charset;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.io.Writer;
 
-public class Utf8Encoder extends Writer {
-    private final OutputStream out;
+public class Utf8Encoder implements CharsetEncoder {
 
-    public Utf8Encoder(OutputStream out) {
-        this.out = out;
-    }
-
-    public void close() throws IOException {
-        out.close();
-    }
-
-    public void flush() throws IOException {
-        out.flush();
-    }
-
-    @Override
-    public void write(int ichar) throws IOException {
+    public void write(OutputStream out, int ichar) throws IOException {
         if (ichar < 0) {
-            throw new IOException("data contains value " + ((long) ichar & 0xFFFFFFFFL)
+            throw new IOException("data contains value " + (ichar & 0xFFFFFFFFL)
                     + " which is not compatible with UTF-8 encoding");
         }
 
@@ -56,45 +42,53 @@ public class Utf8Encoder extends Writer {
         }
     }
 
-    @Override
-    public void write(char[] cbuf) throws IOException {
+    public void write(OutputStream out, char[] cbuf) throws IOException {
         int len = cbuf.length;
         for (int i = 0; i < len;) {
-            write((int) cbuf[i++]);
+            write(out, cbuf[i++]);
         }
     }
 
-    public void write(char[] cbuf, int off, int len) throws IOException {
+    public void write(OutputStream out, char[] cbuf, int off, int len) throws IOException {
         if (off == 0) {
             for (int i = 0; i < len;) {
-                write((int) cbuf[i++]);
+                write(out, cbuf[i++]);
             }
         } else {
             for (int i = 0, j = off; i < len; ++i) {
-                write((int) cbuf[j++]);
+                write(out, cbuf[j++]);
             }
         }
     }
 
-    @Override
-    public void write(String str) throws IOException {
+    public void write(OutputStream out, String str) throws IOException {
         int len = str.length();
 
         for (int i = 0; i < len;) {
-            write(str.charAt(i++) & 0x7F);
+            write(out, str.charAt(i++));
         }
     }
 
-    @Override
-    public void write(String str, int off, int len) throws IOException {
+    public void write(OutputStream out, String str, int off, int len) throws IOException {
         if (off == 0) {
             for (int i = 0; i < len;) {
-                write((int) str.charAt(i++));
+                write(out, str.charAt(i++));
             }
         } else {
             for (int i = 0, j = off; i < len; ++i) {
-                write((int) str.charAt(j++));
+                write(out, str.charAt(j++));
             }
         }
     }
+
+	public byte[] toBytes(char[] cbuf, int off, int len) {
+		ByteArrayOutputStream out = new ByteArrayOutputStream(len);
+		try {
+			write(out, cbuf, off, len);
+		} catch (Throwable t) {
+			// do nothing
+		}
+
+		return out.toByteArray();
+	}
 }

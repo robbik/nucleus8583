@@ -1,16 +1,18 @@
 package org.nucleus8583.core.field.type;
 
 import java.io.IOException;
-import java.io.Reader;
-import java.io.Writer;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.Arrays;
 
-import org.nucleus8583.core.util.ReaderUtils;
+import org.nucleus8583.core.charset.CharsetDecoder;
+import org.nucleus8583.core.charset.CharsetEncoder;
+import org.nucleus8583.core.util.IOUtils;
 import org.nucleus8583.core.util.StringUtils;
 import org.nucleus8583.core.xml.Iso8583FieldAlignments;
 import org.nucleus8583.core.xml.Iso8583FieldDefinition;
 
-public final class Iso8583StringFieldType extends Iso8583AbstractStringFieldType {
+public final class StringFieldType extends AbstractStringFieldType {
 	private static final long serialVersionUID = -5615324004502124085L;
 
 	private final int length;
@@ -23,7 +25,7 @@ public final class Iso8583StringFieldType extends Iso8583AbstractStringFieldType
 
 	private final char[] emptyValue;
 
-	public Iso8583StringFieldType(Iso8583FieldDefinition def, Iso8583FieldAlignments defaultAlign,
+	public StringFieldType(Iso8583FieldDefinition def, Iso8583FieldAlignments defaultAlign,
 			String defaultPadWith, String defaultEmptyValue) {
 		super(def, defaultAlign, defaultPadWith, defaultEmptyValue);
 
@@ -72,19 +74,19 @@ public final class Iso8583StringFieldType extends Iso8583AbstractStringFieldType
 		}
 	}
 
-	public String readString(Reader reader) throws IOException {
+	public String readString(InputStream in, CharsetDecoder dec) throws IOException {
 		char[] cbuf = new char[length];
-		ReaderUtils.readFully(reader, cbuf, length);
+		IOUtils.readFully(in, dec, cbuf, length);
 
 		return new String(StringUtils.unpad(cbuf, length, align, padWith, emptyValue));
 	}
 
-	public void write(Writer writer, String value) throws IOException {
+	public void write(OutputStream out, CharsetEncoder enc, String value) throws IOException {
 		int vlen = value.length();
 		if (vlen > length) {
 			throw new IllegalArgumentException("value of field #" + id + " is too long, expected " + length + " but actual is " + vlen);
 		}
 
-		StringUtils.pad(writer, value, vlen, length, align, padder);
+		StringUtils.pad(out, enc, value, vlen, length, align, padder);
 	}
 }

@@ -2,19 +2,21 @@ package org.nucleus8583.core.field.type;
 
 import java.io.EOFException;
 import java.io.IOException;
-import java.io.Reader;
-import java.io.Writer;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.BitSet;
 
+import org.nucleus8583.core.charset.CharsetDecoder;
+import org.nucleus8583.core.charset.CharsetEncoder;
 import org.nucleus8583.core.xml.Iso8583FieldAlignments;
 import org.nucleus8583.core.xml.Iso8583FieldDefinition;
 
-public abstract class Iso8583AbstractBinaryFieldType extends Iso8583FieldType {
+public abstract class AbstractHexBinFieldType extends FieldType {
 	private static final long serialVersionUID = 3977789121124596289L;
 
 	private static final char[] HEX = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F' };
 
-	public Iso8583AbstractBinaryFieldType(Iso8583FieldDefinition def, Iso8583FieldAlignments defaultAlign,
+	public AbstractHexBinFieldType(Iso8583FieldDefinition def, Iso8583FieldAlignments defaultAlign,
 			String defaultPadWith, String defaultEmptyValue) {
 		super(def, defaultAlign, defaultPadWith, defaultEmptyValue);
 	}
@@ -23,22 +25,22 @@ public abstract class Iso8583AbstractBinaryFieldType extends Iso8583FieldType {
 		return true;
 	}
 
-	public String readString(Reader packed) throws IOException {
+	public String readString(InputStream in, CharsetDecoder dec) throws IOException {
 		throw new UnsupportedOperationException();
 	}
 
-	public void write(Writer writer, String value) throws IOException {
+	public void write(OutputStream out, CharsetEncoder enc, String value) throws IOException {
 		throw new UnsupportedOperationException();
 	}
 
-	protected void read(Reader reader, BitSet bits, int length) throws IOException {
+	protected void read(InputStream in, CharsetDecoder dec, BitSet bits, int length) throws IOException {
 		int bitsIndex = 0;
 		int ichar;
 
 		bits.clear();
 
 		for (int i = 0; i < length; ++i, bitsIndex += 4) {
-			ichar = reader.read();
+			ichar = dec.read(in);
 			if (ichar < 0) {
 				throw new EOFException();
 			}
@@ -127,7 +129,7 @@ public abstract class Iso8583AbstractBinaryFieldType extends Iso8583FieldType {
 		}
 	}
 
-	protected void write(Writer writer, BitSet value, int length) throws IOException {
+	protected void write(OutputStream out, CharsetEncoder enc, BitSet value, int length) throws IOException {
 		int bitsIndex = 0;
 		int ivalue;
 
@@ -147,7 +149,7 @@ public abstract class Iso8583AbstractBinaryFieldType extends Iso8583FieldType {
 				ivalue |= 1;
 			}
 
-			writer.write(HEX[ivalue]);
+			enc.write(out, HEX[ivalue]);
 		}
 	}
 }

@@ -1,7 +1,10 @@
 package org.nucleus8583.core.util;
 
 import java.io.IOException;
+import java.io.OutputStream;
 import java.io.Writer;
+
+import org.nucleus8583.core.charset.CharsetEncoder;
 
 public abstract class StringUtils {
 
@@ -35,6 +38,32 @@ public abstract class StringUtils {
 		}
 
 		return value;
+	}
+
+	public static void pad(OutputStream out, CharsetEncoder enc, String value, int valueLength, int expectedLength, char align, char[] padder) throws IOException {
+		if (valueLength == 0) {
+			enc.write(out, padder, 0, expectedLength);
+		} else if (valueLength == expectedLength) {
+			enc.write(out, value, 0, valueLength);
+		} else {
+			switch (align) {
+			case 'l':
+				enc.write(out, value, 0, valueLength);
+				enc.write(out, padder, 0, expectedLength - valueLength);
+
+				break;
+			case 'r':
+				enc.write(out, padder, 0, expectedLength - valueLength);
+				enc.write(out, value, 0, valueLength);
+
+				break;
+			default: // 'n'
+				enc.write(out, value, 0, valueLength);
+				enc.write(out, padder, 0, expectedLength - valueLength);
+
+				break;
+			}
+		}
 	}
 
 	public static void pad(Writer writer, String value, int valueLength, int expectedLength, char align, char[] padder) throws IOException {

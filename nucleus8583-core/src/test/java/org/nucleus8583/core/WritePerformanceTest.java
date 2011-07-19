@@ -1,13 +1,12 @@
 package org.nucleus8583.core;
 
-import java.io.IOException;
 import java.io.OutputStream;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
+import org.nucleus8583.core.util.NullOutputStream;
 
-@Ignore
+// @Ignore
 public class WritePerformanceTest {
 	private Iso8583MessageSerializer serializer;
 
@@ -17,11 +16,7 @@ public class WritePerformanceTest {
 	public void initialize() throws Exception {
 		serializer = new Iso8583MessageSerializer("classpath:META-INF/codec8583.xml");
 
-		nullOut = new OutputStream() {
-			public void write(int b) throws IOException {
-				// do nothing
-			}
-		};
+		nullOut = new NullOutputStream();
 	}
 
 	private long measure(int loops) throws Exception {

@@ -1,12 +1,6 @@
 package org.nucleus8583.core;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.Reader;
 import java.io.Serializable;
-import java.io.Writer;
 import java.util.Arrays;
 import java.util.BitSet;
 import java.util.Map;
@@ -49,8 +43,6 @@ public final class Iso8583Message implements Serializable {
 	private final BitSet bits1To128;
 
 	private final BitSet bits129To192;
-
-	private transient Iso8583MessageSerializer serializer;
 
 	/**
 	 * create a new instance of this class with 192 number of fields defined.
@@ -414,124 +406,6 @@ public final class Iso8583Message implements Serializable {
 		bits129To192.clear();
 	}
 
-	/**
-	 * convert this object into standard ISO-8583 message and return a byte
-	 * array containing the message. This method is slower than
-	 * <code>void pack(OutputStream)</code> method.
-	 *
-	 * @return the byte array containing the ISO-8583 message
-	 * @deprecated use {@link Iso8583MessageSerializer} object instead
-	 */
-	@Deprecated
-	public byte[] pack() {
-		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		try {
-			serializer.write(this, baos);
-		} catch (IOException e) {
-			// should not be here
-		}
-
-		return baos.toByteArray();
-	}
-
-	/**
-	 * convert this object into ISO-8583 message and write to given
-	 * {@link OutputStream}. This method is slower than
-	 * <code>void pack(Writer)</code> method.
-	 *
-	 * @param out
-	 *            the {@link OutputStream}
-	 * @throws IOException
-	 *             thrown if an IO error occurred while converting.
-	 * @deprecated use {@link Iso8583MessageSerializer} object instead
-	 */
-	@Deprecated
-	public void pack(OutputStream out) throws IOException {
-		serializer.write(this, out);
-	}
-
-	/**
-	 * convert this object into ISO-8583 message and write to given
-	 * {@link Writer}.
-	 *
-	 * @param writer
-	 *            the {@link Writer}
-	 * @throws IOException
-	 *             thrown if an IO error occured while converting.
-	 * @deprecated use {@link Iso8583MessageSerializer} object instead
-	 */
-	@Deprecated
-	public void pack(Writer writer) throws IOException {
-		serializer.write(this, writer);
-	}
-
-	/**
-	 * read ISO-8583 message contained in given byte array and assign the fields
-	 * value to this object. This method is slower than
-	 * <code>void unpack(InputStream)</code> method.
-	 *
-	 * @param in
-	 *            the byte array
-	 * @deprecated use {@link Iso8583MessageSerializer} object instead
-	 */
-	@Deprecated
-	public void unpack(byte[] in) {
-		try {
-			serializer.read(in, this);
-		} catch (IOException ex) {
-			// should not be here
-		}
-	}
-
-	/**
-	 * read ISO-8583 message contained in given string and assign the fields
-	 * value to this object. This method is slower than
-	 * <code>void unpack(Reader)</code> method but faster then
-	 * <code>void unpack(InputStream)</code> method.
-	 *
-	 * @param str
-	 *            the string
-	 * @deprecated use {@link Iso8583MessageSerializer} object instead
-	 */
-	@Deprecated
-	public void unpack(String str) {
-		try {
-			serializer.read(str, this);
-		} catch (IOException ex) {
-			// should not be here
-		}
-	}
-
-	/**
-	 * read ISO-8583 message from given {@link InputStream} and assign the
-	 * fields value to this object. This method is slower than
-	 * <code>void unpack(Reader)</code> method.
-	 *
-	 * @param in
-	 *            the {@link InputStream}
-	 * @throws IOException
-	 *             thrown if an IO error occurred while converting.
-	 * @deprecated use {@link Iso8583MessageSerializer} object instead
-	 */
-	@Deprecated
-	public void unpack(InputStream in) throws IOException {
-		serializer.read(in, this);
-	}
-
-	/**
-	 * read ISO-8583 message from given {@link Reader} and assign the fields
-	 * value to this object.
-	 *
-	 * @param in
-	 *            the {@link Reader}
-	 * @throws IOException
-	 *             thrown if an IO error occurred while converting.
-	 * @deprecated use {@link Iso8583MessageSerializer} object instead
-	 */
-	@Deprecated
-	public void unpack(Reader in) throws IOException {
-		serializer.read(in, this);
-	}
 
 	/**
 	 * dump active fields value to a map. The map key is the field number and
@@ -677,27 +551,6 @@ public final class Iso8583Message implements Serializable {
 		sbuf.append("</iso-message>\n");
 
 		return sbuf.toString();
-	}
-
-	/**
-	 * attach this message to a message factory
-	 *
-	 * @param factory
-	 *            the message factory
-	 * @deprecated use {@link Iso8583MessageSerializer} object instead
-	 */
-	@Deprecated
-	public void attach(Iso8583MessageFactory factory) {
-		serializer = factory.getWrappedObject();
-	}
-
-	/**
-	 * detach any message factory from this message
-	 * @deprecated use {@link Iso8583MessageSerializer} object instead
-	 */
-	@Deprecated
-	public void detach() {
-		serializer = null;
 	}
 
 	/**

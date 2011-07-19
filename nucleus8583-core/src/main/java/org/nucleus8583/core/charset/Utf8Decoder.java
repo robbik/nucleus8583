@@ -1,22 +1,11 @@
-package org.nucleus8583.core.charset.spi;
+package org.nucleus8583.core.charset;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.Reader;
 
-public class Utf8Decoder extends Reader {
-    private final InputStream in;
+public class Utf8Decoder implements CharsetDecoder {
 
-    public Utf8Decoder(InputStream in) {
-        this.in = in;
-    }
-
-    public void close() throws IOException {
-        in.close();
-    }
-
-    @Override
-    public int read() throws IOException {
+    public int read(InputStream in) throws IOException {
         int ubyte;
         int ichar;
 
@@ -149,7 +138,7 @@ public class Utf8Decoder extends Reader {
         return ichar;
     }
 
-    public int read(char[] cbuf, int off, int len) throws IOException {
+    public int read(InputStream in, char[] cbuf, int off, int len) throws IOException {
         int rlen = 0;
         boolean missing = false;
 

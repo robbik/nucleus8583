@@ -14,7 +14,7 @@ import org.nucleus8583.core.util.ResourceUtils;
 import org.nucleus8583.core.xml.Iso8583FieldAlignments;
 import org.nucleus8583.core.xml.Iso8583FieldDefinition;
 
-public abstract class Iso8583FieldTypes {
+public abstract class FieldTypes {
 
 	private static final class Entry {
 
@@ -141,7 +141,7 @@ public abstract class Iso8583FieldTypes {
 		}
 	}
 
-	public static Iso8583FieldType getType(Iso8583FieldDefinition def) {
+	public static FieldType getType(Iso8583FieldDefinition def) {
 		Entry entry = types.get(def.getType().toUpperCase());
 		if (entry == null) {
 			throw new RuntimeException("an error occured while retrieving type " + def.getType() + ", type not found.");
@@ -150,7 +150,7 @@ public abstract class Iso8583FieldTypes {
 		try {
 			Constructor<?> ctor = entry.clazz.getConstructor(Iso8583FieldDefinition.class, Iso8583FieldAlignments.class, String.class, String.class);
 
-			return (Iso8583FieldType) ctor.newInstance(def, entry.align, entry.padWith, entry.emptyValue);
+			return (FieldType) ctor.newInstance(def, entry.align, entry.padWith, entry.emptyValue);
 		} catch (InvocationTargetException ex) {
 			Throwable t = ex.getCause();
 

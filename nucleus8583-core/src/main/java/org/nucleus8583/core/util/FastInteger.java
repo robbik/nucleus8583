@@ -2,8 +2,13 @@ package org.nucleus8583.core.util;
 
 import java.io.EOFException;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.Reader;
 import java.io.Writer;
+
+import org.nucleus8583.core.charset.CharsetDecoder;
+import org.nucleus8583.core.charset.CharsetEncoder;
 
 public abstract class FastInteger {
 	private static final int[][] digitsToInt;
@@ -47,6 +52,19 @@ public abstract class FastInteger {
 		return new String(cc);
 	}
 
+	public static void writeUint(OutputStream out, CharsetEncoder enc,
+			int ivalue, int len) throws IOException {
+		int rem = ivalue;
+		char[] cc = new char[len];
+
+		for (int i = len - 1; i >= 0; --i) {
+			cc[i] = intToDigits[rem % 10];
+			rem = rem / 10;
+		}
+
+		enc.write(out, cc, 0, len);
+	}
+
 	public static void writeUint(Writer writer, int ivalue, int len)
 			throws IOException {
 		int rem = ivalue;
@@ -58,6 +76,29 @@ public abstract class FastInteger {
 		}
 
 		writer.write(cc, 0, len);
+	}
+
+	public static int readUint(InputStream in, CharsetDecoder dec, int len)
+			throws IOException {
+		int ivalue = 0;
+		int ichar;
+
+		for (int i = len - 1; i >= 0; --i) {
+			ichar = dec.read(in);
+			if (ichar < 0) {
+				throw new EOFException();
+			}
+
+			int digitInt = digitsToInt[ichar][i];
+			if (digitInt < 0) {
+				throw new NumberFormatException((char) ichar
+						+ " is not a number.");
+			}
+
+			ivalue += digitInt;
+		}
+
+		return ivalue;
 	}
 
 	public static int readUint(Reader reader, int len) throws IOException {
@@ -86,7 +127,7 @@ public abstract class FastInteger {
 		int ivalue = 0;
 
 		for (int i = len - 1, j = start; i >= 0; --i, ++j) {
-			int digitInt = digitsToInt[(int) s[j]][i];
+			int digitInt = digitsToInt[s[j]][i];
 			if (digitInt < 0) {
 				throw new NumberFormatException(s[j] + " is not a number.");
 			}
@@ -105,7 +146,7 @@ public abstract class FastInteger {
 		int ivalue = 0;
 
 		for (int i = len - 1, j = 0; i >= 0; --i, ++j) {
-			int digitInt = digitsToInt[(int) s.charAt(j)][i];
+			int digitInt = digitsToInt[s.charAt(j)][i];
 			if (digitInt < 0) {
 				throw new NumberFormatException(s.charAt(j)
 						+ " is not a number.");

@@ -2,7 +2,7 @@ package org.nucleus8583.core;
 
 import static org.junit.Assert.assertEquals;
 
-import java.io.StringWriter;
+import java.io.ByteArrayOutputStream;
 import java.util.BitSet;
 
 import org.junit.Before;
@@ -36,13 +36,13 @@ public class Iso8583MessageSerializer192Test {
 	public void testRead() throws Exception {
 		Iso8583Message unpacked = new Iso8583Message();
 
-		serializer.read(packed, unpacked);
+		serializer.read(packed.getBytes(), unpacked);
 		assertEquals(this.unpacked, unpacked);
 	}
 
 	@Test
 	public void testWrite() throws Exception {
-		StringWriter sw = new StringWriter();
+		ByteArrayOutputStream sw = new ByteArrayOutputStream();
 
 		serializer.write(unpacked, sw);
 		assertEquals(packed, sw.toString());

@@ -6,7 +6,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
-import org.nucleus8583.core.charset.spi.CharsetProvider;
 import org.nucleus8583.core.util.ResourceUtils;
 
 public abstract class Charsets {
