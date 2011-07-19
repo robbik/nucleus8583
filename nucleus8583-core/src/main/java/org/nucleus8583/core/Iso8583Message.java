@@ -1,6 +1,5 @@
 package org.nucleus8583.core;
 
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -11,9 +10,6 @@ import java.io.Writer;
 import java.util.Arrays;
 import java.util.BitSet;
 import java.util.Map;
-
-import org.nucleus8583.core.charset.spi.CharsetProvider;
-import org.nucleus8583.core.util.FastStringReader;
 
 /**
  * This class represents an ISO-8583 message. You can read, manipulate, and
@@ -42,13 +38,7 @@ import org.nucleus8583.core.util.FastStringReader;
 public final class Iso8583Message implements Serializable {
 	private static final long serialVersionUID = -1503040549193848604L;
 
-	private transient Iso8583Field[] fields;
-
-	private transient boolean[] binaries;
-
-	private transient CharsetProvider charsetProvider;
-
-	private int count;
+	private final int count;
 
 	private String mti;
 
@@ -59,6 +49,8 @@ public final class Iso8583Message implements Serializable {
 	private final BitSet bits1To128;
 
 	private final BitSet bits129To192;
+
+	private transient Iso8583MessageSerializer serializer;
 
 	/**
 	 * create a new instance of this class with 192 number of fields defined.
@@ -82,42 +74,11 @@ public final class Iso8583Message implements Serializable {
 					"number of fields must in range 64-192");
 		}
 
-		this.fields = null;
-		this.binaries = null;
-		this.charsetProvider = null;
-
 		this.count = count + 1;
 
 		this.mti = "";
 		this.stringValues = new String[this.count];
 		this.binaryValues = new BitSet[this.count];
-
-		this.bits1To128 = new BitSet(128);
-		this.bits129To192 = new BitSet(64);
-	}
-
-	/**
-	 * This constructor is for internal use only.
-	 *
-	 * @param fields
-	 * @param count
-	 * @param binaries
-	 * @param charsetProvider
-	 */
-	public Iso8583Message(Iso8583Field[] fields, boolean[] binaries,
-			CharsetProvider charsetProvider, int count) {
-		this.fields = fields;
-		this.binaries = binaries;
-		this.charsetProvider = charsetProvider;
-
-		this.count = count;
-
-		this.mti = "";
-		this.stringValues = new String[count];
-		this.binaryValues = new BitSet[count];
-		
-		Arrays.fill(this.stringValues, null);
-		Arrays.fill(this.binaryValues, null);
 
 		this.bits1To128 = new BitSet(128);
 		this.bits129To192 = new BitSet(64);
@@ -174,11 +135,6 @@ public final class Iso8583Message implements Serializable {
 					+ (count - 1) + " and not equals to 65");
 		}
 
-		if ((binaries != null) && !binaries[no]) {
-			throw new IllegalArgumentException("field " + no
-					+ " is a string field.");
-		}
-
 		if (value == null) {
 			unsafeUnset(no);
 		} else {
@@ -217,11 +173,6 @@ public final class Iso8583Message implements Serializable {
 		if ((no <= 1) || (no > 192) || (no == 65) || (no >= count)) {
 			throw new IllegalArgumentException("field no must be in range 2-"
 					+ (count - 1) + " and not equals to 65");
-		}
-
-		if ((binaries != null) && binaries[no]) {
-			throw new IllegalArgumentException("field " + no
-					+ " is a binary field.");
 		}
 
 		if (value == null) {
@@ -360,17 +311,9 @@ public final class Iso8583Message implements Serializable {
 					+ (count - 1) + " and not equals to 65");
 		}
 
-		if (binaries == null) {
-			Object value = binaryValues[no];
-			if (value != null) {
-				return value;
-			}
-
-			return stringValues[no];
-		}
-
-		if (binaries[no]) {
-			return binaryValues[no];
+		Object value = binaryValues[no];
+		if (value != null) {
+			return value;
 		}
 
 		return stringValues[no];
@@ -401,11 +344,6 @@ public final class Iso8583Message implements Serializable {
 					+ (count - 1) + " and not equals to 65");
 		}
 
-		if ((binaries != null) && binaries[no]) {
-			throw new IllegalArgumentException("field " + no
-					+ " is a binary field");
-		}
-
 		return stringValues[no];
 	}
 
@@ -426,11 +364,6 @@ public final class Iso8583Message implements Serializable {
 		if ((no <= 1) || (no > 192) || (no == 65) || (no >= count)) {
 			throw new IllegalArgumentException("field no must be in range 2-"
 					+ (count - 1) + " and not equals to 65");
-		}
-
-		if ((binaries != null) && !binaries[no]) {
-			throw new IllegalArgumentException("field " + no
-					+ " is a string field");
 		}
 
 		return binaryValues[no];
@@ -487,11 +420,13 @@ public final class Iso8583Message implements Serializable {
 	 * <code>void pack(OutputStream)</code> method.
 	 *
 	 * @return the byte array containing the ISO-8583 message
+	 * @deprecated use {@link Iso8583MessageSerializer} object instead
 	 */
+	@Deprecated
 	public byte[] pack() {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		try {
-			pack(baos);
+			serializer.write(this, baos);
 		} catch (IOException e) {
 			// should not be here
 		}
@@ -507,10 +442,12 @@ public final class Iso8583Message implements Serializable {
 	 * @param out
 	 *            the {@link OutputStream}
 	 * @throws IOException
-	 *             thrown if an IO error occured while converting.
+	 *             thrown if an IO error occurred while converting.
+	 * @deprecated use {@link Iso8583MessageSerializer} object instead
 	 */
+	@Deprecated
 	public void pack(OutputStream out) throws IOException {
-		pack(charsetProvider.createEncoder(out));
+		serializer.write(this, out);
 	}
 
 	/**
@@ -521,47 +458,11 @@ public final class Iso8583Message implements Serializable {
 	 *            the {@link Writer}
 	 * @throws IOException
 	 *             thrown if an IO error occured while converting.
+	 * @deprecated use {@link Iso8583MessageSerializer} object instead
 	 */
+	@Deprecated
 	public void pack(Writer writer) throws IOException {
-		// is bit 65 on?
-		if (bits129To192.isEmpty()) {
-			bits1To128.clear(64);
-			
-			binaryValues[65] = null;
-			stringValues[65] = null;
-		} else {
-			bits1To128.set(64);
-			
-			binaryValues[65] = bits129To192;
-			stringValues[65] = null;
-		}
-		
-		// bit 1 is always on
-		bits1To128.set(0);
-
-		// pack!
-		fields[0].pack(writer, mti);
-		fields[1].pack(writer, bits1To128);
-
-		for (int i = 2, j = 1; (i < count) && (i < 129); ++i, ++j) {
-			if (bits1To128.get(j)) {
-				if (binaries[i]) {
-					fields[i].pack(writer, binaryValues[i]);
-				} else {
-					fields[i].pack(writer, stringValues[i]);
-				}
-			}
-		}
-
-		for (int i = 129, j = 0; i < count; ++i, ++j) {
-			if (bits129To192.get(j)) {
-				if (binaries[i]) {
-					fields[i].pack(writer, binaryValues[i]);
-				} else {
-					fields[i].pack(writer, stringValues[i]);
-				}
-			}
-		}
+		serializer.write(this, writer);
 	}
 
 	/**
@@ -571,10 +472,12 @@ public final class Iso8583Message implements Serializable {
 	 *
 	 * @param in
 	 *            the byte array
+	 * @deprecated use {@link Iso8583MessageSerializer} object instead
 	 */
+	@Deprecated
 	public void unpack(byte[] in) {
 		try {
-			unpack(new ByteArrayInputStream(in));
+			serializer.read(in, this);
 		} catch (IOException ex) {
 			// should not be here
 		}
@@ -588,10 +491,12 @@ public final class Iso8583Message implements Serializable {
 	 *
 	 * @param str
 	 *            the string
+	 * @deprecated use {@link Iso8583MessageSerializer} object instead
 	 */
+	@Deprecated
 	public void unpack(String str) {
 		try {
-			unpack(new FastStringReader(str));
+			serializer.read(str, this);
 		} catch (IOException ex) {
 			// should not be here
 		}
@@ -605,10 +510,12 @@ public final class Iso8583Message implements Serializable {
 	 * @param in
 	 *            the {@link InputStream}
 	 * @throws IOException
-	 *             thrown if an IO error occured while converting.
+	 *             thrown if an IO error occurred while converting.
+	 * @deprecated use {@link Iso8583MessageSerializer} object instead
 	 */
+	@Deprecated
 	public void unpack(InputStream in) throws IOException {
-		unpack(charsetProvider.createDecoder(in));
+		serializer.read(in, this);
 	}
 
 	/**
@@ -618,36 +525,12 @@ public final class Iso8583Message implements Serializable {
 	 * @param in
 	 *            the {@link Reader}
 	 * @throws IOException
-	 *             thrown if an IO error occured while converting.
+	 *             thrown if an IO error occurred while converting.
+	 * @deprecated use {@link Iso8583MessageSerializer} object instead
 	 */
+	@Deprecated
 	public void unpack(Reader in) throws IOException {
-		mti = fields[0].unpackString(in);
-		fields[1].unpackBinary(in, bits1To128);
-
-		// read bit-by-bit
-		for (int i = 2, iMin1 = 1, iMin129 = -127; i < count; ++i, ++iMin1, ++iMin129) {
-			if (i == 65) {
-				if (bits1To128.get(64)) {
-					fields[i].unpackBinary(in, bits129To192);
-				}
-			} else if (i < 129) {
-				if (bits1To128.get(iMin1)) {
-					if (binaries[i]) {
-						unsafeSet(i, fields[i].unpackBinary(in));
-					} else {
-						unsafeSet(i, fields[i].unpackString(in));
-					}
-				}
-			} else {
-				if (bits129To192.get(iMin129)) {
-					if (binaries[i]) {
-						unsafeSet(i, fields[i].unpackBinary(in));
-					} else {
-						unsafeSet(i, fields[i].unpackString(in));
-					}
-				}
-			}
-		}
+		serializer.read(in, this);
 	}
 
 	/**
@@ -666,36 +549,22 @@ public final class Iso8583Message implements Serializable {
 				// do nothing
 			} else if (i < 129) {
 				if (bits1To128.get(iMin1)) {
-					if (binaries == null) {
-						Object value = binaryValues[i];
-						if (value == null) {
-							map.put(Integer.valueOf(i), stringValues[i]);
-						} else {
-							map.put(Integer.valueOf(i), binaryValues[i]);
-						}
+					Object value = binaryValues[i];
+
+					if (value == null) {
+						map.put(Integer.valueOf(i), stringValues[i]);
 					} else {
-						if (binaries[i]) {
-							map.put(Integer.valueOf(i), binaryValues[i]);
-						} else {
-							map.put(Integer.valueOf(i), stringValues[i]);
-						}
+						map.put(Integer.valueOf(i), binaryValues[i]);
 					}
 				}
 			} else {
 				if (bits129To192.get(iMin129)) {
-					if (binaries == null) {
-						Object value = binaryValues[i];
-						if (value == null) {
-							map.put(Integer.valueOf(i), stringValues[i]);
-						} else {
-							map.put(Integer.valueOf(i), binaryValues[i]);
-						}
+					Object value = binaryValues[i];
+
+					if (value == null) {
+						map.put(Integer.valueOf(i), stringValues[i]);
 					} else {
-						if (binaries[i]) {
-							map.put(Integer.valueOf(i), binaryValues[i]);
-						} else {
-							map.put(Integer.valueOf(i), stringValues[i]);
-						}
+						map.put(Integer.valueOf(i), binaryValues[i]);
 					}
 				}
 			}
@@ -745,16 +614,6 @@ public final class Iso8583Message implements Serializable {
 			}
 		}
 
-		if ((this.binaries != null) && (another.binaries != null)) {
-			for (int i = this.count - 1; i >= 2; --i) {
-				if (i != 65) {
-					if (this.binaries[i] != another.binaries[i]) {
-						return false;
-					}
-				}
-			}
-		}
-
 		return true;
 	}
 
@@ -786,19 +645,12 @@ public final class Iso8583Message implements Serializable {
 					sbuf.append(i);
 					sbuf.append("\" value=\"");
 
-					if (binaries == null) {
-						Object val = binaryValues[i];
-						if (val == null) {
-							sbuf.append(stringValues[i]);
-						} else {
-							sbuf.append(val);
-						}
+					Object val = binaryValues[i];
+
+					if (val == null) {
+						sbuf.append(stringValues[i]);
 					} else {
-						if (binaries[i]) {
-							sbuf.append(binaryValues[i]);
-						} else {
-							sbuf.append(stringValues[i]);
-						}
+						sbuf.append(val);
 					}
 
 					sbuf.append("\" />\n");
@@ -809,19 +661,12 @@ public final class Iso8583Message implements Serializable {
 					sbuf.append(i);
 					sbuf.append("\" value=\"");
 
-					if (binaries == null) {
-						Object val = binaryValues[i];
-						if (val == null) {
-							sbuf.append(stringValues[i]);
-						} else {
-							sbuf.append(val);
-						}
+					Object val = binaryValues[i];
+
+					if (val == null) {
+						sbuf.append(stringValues[i]);
 					} else {
-						if (binaries[i]) {
-							sbuf.append(binaryValues[i]);
-						} else {
-							sbuf.append(stringValues[i]);
-						}
+						sbuf.append(val);
 					}
 
 					sbuf.append("\" />\n");
@@ -839,28 +684,61 @@ public final class Iso8583Message implements Serializable {
 	 *
 	 * @param factory
 	 *            the message factory
+	 * @deprecated use {@link Iso8583MessageSerializer} object instead
 	 */
+	@Deprecated
 	public void attach(Iso8583MessageFactory factory) {
-		this.fields = factory.getFields();
-		this.binaries = factory.getBinaries();
-		this.charsetProvider = factory.getCharsetProvider();
-
-		int count = this.fields.length;
-		if (count > this.binaryValues.length) {
-			this.count = this.binaryValues.length;
-		} else {
-			this.count = count;
-		}
+		serializer = factory.getWrappedObject();
 	}
 
 	/**
 	 * detach any message factory from this message
+	 * @deprecated use {@link Iso8583MessageSerializer} object instead
 	 */
+	@Deprecated
 	public void detach() {
-		this.fields = null;
-		this.binaries = null;
-		this.charsetProvider = null;
+		serializer = null;
+	}
 
-		this.count = this.binaryValues.length;
+	/**
+	 * DO NOT use this method directly
+	 */
+	int size() {
+		return count;
+	}
+
+	/**
+	 * DO NOT use this method directly
+	 */
+	BitSet directBits1To128() {
+		return bits1To128;
+	}
+
+	/**
+	 * DO NOT use this method directly
+	 */
+	BitSet directBits129To192() {
+		return bits129To192;
+	}
+
+	/**
+	 * DO NOT use this method directly
+	 */
+	BitSet[] directBinaryValues() {
+		return binaryValues;
+	}
+
+	/**
+	 * DO NOT use this method directly
+	 */
+	String[] directStringValues() {
+		return stringValues;
+	}
+
+	/**
+	 * DO NOT use this method directly
+	 */
+	String directMti() {
+		return mti;
 	}
 }

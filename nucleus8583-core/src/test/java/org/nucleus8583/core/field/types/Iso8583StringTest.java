@@ -1,4 +1,4 @@
-package org.nucleus8583.core;
+package org.nucleus8583.core.field.types;
 
 import static org.junit.Assert.assertEquals;
 
@@ -12,39 +12,41 @@ import javax.xml.bind.Unmarshaller;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.nucleus8583.core.field.type.Iso8583FieldType;
+import org.nucleus8583.core.field.type.Iso8583FieldTypes;
 import org.nucleus8583.core.xml.Iso8583FieldDefinition;
 
 public class Iso8583StringTest {
-	private Iso8583String stringFieldAlignL;
+	private Iso8583FieldType stringFieldAlignL;
 
-	private Iso8583String stringFieldAlignR;
+	private Iso8583FieldType stringFieldAlignR;
 
-	private Iso8583String stringFieldAlignN;
+	private Iso8583FieldType stringFieldAlignN;
 
 	@Before
 	public void before() throws Exception {
 		Unmarshaller unmarshaller = JAXBContext.newInstance(
 				Iso8583FieldDefinition.class).createUnmarshaller();
 
-		stringFieldAlignL = (Iso8583String) ((Iso8583FieldDefinition) unmarshaller
+		stringFieldAlignL = Iso8583FieldTypes.getType((Iso8583FieldDefinition) unmarshaller
 				.unmarshal(new ByteArrayInputStream(
 						("<iso-field id=\"39\" type=\"a\" length=\"2\" xmlns=\"http://www.nucleus8583.org/schema/iso-message\" />")
-								.getBytes()))).createField();
+								.getBytes())));
 
-		stringFieldAlignR = (Iso8583String) ((Iso8583FieldDefinition) unmarshaller
+		stringFieldAlignR = Iso8583FieldTypes.getType((Iso8583FieldDefinition) unmarshaller
 				.unmarshal(new ByteArrayInputStream(
 						("<iso-field id=\"39\" type=\"custom\" align=\"right\" pad-with=\" \" length=\"2\" xmlns=\"http://www.nucleus8583.org/schema/iso-message\" />")
-								.getBytes()))).createField();
+								.getBytes())));
 
-		stringFieldAlignN = (Iso8583String) ((Iso8583FieldDefinition) unmarshaller
+		stringFieldAlignN = Iso8583FieldTypes.getType((Iso8583FieldDefinition) unmarshaller
 				.unmarshal(new ByteArrayInputStream(
 						("<iso-field id=\"39\" type=\"custom\" align=\"none\" pad-with=\"\" length=\"2\" xmlns=\"http://www.nucleus8583.org/schema/iso-message\" />")
-								.getBytes()))).createField();
+								.getBytes())));
 	}
 
 	@Test(expected = UnsupportedOperationException.class)
 	public void packBinary() throws Exception {
-		stringFieldAlignL.pack(new StringWriter(), new BitSet());
+		stringFieldAlignL.write(new StringWriter(), new BitSet());
 	}
 
 	@Test
@@ -53,7 +55,7 @@ public class Iso8583StringTest {
 		String errorMsg = null;
 
 		try {
-			stringFieldAlignL.pack(sw, "1124134=2343434");
+			stringFieldAlignL.write(sw, "1124134=2343434");
 		} catch (IllegalArgumentException ex) {
 			errorMsg = ex.getMessage();
 		}
@@ -66,109 +68,99 @@ public class Iso8583StringTest {
 	@Test
 	public void packStringNoPad() throws Exception {
 		StringWriter sw = new StringWriter();
-		stringFieldAlignL.pack(sw, "20");
+		stringFieldAlignL.write(sw, "20");
 		assertEquals("20", sw.toString());
 
 		sw = new StringWriter();
-		stringFieldAlignR.pack(sw, "20");
+		stringFieldAlignR.write(sw, "20");
 		assertEquals("20", sw.toString());
 
 		sw = new StringWriter();
-		stringFieldAlignN.pack(sw, "20");
+		stringFieldAlignN.write(sw, "20");
 		assertEquals("20", sw.toString());
 	}
 
 	@Test
 	public void packEmptyString() throws Exception {
 		StringWriter sw = new StringWriter();
-		stringFieldAlignL.pack(sw, "");
+		stringFieldAlignL.write(sw, "");
 		assertEquals("  ", sw.toString());
 
 		sw = new StringWriter();
-		stringFieldAlignR.pack(sw, "");
+		stringFieldAlignR.write(sw, "");
 		assertEquals("  ", sw.toString());
 
 		sw = new StringWriter();
-		stringFieldAlignN.pack(sw, "");
+		stringFieldAlignN.write(sw, "");
 		assertEquals("  ", sw.toString());
 	}
 
 	@Test
 	public void packStringWithPad() throws Exception {
 		StringWriter sw = new StringWriter();
-		stringFieldAlignL.pack(sw, "j");
+		stringFieldAlignL.write(sw, "j");
 		sw.flush();
 		assertEquals("j ", sw.toString());
 
 		sw = new StringWriter();
-		stringFieldAlignR.pack(sw, "j");
+		stringFieldAlignR.write(sw, "j");
 		sw.flush();
 		assertEquals(" j", sw.toString());
 
 		sw = new StringWriter();
-		stringFieldAlignN.pack(sw, "j");
+		stringFieldAlignN.write(sw, "j");
 		sw.flush();
 		assertEquals("j ", sw.toString());
 	}
 
 	@Test(expected = IllegalArgumentException.class)
 	public void packStringOverflow() throws Exception {
-		stringFieldAlignL.pack(new StringWriter(), "300");
+		stringFieldAlignL.write(new StringWriter(), "300");
 	}
 
 	@Test(expected = UnsupportedOperationException.class)
 	public void unpackBinary1() throws Exception {
-		stringFieldAlignL.unpackBinary(new StringReader("a"), new BitSet());
+		stringFieldAlignL.read(new StringReader("a"), new BitSet());
 	}
 
 	@Test(expected = UnsupportedOperationException.class)
 	public void unpackBinary2() throws Exception {
-		stringFieldAlignL.unpackBinary(new StringReader("a"));
+		stringFieldAlignL.readBinary(new StringReader("a"));
 	}
 
 	@Test
 	public void unpackStringNoUnpad() throws Exception {
-		assertEquals("20", stringFieldAlignL
-				.unpackString(new StringReader("20")));
+		assertEquals("20", stringFieldAlignL.readString(new StringReader("20")));
 
-		assertEquals("20", stringFieldAlignR
-				.unpackString(new StringReader("20")));
+		assertEquals("20", stringFieldAlignR.readString(new StringReader("20")));
 
-		assertEquals("20", stringFieldAlignN
-				.unpackString(new StringReader("20")));
+		assertEquals("20", stringFieldAlignN.readString(new StringReader("20")));
 	}
 
 	@Test
 	public void unpackEmptyString() throws Exception {
-		assertEquals("", stringFieldAlignL.unpackString(new StringReader("  ")));
+		assertEquals("", stringFieldAlignL.readString(new StringReader("  ")));
 
-		assertEquals("", stringFieldAlignR.unpackString(new StringReader("  ")));
+		assertEquals("", stringFieldAlignR.readString(new StringReader("  ")));
 
-		assertEquals("  ", stringFieldAlignN
-				.unpackString(new StringReader("  ")));
+		assertEquals("  ", stringFieldAlignN.readString(new StringReader("  ")));
 	}
 
 	@Test
 	public void unpackStringUnpad() throws Exception {
-		assertEquals("j", stringFieldAlignL
-				.unpackString(new StringReader("j ")));
+		assertEquals("j", stringFieldAlignL.readString(new StringReader("j ")));
 
-		assertEquals("j", stringFieldAlignR
-				.unpackString(new StringReader(" j")));
+		assertEquals("j", stringFieldAlignR.readString(new StringReader(" j")));
 
-		assertEquals("j ", stringFieldAlignN
-				.unpackString(new StringReader("j ")));
+		assertEquals("j ", stringFieldAlignN.readString(new StringReader("j ")));
 	}
 
 	@Test
 	public void unpackStringUnpadOverflow() throws Exception {
-		assertEquals("j", stringFieldAlignL.unpackString(new StringReader(
-				"j kl")));
+		assertEquals("j", stringFieldAlignL.readString(new StringReader("j kl")));
 
-		assertEquals("j ", stringFieldAlignR.unpackString(new StringReader(
-				"j kl")));
+		assertEquals("j ", stringFieldAlignR.readString(new StringReader("j kl")));
 
-		assertEquals("j ", stringFieldAlignN.unpackString(new StringReader(
-				"j kl")));
+		assertEquals("j ", stringFieldAlignN.readString(new StringReader("j kl")));
 	}
 }

@@ -6,19 +6,16 @@ import java.io.OutputStream;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
-import org.nucleus8583.core.Iso8583Message;
-import org.nucleus8583.core.Iso8583MessageFactory;
 
 @Ignore
-public class PackPerformanceTest {
-	private Iso8583MessageFactory messageFactory;
+public class WritePerformanceTest {
+	private Iso8583MessageSerializer serializer;
 
 	private OutputStream nullOut;
 
 	@Before
 	public void initialize() throws Exception {
-		messageFactory = new Iso8583MessageFactory(
-				"src/test/resources/META-INF/codec8583.xml");
+		serializer = new Iso8583MessageSerializer("classpath:META-INF/codec8583.xml");
 
 		nullOut = new OutputStream() {
 			public void write(int b) throws IOException {
@@ -31,7 +28,7 @@ public class PackPerformanceTest {
 		long startDate = System.currentTimeMillis();
 
 		for (int i = loops - 1; i >= 0; --i) {
-			Iso8583Message msg = messageFactory.createMessage();
+			Iso8583Message msg = new Iso8583Message();
 
 			msg.setMti("0200");
 			msg.set(2, "3125");
@@ -44,7 +41,7 @@ public class PackPerformanceTest {
 			msg.set(39, "00");
 			msg.set(48, "01000abcdefghijkl                    ");
 
-			msg.pack(nullOut);
+			serializer.write(msg, nullOut);
 		}
 		long endDate = System.currentTimeMillis();
 
@@ -58,8 +55,7 @@ public class PackPerformanceTest {
 		for (int i = 0; i < 1; ++i) {
 			long elapsed = measure(loops);
 
-			System.out.println("[pack] loops / sec = "
-					+ (loops * 1000 / elapsed));
+			System.out.println("[write] loops / sec = " + (loops * 1000 / elapsed));
 			Thread.yield();
 		}
 	}

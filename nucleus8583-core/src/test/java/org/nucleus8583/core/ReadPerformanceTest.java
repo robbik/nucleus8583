@@ -6,22 +6,18 @@ import java.io.InputStream;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
-import org.nucleus8583.core.Iso8583Message;
-import org.nucleus8583.core.Iso8583MessageFactory;
 
 @Ignore
-public class UnpackPerformanceTest {
-	private Iso8583MessageFactory messageFactory;
+public class ReadPerformanceTest {
+	private Iso8583MessageSerializer serializer;
 
 	private InputStream ipacked;
 
 	@Before
 	public void initialize() throws Exception {
-		messageFactory = new Iso8583MessageFactory(
-				"src/test/resources/META-INF/codec8583.xml");
+		serializer = new Iso8583MessageSerializer("classpath:META-INF/codec8583.xml");
 
-		final byte[] bpacked = "0200423800080A010000000000000000000004312501041324311     1324310104C010000001762745214  0003701000abcdefghijkl                    "
-				.getBytes();
+		final byte[] bpacked = "0200423800080A010000000000000000000004312501041324311     1324310104C010000001762745214  0003701000abcdefghijkl                    ".getBytes();
 
 		ipacked = new InputStream() {
 			private int readerIndex = 0;
@@ -77,12 +73,11 @@ public class UnpackPerformanceTest {
 	}
 
 	private long measure(int loops) throws Exception {
-		Iso8583Message msg = messageFactory.createMessage();
-		msg.clear();
+		Iso8583Message msg = new Iso8583Message();
 
 		long startDate = System.currentTimeMillis();
 		for (int i = 0; i < loops; ++i) {
-			msg.unpack(ipacked);
+			serializer.read(ipacked, msg);
 			ipacked.close();
 		}
 		long endDate = System.currentTimeMillis();
@@ -97,8 +92,7 @@ public class UnpackPerformanceTest {
 		for (int i = 0; i < 1; ++i) {
 			long elapsed = measure(loops);
 
-			System.out.println("[unpack] loops/ms = "
-					+ (loops * 1000 / elapsed));
+			System.out.println("[read] loops/ms = " + (loops * 1000 / elapsed));
 			Thread.yield();
 		}
 	}

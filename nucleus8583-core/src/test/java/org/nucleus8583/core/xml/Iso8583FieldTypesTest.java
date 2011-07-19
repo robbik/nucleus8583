@@ -5,6 +5,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.io.ByteArrayInputStream;
+import java.lang.reflect.Field;
 import java.util.Random;
 
 import javax.xml.bind.JAXBContext;
@@ -12,29 +13,40 @@ import javax.xml.bind.Unmarshaller;
 
 import org.junit.Ignore;
 import org.junit.Test;
-import org.nucleus8583.core.Iso8583Field;
-import org.nucleus8583.core.Iso8583String;
+import org.nucleus8583.core.field.type.Iso8583AbstractStringFieldType;
+import org.nucleus8583.core.field.type.Iso8583FieldType;
+import org.nucleus8583.core.field.type.Iso8583FieldTypes;
 
-public class Iso8583FieldDefinitionTest {
+public class Iso8583FieldTypesTest {
 	private static String[] stringTypes = new String[] { "a", "n", "s", "an",
 			"as", "ns", "ans" };
 
-	private static String[] dots = new String[] { ".", "..", "...", "....",
-			"....." };
-	private static int[] dotLen = new int[] { 9, 99, 999, 9999, 99999 };
+	private static String[] dots = new String[] { ".", "..", "..." };
+	private static int[] dotLen = new int[] { 9, 99, 999 };
 
 	@Ignore
-	private void stringFieldHelper(Object x, int id, int length)
-			throws Exception {
+	private void stringFieldHelper(Object x, int id, int length) throws Exception {
 		assertNotNull(x);
 		assertTrue(x instanceof Iso8583FieldDefinition);
 
 		Iso8583FieldDefinition def = (Iso8583FieldDefinition) x;
-		Iso8583Field field = def.createField();
+		Iso8583FieldType field = Iso8583FieldTypes.getType(def);
 
-		assertTrue(field instanceof Iso8583String);
+		assertTrue(field instanceof Iso8583AbstractStringFieldType);
 		assertEquals(id, field.getId());
-		assertEquals(length, field.getLength());
+
+		Field f = null;
+
+		try {
+			f = field.getClass().getDeclaredField("length");
+			f.setAccessible(true);
+		} catch (Throwable t) {
+			// do nothing
+		}
+
+		if (f != null) {
+			assertEquals(length, Integer.parseInt(String.valueOf(f.get(field))));
+		}
 	}
 
 	@Test
@@ -71,7 +83,7 @@ public class Iso8583FieldDefinitionTest {
 		for (int i = 0; i < dots.length; ++i) {
 			x = unmarshaller
 					.unmarshal(new ByteArrayInputStream(
-							("<iso-field id=\"1\" type=\"a" + dots[i] + "\" xmlns=\"http://www.nucleus8583.org/schema/iso-message\" />")
+							("<iso-field id=\"1\" type=\"a " + dots[i] + "\" xmlns=\"http://www.nucleus8583.org/schema/iso-message\" />")
 									.getBytes()));
 
 			stringFieldHelper(x, 1, dotLen[i]);
@@ -92,7 +104,7 @@ public class Iso8583FieldDefinitionTest {
 			assertNotNull(x);
 			assertTrue(x instanceof Iso8583FieldDefinition);
 
-			((Iso8583FieldDefinition) x).createField();
+			Iso8583FieldTypes.getType((Iso8583FieldDefinition) x);
 		}
 	}
 
@@ -109,6 +121,6 @@ public class Iso8583FieldDefinitionTest {
 		assertNotNull(x);
 		assertTrue(x instanceof Iso8583FieldDefinition);
 
-		((Iso8583FieldDefinition) x).createField();
+		Iso8583FieldTypes.getType((Iso8583FieldDefinition) x);
 	}
 }

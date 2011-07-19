@@ -12,6 +12,7 @@ import java.util.BitSet;
 import org.junit.Before;
 import org.junit.Test;
 
+@SuppressWarnings("deprecation")
 public class PackUnpackTest {
 	private Iso8583MessageFactory messageFactory;
 

@@ -13,35 +13,33 @@ import org.junit.Before;
 import org.junit.Test;
 
 public class Iso8583Message192Test {
-	private Iso8583Message msg;
+	private Iso8583Message msg1;
 
 	private Iso8583Message msg2;
 
 	@Before
 	public void before() {
-		Iso8583MessageFactory fact = Iso8583MessageFactory
-				.create("classpath:META-INF/codec8583L.xml");
+		msg1 = new Iso8583Message(192);
 
-		msg = fact.createMessage();
-		msg2 = fact.createMessage();
+		msg2 = new Iso8583Message(192);
 	}
 
 	@Test
 	public void testManipulateMti() {
-		msg.setMti("0200");
-		assertEquals("0200", msg.getMti());
+		msg1.setMti("0200");
+		assertEquals("0200", msg1.getMti());
 
-		msg.unsetMti();
-		assertEquals("", msg.getMti());
+		msg1.unsetMti();
+		assertEquals("", msg1.getMti());
 	}
 
 	@Test
-	public void testOutOfRange() {
+	public void testManipulateOutOfRangeFields() {
 		boolean error;
 
 		error = false;
 		try {
-			msg.set(0, new BitSet());
+			msg1.set(0, new BitSet());
 		} catch (IllegalArgumentException ex) {
 			error = true;
 		}
@@ -49,7 +47,7 @@ public class Iso8583Message192Test {
 
 		error = false;
 		try {
-			msg.getBinary(0);
+			msg1.getBinary(0);
 		} catch (IllegalArgumentException ex) {
 			error = true;
 		}
@@ -57,7 +55,7 @@ public class Iso8583Message192Test {
 
 		error = false;
 		try {
-			msg.set(1, "ab");
+			msg1.set(1, "ab");
 		} catch (IllegalArgumentException ex) {
 			error = true;
 		}
@@ -65,7 +63,7 @@ public class Iso8583Message192Test {
 
 		error = false;
 		try {
-			msg.set(1, new BitSet());
+			msg1.set(1, new BitSet());
 		} catch (IllegalArgumentException ex) {
 			error = true;
 		}
@@ -73,7 +71,7 @@ public class Iso8583Message192Test {
 
 		error = false;
 		try {
-			msg.set(65, "ab");
+			msg1.set(65, "ab");
 		} catch (IllegalArgumentException ex) {
 			error = true;
 		}
@@ -81,7 +79,7 @@ public class Iso8583Message192Test {
 
 		error = false;
 		try {
-			msg.set(65, new BitSet());
+			msg1.set(65, new BitSet());
 		} catch (IllegalArgumentException ex) {
 			error = true;
 		}
@@ -90,14 +88,14 @@ public class Iso8583Message192Test {
 		for (int i = 129; i < 192; ++i) {
 			error = false;
 			try {
-				msg.set(129, "ab");
+				msg1.set(129, "ab");
 			} catch (IllegalArgumentException ex) {
 				error = true;
 			}
 
 			try {
-				msg.set(129, new BitSet());
-				error &= false; 
+				msg1.set(129, new BitSet());
+				error &= false;
 			} catch (IllegalArgumentException ex) {
 				error &= true;
 			}
@@ -106,7 +104,7 @@ public class Iso8583Message192Test {
 
 		error = false;
 		try {
-			msg.set(198, "ab");
+			msg1.set(198, "ab");
 		} catch (IllegalArgumentException ex) {
 			error = true;
 		}
@@ -114,195 +112,121 @@ public class Iso8583Message192Test {
 
 		error = false;
 		try {
-			msg.set(198, new BitSet());
+			msg1.set(198, new BitSet());
 		} catch (IllegalArgumentException ex) {
 			error = true;
 		}
 		assertTrue(error);
-	}
-
-	@Test
-	public void testTypeNotMatch() {
-		boolean error;
-
-		error = false;
-		try {
-			msg.set(162, new BitSet());
-		} catch (IllegalArgumentException ex) {
-			error = true;
-		}
-		assertTrue(error);
-
-		assertNull(msg.get(162));
-
-		error = false;
-		try {
-			msg.set(190, "abcd");
-		} catch (IllegalArgumentException ex) {
-			error = true;
-		}
-		assertTrue(error);
-
-		assertNull(msg.get(190));
 	}
 
 	@Test
 	public void testManipulateStringField() {
-		boolean error;
+		msg1.set(162, "9000");
+		assertTrue(msg1.get(162) instanceof String);
 
-		msg.set(162, "9000");
+		assertNull(msg1.getBinary(162));
+		assertEquals("9000", msg1.getString(162));
 
-		error = false;
-		try {
-			msg.getBinary(162);
-		} catch (IllegalArgumentException ex) {
-			error = true;
-		}
-		assertTrue(error);
+		msg1.unset(162);
+		assertNull(msg1.getBinary(162));
+		assertNull(msg1.getString(162));
 
-		assertEquals("9000", msg.getString(162));
-		assertTrue(msg.get(162) instanceof String);
+		msg1.set(162, "0200");
+		msg1.set(162, (String) null);
 
-		msg.unset(162);
-		error = false;
-		try {
-			assertNull(msg.getBinary(162));
-		} catch (IllegalArgumentException ex) {
-			error = true;
-		}
-		assertTrue(error);
-		assertNull(msg.getString(162));
+		assertNull(msg1.getBinary(162));
+		assertNull(msg1.getString(2));
 
-		msg.set(162, "0200");
-		msg.set(162, (String) null);
-		error = false;
-		try {
-			msg.getBinary(162);
-		} catch (IllegalArgumentException ex) {
-			error = true;
-		}
-		assertTrue(error);
-		assertNull(msg.getString(2));
+		msg1.unsafeSet(162, "9000");
+		assertTrue(msg1.get(162) instanceof String);
 
-		msg.unsafeSet(162, "9000");
-		assertNull(msg.unsafeGetBinary(162));
-		assertEquals("9000", msg.unsafeGetString(162));
-		assertTrue(msg.get(162) instanceof String);
+		assertNull(msg1.unsafeGetBinary(162));
+		assertEquals("9000", msg1.unsafeGetString(162));
 
-		msg.unsafeUnset(162);
-		error = false;
-		try {
-			msg.getBinary(162);
-		} catch (IllegalArgumentException ex) {
-			error = true;
-		}
-		assertTrue(error);
-		assertNull(msg.getString(162));
+		msg1.unsafeUnset(162);
+		assertNull(msg1.getBinary(162));
+		assertNull(msg1.getString(162));
 	}
 
 	@Test
 	public void testManipulateBinaryField() {
-		boolean error;
-
 		BitSet ori = new BitSet();
 		ori.set(1, true);
 
-		msg.set(190, ori);
+		msg1.set(190, ori);
+		assertTrue(msg1.get(190) instanceof BitSet);
 
-		error = false;
-		try {
-			assertNull(msg.getString(190));
-		} catch (IllegalArgumentException ex) {
-			error = true;
-		}
-		assertTrue(error);
-		assertEquals(ori, msg.getBinary(190));
-		assertTrue(msg.get(190) instanceof BitSet);
+		assertNull(msg1.getString(190));
+		assertEquals(ori, msg1.getBinary(190));
 
-		msg.clear();
-		assertNull(msg.getBinary(190));
-		error = false;
-		try {
-			msg.getString(190);
-		} catch (IllegalArgumentException ex) {
-			error = true;
-		}
-		assertTrue(error);
+		msg1.clear();
+		assertNull(msg1.getBinary(190));
+		assertNull(msg1.getString(190));
 
-		msg.set(190, ori);
-		msg.set(190, (BitSet) null);
-		assertNull(msg.getBinary(190));
-		error = false;
-		try {
-			msg.getString(190);
-		} catch (IllegalArgumentException ex) {
-			error = true;
-		}
-		assertTrue(error);
+		msg1.set(190, ori);
+		msg1.set(190, (BitSet) null);
 
-		msg.unsafeSet(190, ori);
-		error = false;
-		try {
-			msg.getString(190);
-		} catch (IllegalArgumentException ex) {
-			error = true;
-		}
-		assertTrue(error);
-		assertEquals(ori, msg.getBinary(190));
-		assertTrue(msg.get(190) instanceof BitSet);
+		assertNull(msg1.getBinary(190));
+		assertNull(msg1.getString(190));
+
+		msg1.unsafeSet(190, ori);
+		assertTrue(msg1.get(190) instanceof BitSet);
+
+		assertNull(msg1.getString(190));
+		assertEquals(ori, msg1.getBinary(190));
 	}
 
 	@Test
 	public void equalityTest() {
-		assertEquals(msg, msg);
+		assertEquals(msg1, msg1);
 		assertEquals(msg2, msg2);
 
-		assertEquals(msg, msg2);
-		assertEquals(msg2, msg);
+		assertEquals(msg1, msg2);
+		assertEquals(msg2, msg1);
 
-		assertFalse(msg.equals(null));
-		assertFalse(msg.equals("abcde"));
+		assertFalse(msg1.equals(null));
+		assertFalse(msg1.equals("abcde"));
 
-		msg.setMti("0100");
-		assertFalse(msg.equals(msg2));
-		assertFalse(msg2.equals(msg));
+		msg1.setMti("0100");
+		assertFalse(msg1.equals(msg2));
+		assertFalse(msg2.equals(msg1));
 
-		msg.setMti("0100");
+		msg1.setMti("0100");
 		msg2.setMti("0110");
-		assertFalse(msg.equals(msg2));
-		assertFalse(msg2.equals(msg));
+		assertFalse(msg1.equals(msg2));
+		assertFalse(msg2.equals(msg1));
 
-		msg.setMti("0200");
-		msg.set(163, "400");
+		msg1.setMti("0200");
+		msg1.set(163, "400");
 		msg2.setMti("0200");
 		msg2.set(163, "401");
-		assertFalse(msg.equals(msg2));
-		assertFalse(msg2.equals(msg));
+		assertFalse(msg1.equals(msg2));
+		assertFalse(msg2.equals(msg1));
 
-		msg.clear();
+		msg1.clear();
 		msg2.clear();
 
 		BitSet bits = new BitSet();
 		bits.set(0, true);
-		msg.setMti("0200");
-		msg.set(190, bits);
+		msg1.setMti("0200");
+		msg1.set(190, bits);
 
 		BitSet bits2 = new BitSet();
 		bits2.set(0, true);
 		msg2.setMti("0200");
 		msg2.set(190, bits2);
-		assertEquals(msg, msg2);
-		assertEquals(msg2, msg);
+		assertEquals(msg1, msg2);
+		assertEquals(msg2, msg1);
 
-		msg.setMti("0200");
-		msg.set(163, "400");
+		msg1.setMti("0200");
+		msg1.set(163, "400");
 		msg2.setMti("0200");
 		msg2.set(163, "400");
-		assertEquals(msg, msg2);
-		assertEquals(msg2, msg);
+		assertEquals(msg1, msg2);
+		assertEquals(msg2, msg1);
 
-		assertEquals(msg.hashCode(), msg2.hashCode());
-		assertEquals(msg.toString(), msg2.toString());
+		assertEquals(msg1.hashCode(), msg2.hashCode());
+		assertEquals(msg1.toString(), msg2.toString());
 	}
 
 	@Test
@@ -310,19 +234,19 @@ public class Iso8583Message192Test {
 		Map<Integer, Object> dump = new HashMap<Integer, Object>();
 		Map<Integer, Object> expected = new HashMap<Integer, Object>();
 
-		msg.setMti("0100");
-		msg.dump(dump);
+		msg1.setMti("0100");
+		msg1.dump(dump);
 
 		expected.put(Integer.valueOf(0), "0100");
 		assertEquals(expected, dump);
 
 		expected.clear();
 		dump.clear();
-		msg.clear();
+		msg1.clear();
 
-		msg.setMti("0200");
-		msg.set(163, "400");
-		msg.dump(dump);
+		msg1.setMti("0200");
+		msg1.set(163, "400");
+		msg1.dump(dump);
 
 		expected.put(Integer.valueOf(0), "0200");
 		expected.put(Integer.valueOf(163), "400");
@@ -330,13 +254,13 @@ public class Iso8583Message192Test {
 
 		expected.clear();
 		dump.clear();
-		msg.clear();
+		msg1.clear();
 
 		BitSet bits = new BitSet();
 		bits.set(0, true);
-		msg.setMti("0200");
-		msg.set(190, bits);
-		msg.dump(dump);
+		msg1.setMti("0200");
+		msg1.set(190, bits);
+		msg1.dump(dump);
 
 		expected.put(Integer.valueOf(0), "0200");
 		expected.put(Integer.valueOf(190), bits);
@@ -344,6 +268,6 @@ public class Iso8583Message192Test {
 
 		expected.clear();
 		dump.clear();
-		msg.clear();
+		msg1.clear();
 	}
 }

@@ -1,4 +1,4 @@
-package org.nucleus8583.core;
+package org.nucleus8583.core.field.types;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -11,7 +11,8 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Unmarshaller;
 
 import org.junit.Test;
-import org.nucleus8583.core.types.DummyField;
+import org.nucleus8583.core.field.type.Iso8583FieldType;
+import org.nucleus8583.core.field.type.Iso8583FieldTypes;
 import org.nucleus8583.core.xml.Iso8583FieldDefinition;
 
 public class CustomFieldTypeTest {
@@ -29,25 +30,25 @@ public class CustomFieldTypeTest {
 		assertNotNull(x);
 		assertTrue(x instanceof Iso8583FieldDefinition);
 
-		Iso8583Field f = ((Iso8583FieldDefinition) x).createField();
+		Iso8583FieldType f = Iso8583FieldTypes.getType((Iso8583FieldDefinition) x);
 
 		assertNotNull(f);
 		assertTrue(f instanceof DummyField);
 
 		StringWriter sw = new StringWriter();
-		((DummyField) f).pack(sw, "abcdefg");
+		((DummyField) f).write(sw, "abcdefg");
 		assertEquals("ab", sw.toString());
 
 		sw = new StringWriter();
-		((DummyField) f).pack(sw, "a");
+		((DummyField) f).write(sw, "a");
 		assertEquals("xa", sw.toString());
 
 		sw = new StringWriter();
-		((DummyField) f).pack(sw, "");
+		((DummyField) f).write(sw, "");
 		assertEquals("xx", sw.toString());
 
 		sw = new StringWriter();
-		((DummyField) f).pack(sw, (String) null);
+		((DummyField) f).write(sw, (String) null);
 		assertEquals("xx", sw.toString());
 	}
 
@@ -64,7 +65,7 @@ public class CustomFieldTypeTest {
 		assertNotNull(x);
 		assertTrue(x instanceof Iso8583FieldDefinition);
 
-		((Iso8583FieldDefinition) x).createField();
+		Iso8583FieldTypes.getType((Iso8583FieldDefinition) x);
 	}
 
 	@Test(expected = RuntimeException.class)
@@ -80,6 +81,6 @@ public class CustomFieldTypeTest {
 		assertNotNull(x);
 		assertTrue(x instanceof Iso8583FieldDefinition);
 
-		((Iso8583FieldDefinition) x).createField();
+		Iso8583FieldTypes.getType((Iso8583FieldDefinition) x);
 	}
 }
