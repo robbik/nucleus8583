@@ -2,40 +2,64 @@ a=org.nucleus8583.core.field.type.Iso8583StringFieldType,align\=left,pad-with\= 
 a\ .=org.nucleus8583.core.field.type.Iso8583UnicodeLVarStringFieldType,empty-value\=
 a\ ..=org.nucleus8583.core.field.type.Iso8583UnicodeLLVarStringFieldType,empty-value\=
 a\ ...=org.nucleus8583.core.field.type.Iso8583UnicodeLLLVarStringFieldType,empty-value\=
+a.=org.nucleus8583.core.field.type.Iso8583UnicodeLVarStringFieldType,empty-value\=
+a..=org.nucleus8583.core.field.type.Iso8583UnicodeLLVarStringFieldType,empty-value\=
+a...=org.nucleus8583.core.field.type.Iso8583UnicodeLLLVarStringFieldType,empty-value\=
 
 n=org.nucleus8583.core.field.type.Iso8583StringFieldType,align\=right,pad-with\=0,empty-value\=0
 n\ .=org.nucleus8583.core.field.type.Iso8583UnicodeLVarStringFieldType,empty-value\=0
 n\ ..=org.nucleus8583.core.field.type.Iso8583UnicodeLLVarStringFieldType,empty-value\=0
 n\ ...=org.nucleus8583.core.field.type.Iso8583UnicodeLLLVarStringFieldType,empty-value\=0
+n.=org.nucleus8583.core.field.type.Iso8583UnicodeLVarStringFieldType,empty-value\=0
+n..=org.nucleus8583.core.field.type.Iso8583UnicodeLLVarStringFieldType,empty-value\=0
+n...=org.nucleus8583.core.field.type.Iso8583UnicodeLLLVarStringFieldType,empty-value\=0
 
 s=org.nucleus8583.core.field.type.Iso8583StringFieldType,align\=left,pad-with\= ,empty-value\=
 s\ .=org.nucleus8583.core.field.type.Iso8583UnicodeLVarStringFieldType,empty-value\=
 s\ ..=org.nucleus8583.core.field.type.Iso8583UnicodeLLVarStringFieldType,empty-value\=
 s\ ...=org.nucleus8583.core.field.type.Iso8583UnicodeLLLVarStringFieldType,empty-value\=
+s.=org.nucleus8583.core.field.type.Iso8583UnicodeLVarStringFieldType,empty-value\=
+s..=org.nucleus8583.core.field.type.Iso8583UnicodeLLVarStringFieldType,empty-value\=
+s...=org.nucleus8583.core.field.type.Iso8583UnicodeLLLVarStringFieldType,empty-value\=
 
 an=org.nucleus8583.core.field.type.Iso8583StringFieldType,align\=left,pad-with\= ,empty-value\=
 an\ .=org.nucleus8583.core.field.type.Iso8583UnicodeLVarStringFieldType,empty-value\=
 an\ ..=org.nucleus8583.core.field.type.Iso8583UnicodeLLVarStringFieldType,empty-value\=
 an\ ...=org.nucleus8583.core.field.type.Iso8583UnicodeLLLVarStringFieldType,empty-value\=
+an.=org.nucleus8583.core.field.type.Iso8583UnicodeLVarStringFieldType,empty-value\=
+an..=org.nucleus8583.core.field.type.Iso8583UnicodeLLVarStringFieldType,empty-value\=
+an...=org.nucleus8583.core.field.type.Iso8583UnicodeLLLVarStringFieldType,empty-value\=
 
 as=org.nucleus8583.core.field.type.Iso8583StringFieldType,align\=left,pad-with\= ,empty-value\=
 as\ .=org.nucleus8583.core.field.type.Iso8583UnicodeLVarStringFieldType,empty-value\=
 as\ ..=org.nucleus8583.core.field.type.Iso8583UnicodeLLVarStringFieldType,empty-value\=
 as\ ...=org.nucleus8583.core.field.type.Iso8583UnicodeLLLVarStringFieldType,empty-value\=
+as.=org.nucleus8583.core.field.type.Iso8583UnicodeLVarStringFieldType,empty-value\=
+as..=org.nucleus8583.core.field.type.Iso8583UnicodeLLVarStringFieldType,empty-value\=
+as...=org.nucleus8583.core.field.type.Iso8583UnicodeLLLVarStringFieldType,empty-value\=
 
 ns=org.nucleus8583.core.field.type.Iso8583StringFieldType,align\=left,pad-with\= ,empty-value\=
 ns\ .=org.nucleus8583.core.field.type.Iso8583UnicodeLVarStringFieldType,empty-value\=
 ns\ ..=org.nucleus8583.core.field.type.Iso8583UnicodeLLVarStringFieldType,empty-value\=
 ns\ ...=org.nucleus8583.core.field.type.Iso8583UnicodeLLLVarStringFieldType,empty-value\=
+ns.=org.nucleus8583.core.field.type.Iso8583UnicodeLVarStringFieldType,empty-value\=
+ns..=org.nucleus8583.core.field.type.Iso8583UnicodeLLVarStringFieldType,empty-value\=
+ns...=org.nucleus8583.core.field.type.Iso8583UnicodeLLLVarStringFieldType,empty-value\=
 
 ans=org.nucleus8583.core.field.type.Iso8583StringFieldType,align\=left,pad-with\= ,empty-value\=
 ans\ .=org.nucleus8583.core.field.type.Iso8583UnicodeLVarStringFieldType,empty-value\=
 ans\ ..=org.nucleus8583.core.field.type.Iso8583UnicodeLLVarStringFieldType,empty-value\=
 ans\ ...=org.nucleus8583.core.field.type.Iso8583UnicodeLLLVarStringFieldType,empty-value\=
+ans.=org.nucleus8583.core.field.type.Iso8583UnicodeLVarStringFieldType,empty-value\=
+ans..=org.nucleus8583.core.field.type.Iso8583UnicodeLLVarStringFieldType,empty-value\=
+ans...=org.nucleus8583.core.field.type.Iso8583UnicodeLLLVarStringFieldType,empty-value\=
 
 custom=org.nucleus8583.core.field.type.Iso8583StringFieldType
 custom\ .=org.nucleus8583.core.field.type.Iso8583UnicodeLVarStringFieldType,empty-value\=
 custom\ ..=org.nucleus8583.core.field.type.Iso8583UnicodeLLVarStringFieldType,empty-value\=
 custom\ ...=org.nucleus8583.core.field.type.Iso8583UnicodeLLLVarStringFieldType,empty-value\=
+custom.=org.nucleus8583.core.field.type.Iso8583UnicodeLVarStringFieldType,empty-value\=
+custom..=org.nucleus8583.core.field.type.Iso8583UnicodeLLVarStringFieldType,empty-value\=
+custom...=org.nucleus8583.core.field.type.Iso8583UnicodeLLLVarStringFieldType,empty-value\=
 
 b=org.nucleus8583.core.field.type.Iso8583BinaryFieldType
