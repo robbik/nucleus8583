@@ -45,6 +45,19 @@ public class PackUnpackTest {
 	}
 
 	@Test
+	public void quickstartTest() throws Exception {
+		Iso8583Message msg = new Iso8583MessageFactory("classpath:META-INF/codec8583-qs.xml").createMessage();
+
+		msg.setMti("0800");
+		msg.set(7, "0627180510");
+		msg.set(11, "123456");
+		msg.set(70, "301");
+		byte[] packed = msg.pack();
+
+		assertEquals("0800822000000000000004000000000000000627180510123456301", new String(packed));
+	}
+
+	@Test
 	public void unpackFromBytesTest() throws Exception {
 		Iso8583Message unpacked = messageFactory.createMessage();
 		unpacked.unpack(packed.getBytes());
