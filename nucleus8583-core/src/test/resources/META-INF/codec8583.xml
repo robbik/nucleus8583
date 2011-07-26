@@ -90,7 +90,7 @@
 	<iso-field id="87" type="custom" length="16" align="none" />
 	<iso-field id="88" type="custom" length="16" align="none" />
 	<iso-field id="89" type="custom" length="16" align="none" />
-	<iso-field id="90" type="custom" length="42" align="none" />
+	<iso-field id="90" type="custom" length="26" align="none" />
 	<iso-field id="91" type="custom" length="1" align="none" />
 	<iso-field id="92" type="custom" length="2" align="none" />
 	<iso-field id="93" type="custom" length="6" align="none" />

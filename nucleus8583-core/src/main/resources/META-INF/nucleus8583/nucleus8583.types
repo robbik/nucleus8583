@@ -62,4 +62,10 @@ custom.=org.nucleus8583.core.field.type.UnicodeLVarStringFieldType,empty-value\=
 custom..=org.nucleus8583.core.field.type.UnicodeLLVarStringFieldType,empty-value\=
 custom...=org.nucleus8583.core.field.type.UnicodeLLLVarStringFieldType,empty-value\=
 
-b=org.nucleus8583.core.field.type.BinaryFieldType
+b=org.nucleus8583.core.field.type.HexBinFieldType
+b\ .=org.nucleus8583.core.field.type.UnicodeLVarHexBinFieldType
+b\ ..=org.nucleus8583.core.field.type.UnicodeLLVarHexBinFieldType
+b\ ...=org.nucleus8583.core.field.type.UnicodeLLLVarHexBinFieldType
+b.=org.nucleus8583.core.field.type.UnicodeLVarHexBinFieldType
+b..=org.nucleus8583.core.field.type.UnicodeLLVarHexBinFieldType
+b...=org.nucleus8583.core.field.type.UnicodeLLLVarHexBinFieldType

@@ -2,42 +2,17 @@ package org.nucleus8583.core.util;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.io.Writer;
 
 import org.nucleus8583.core.charset.CharsetEncoder;
 
 public abstract class StringUtils {
 
-	public static boolean isNull(String value) {
-		return value == null;
-	}
-
-	public static boolean isEmpty(String value, boolean trimmed) {
+	public static boolean isEmpty(String value) {
 		if (value == null) {
 			return true;
 		}
 
-		if (trimmed) {
-			value = value.trim();
-		}
-
 		return value.length() == 0;
-	}
-
-	public static String defaultIfNull(String value, String defaultValue) {
-		if (value == null) {
-			return defaultValue;
-		}
-
-		return value;
-	}
-
-	public static String defaultIfEmpty(String value, boolean trimmed, String defaultValue) {
-		if (isEmpty(value, trimmed)) {
-			return defaultValue;
-		}
-
-		return value;
 	}
 
 	public static void pad(OutputStream out, CharsetEncoder enc, String value, int valueLength, int expectedLength, char align, char[] padder) throws IOException {
@@ -60,32 +35,6 @@ public abstract class StringUtils {
 			default: // 'n'
 				enc.write(out, value, 0, valueLength);
 				enc.write(out, padder, 0, expectedLength - valueLength);
-
-				break;
-			}
-		}
-	}
-
-	public static void pad(Writer writer, String value, int valueLength, int expectedLength, char align, char[] padder) throws IOException {
-		if (valueLength == 0) {
-			writer.write(padder, 0, expectedLength);
-		} else if (valueLength == expectedLength) {
-			writer.write(value, 0, valueLength);
-		} else {
-			switch (align) {
-			case 'l':
-				writer.write(value, 0, valueLength);
-				writer.write(padder, 0, expectedLength - valueLength);
-
-				break;
-			case 'r':
-				writer.write(padder, 0, expectedLength - valueLength);
-				writer.write(value, 0, valueLength);
-
-				break;
-			default: // 'n'
-				writer.write(value, 0, valueLength);
-				writer.write(padder, 0, expectedLength - valueLength);
 
 				break;
 			}

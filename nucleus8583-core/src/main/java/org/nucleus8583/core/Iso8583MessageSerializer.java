@@ -9,7 +9,6 @@ import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.util.Arrays;
-import java.util.BitSet;
 import java.util.Comparator;
 import java.util.List;
 
@@ -21,6 +20,7 @@ import org.nucleus8583.core.charset.CharsetProvider;
 import org.nucleus8583.core.charset.Charsets;
 import org.nucleus8583.core.field.type.FieldType;
 import org.nucleus8583.core.field.type.FieldTypes;
+import org.nucleus8583.core.util.BitmapHelper;
 import org.nucleus8583.core.util.ResourceUtils;
 import org.nucleus8583.core.xml.Iso8583FieldDefinition;
 import org.nucleus8583.core.xml.Iso8583MessageDefinition;
@@ -251,8 +251,8 @@ public final class Iso8583MessageSerializer {
 	 *             thrown if an IO error occurred while serializing.
 	 */
 	public void read(InputStream in, Iso8583Message out) throws IOException {
-		BitSet bits1To128 = out.directBits1To128();
-		BitSet bits129To192 = out.directBits129To192();
+		byte[] bits1To128 = out.directBits1To128();
+		byte[] bits129To192 = out.directBits129To192();
 
 		int count = out.size();
 		if (count > fieldsCount) {
@@ -268,11 +268,11 @@ public final class Iso8583MessageSerializer {
 		// read bit-i
 		for (int i = 2, iMin1 = 1, iMin129 = -127; i < count; ++i, ++iMin1, ++iMin129) {
 			if (i == 65) {
-				if (bits1To128.get(64)) {
+				if (BitmapHelper.get(bits1To128, 64)) {
 					fields[i].read(in, charsetDecoder, bits129To192);
 				}
 			} else if (i < 129) {
-				if (bits1To128.get(iMin1)) {
+				if (BitmapHelper.get(bits1To128, iMin1)) {
 					if (binaries[i]) {
 						out.unsafeSet(i, fields[i].readBinary(in, charsetDecoder));
 					} else {
@@ -280,7 +280,7 @@ public final class Iso8583MessageSerializer {
 					}
 				}
 			} else {
-				if (bits129To192.get(iMin129)) {
+				if (BitmapHelper.get(bits129To192, iMin129)) {
 					if (binaries[i]) {
 						out.unsafeSet(i, fields[i].readBinary(in, charsetDecoder));
 					} else {
@@ -302,29 +302,29 @@ public final class Iso8583MessageSerializer {
 	 *             thrown if an IO error occurred while serializing.
 	 */
 	public void write(Iso8583Message msg, OutputStream out) throws IOException {
-		BitSet bits1To128 = msg.directBits1To128();
-		BitSet bits129To192 = msg.directBits129To192();
+	    byte[] bits1To128 = msg.directBits1To128();
+	    byte[] bits129To192 = msg.directBits129To192();
 
-		String mti = msg.directMti();
+		String mti = msg.getMti();
 
-		BitSet[] binaryValues = msg.directBinaryValues();
+		byte[][] binaryValues = msg.directBinaryValues();
 		String[] stringValues = msg.directStringValues();
 
 		// is bit 65 on?
-		if (bits129To192.isEmpty()) {
-			bits1To128.clear(64);
+		if (BitmapHelper.isEmpty(bits129To192)) {
+		    BitmapHelper.clear(bits1To128, 64);
 
 			binaryValues[65] = null;
 			stringValues[65] = null;
 		} else {
-			bits1To128.set(64);
+		    BitmapHelper.set(bits1To128, 64);
 
 			binaryValues[65] = bits129To192;
 			stringValues[65] = null;
 		}
 
 		// bit 1 is always on
-		bits1To128.set(0);
+		BitmapHelper.set(bits1To128, 0);
 
 		int count = msg.size();
 		if (count > fieldsCount) {
@@ -336,7 +336,7 @@ public final class Iso8583MessageSerializer {
 		fields[1].write(out, charsetEncoder, bits1To128);
 
 		for (int i = 2, j = 1; (i < count) && (i < 129); ++i, ++j) {
-			if (bits1To128.get(j)) {
+			if (BitmapHelper.get(bits1To128, j)) {
 				if (binaries[i]) {
 					fields[i].write(out, charsetEncoder, binaryValues[i]);
 				} else {
@@ -346,7 +346,7 @@ public final class Iso8583MessageSerializer {
 		}
 
 		for (int i = 129, j = 0; i < count; ++i, ++j) {
-			if (bits129To192.get(j)) {
+			if (BitmapHelper.get(bits129To192, j)) {
 				if (binaries[i]) {
 					fields[i].write(out, charsetEncoder, binaryValues[i]);
 				} else {

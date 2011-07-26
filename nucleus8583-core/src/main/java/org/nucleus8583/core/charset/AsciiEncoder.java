@@ -46,14 +46,4 @@ public class AsciiEncoder implements CharsetEncoder {
 			}
 		}
 	}
-
-	public byte[] toBytes(char[] cbuf, int off, int len) {
-		byte[] buf = new byte[len];
-
-		for (int i = 0; i < len; ++i) {
-			buf[i] = (byte) (cbuf[i] & 0x7F);
-		}
-
-		return buf;
-	}
 }

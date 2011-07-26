@@ -5,12 +5,12 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
-import java.util.BitSet;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.nucleus8583.core.util.BitmapHelper;
 
 public class Iso8583MessageTest {
 	private Iso8583Message msg1;
@@ -56,7 +56,7 @@ public class Iso8583MessageTest {
 
 		error = false;
 		try {
-			msg1.set(0, new BitSet());
+			msg1.set(0, new byte[0]);
 		} catch (IllegalArgumentException ex) {
 			error = true;
 		}
@@ -80,7 +80,7 @@ public class Iso8583MessageTest {
 
 		error = false;
 		try {
-			msg1.set(1, new BitSet());
+			msg1.set(1, new byte[0]);
 		} catch (IllegalArgumentException ex) {
 			error = true;
 		}
@@ -96,7 +96,7 @@ public class Iso8583MessageTest {
 
 		error = false;
 		try {
-			msg1.set(65, new BitSet());
+			msg1.set(65, new byte[0]);
 		} catch (IllegalArgumentException ex) {
 			error = true;
 		}
@@ -113,7 +113,7 @@ public class Iso8583MessageTest {
 
 			error = false;
 			try {
-				msg1.set(129, new BitSet());
+				msg1.set(129, new byte[0]);
 			} catch (IllegalArgumentException ex) {
 				error = true;
 			}
@@ -130,7 +130,7 @@ public class Iso8583MessageTest {
 
 		error = false;
 		try {
-			msg1.set(198, new BitSet());
+			msg1.set(198, new byte[0]);
 		} catch (IllegalArgumentException ex) {
 			error = true;
 		}
@@ -168,11 +168,11 @@ public class Iso8583MessageTest {
 
 	@Test
 	public void testManipulateBinaryField() {
-		BitSet ori = new BitSet();
-		ori.set(1, true);
+		byte[] ori = BitmapHelper.create(8);
+		BitmapHelper.set(ori, 1);
 
 		msg1.set(64, ori);
-		assertTrue(msg1.get(64) instanceof BitSet);
+		assertTrue(msg1.get(64) instanceof byte[]);
 
 		assertNull(msg1.getString(64));
 		assertEquals(ori, msg1.getBinary(64));
@@ -182,13 +182,13 @@ public class Iso8583MessageTest {
 		assertNull(msg1.getString(64));
 
 		msg1.set(64, ori);
-		msg1.set(64, (BitSet) null);
+		msg1.set(64, (byte[]) null);
 
 		assertNull(msg1.getBinary(64));
 		assertNull(msg1.getString(64));
 
 		msg1.unsafeSet(64, ori);
-		assertTrue(msg1.get(64) instanceof BitSet);
+		assertTrue(msg1.get(64) instanceof byte[]);
 
 		assertNull(msg1.getString(64));
 		assertEquals(ori, msg1.getBinary(64));
@@ -231,7 +231,7 @@ public class Iso8583MessageTest {
 		msg2.clear();
 
 		msg1.setMti("0200");
-		msg1.set(64, new BitSet());
+		msg1.set(64, new byte[0]);
 		msg2.setMti("0200");
 		assertFalse(msg1.equals(msg2));
 		assertFalse(msg2.equals(msg1));
@@ -239,15 +239,17 @@ public class Iso8583MessageTest {
 		msg1.clear();
 		msg2.clear();
 
-		BitSet bits = new BitSet();
-		bits.set(0, true);
+        byte[] bits = BitmapHelper.create(8);
+        BitmapHelper.set(bits, 1);
+
 		msg1.setMti("0200");
 		msg1.set(64, bits);
 
-		BitSet bits2 = new BitSet();
-		bits2.set(0, true);
+        bits = BitmapHelper.create(8);
+        BitmapHelper.set(bits, 1);
+
 		msg2.setMti("0200");
-		msg2.set(64, bits2);
+		msg2.set(64, bits);
 		assertEquals(msg1, msg2);
 		assertEquals(msg2, msg1);
 
@@ -289,8 +291,9 @@ public class Iso8583MessageTest {
 		dump.clear();
 		msg1.clear();
 
-		BitSet bits = new BitSet();
-		bits.set(0, true);
+        byte[] bits = BitmapHelper.create(8);
+        BitmapHelper.set(bits, 1);
+
 		msg1.setMti("0200");
 		msg1.set(64, bits);
 		msg1.dump(dump);

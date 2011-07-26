@@ -68,7 +68,7 @@ public class Iso8583FieldTypesTest {
 		}
 
 		if (f != null) {
-			assertEquals(length << 1, Integer.parseInt(String.valueOf(f.get(field))));
+			assertEquals(length, Integer.parseInt(String.valueOf(f.get(field))));
 		}
 	}
 

@@ -3,10 +3,10 @@ package org.nucleus8583.core;
 import static org.junit.Assert.assertEquals;
 
 import java.io.ByteArrayOutputStream;
-import java.util.BitSet;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.nucleus8583.core.util.BitmapHelper;
 
 public class Iso8583MessageSerializer192Test {
 	private Iso8583MessageSerializer serializer;
@@ -27,8 +27,9 @@ public class Iso8583MessageSerializer192Test {
 		unpacked.set(48, "9998");
 		unpacked.set(164, "301");
 
-		BitSet bs = new BitSet();
-		bs.set(10, true);
+		byte[] bs = BitmapHelper.create(96);
+		BitmapHelper.set(bs, 10);
+
 		unpacked.set(190, bs);
 	}
 

@@ -6,7 +6,6 @@ import java.io.InputStream;
 import org.junit.Before;
 import org.junit.Test;
 
-// @Ignore
 public class ReadPerformanceTest {
 	private Iso8583MessageSerializer serializer;
 

@@ -1,6 +1,5 @@
 package org.nucleus8583.core.charset;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 
@@ -80,15 +79,4 @@ public class Utf8Encoder implements CharsetEncoder {
             }
         }
     }
-
-	public byte[] toBytes(char[] cbuf, int off, int len) {
-		ByteArrayOutputStream out = new ByteArrayOutputStream(len);
-		try {
-			write(out, cbuf, off, len);
-		} catch (Throwable t) {
-			// do nothing
-		}
-
-		return out.toByteArray();
-	}
 }

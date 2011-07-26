@@ -4,7 +4,6 @@ import static org.junit.Assert.assertEquals;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.util.BitSet;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Unmarshaller;
@@ -18,7 +17,7 @@ import org.nucleus8583.core.field.type.FieldType;
 import org.nucleus8583.core.field.type.FieldTypes;
 import org.nucleus8583.core.xml.Iso8583FieldDefinition;
 
-public class StringTest {
+public class StringFieldTypeTest {
 
 	private CharsetEncoder encoder;
 
@@ -55,7 +54,7 @@ public class StringTest {
 
 	@Test(expected = UnsupportedOperationException.class)
 	public void packBinary() throws Exception {
-		stringFieldAlignL.write(new ByteArrayOutputStream(), encoder, new BitSet());
+		stringFieldAlignL.write(new ByteArrayOutputStream(), encoder, new byte[0]);
 	}
 
 	@Test
@@ -127,7 +126,7 @@ public class StringTest {
 
 	@Test(expected = UnsupportedOperationException.class)
 	public void unpackBinary1() throws Exception {
-		stringFieldAlignL.read(new ByteArrayInputStream("a".getBytes()), decoder, new BitSet());
+		stringFieldAlignL.read(new ByteArrayInputStream("a".getBytes()), decoder, new byte[0]);
 	}
 
 	@Test(expected = UnsupportedOperationException.class)

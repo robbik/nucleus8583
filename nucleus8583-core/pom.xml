@@ -8,7 +8,7 @@
 
 	<groupId>org.nucleus8583</groupId>
 	<artifactId>nucleus8583-core</artifactId>
-	
+
     <packaging>bundle</packaging>
 
 	<name>nucleus8583 Core</name>
@@ -16,11 +16,12 @@
 
 	<description>OSGi bundle for ISO-8583 message standard implementation.</description>
 	<url>http://code.google.com/p/nucleus8583/</url>
-	
+
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<maven-surefire-plugin-version>2.7.1</maven-surefire-plugin-version>
 	</properties>
-	
+
 	<licenses>
 	   <license>
 	       <name>The Apache Software License, Version 2.0</name>
@@ -28,17 +29,17 @@
 	       <distribution>repo</distribution>
 	   </license>
 	</licenses>
-	
+
     <issueManagement>
         <url>http://code.google.com/p/nucleus8583/issues/</url>
     </issueManagement>
-    
+
     <scm>
         <url>git@github.com:robbik/nucleus8583.git</url>
         <connection>scm:git:git@github.com:robbik/nucleus8583.git</connection>
         <developerConnection>scm:git:git@github.com:robbik/nucleus8583.git</developerConnection>
     </scm>
-    
+
     <developers>
         <developer>
             <id>robbi.kurniawan</id>
@@ -46,7 +47,7 @@
             <email>robbi.kurniawan@gmail.com</email>
         </developer>
     </developers>
-    
+
 	<build>
 		<plugins>
 			<plugin>
@@ -58,7 +59,7 @@
 					<target>1.5</target>
 				</configuration>
 			</plugin>
-			
+
 			<plugin>
 				<groupId>org.apache.felix</groupId>
 				<artifactId>maven-bundle-plugin</artifactId>
@@ -74,9 +75,20 @@
 					</instructions>
 				</configuration>
 			</plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>${maven-surefire-plugin-version}</version>
+                <configuration>
+                    <excludes>
+                        <exclude>**/*PerformanceTest.java</exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
 		</plugins>
 	</build>
-	
+
 	<profiles>
         <profile>
             <id>snapshots</id>
@@ -118,7 +130,7 @@
                 </repository>
             </distributionManagement>
 		</profile>
-		
+
 		<profile>
 			<id>jdk15</id>
 
@@ -141,6 +153,25 @@
 				</dependency>
 			</dependencies>
 		</profile>
+
+        <profile>
+            <id>performance-test</id>
+
+            <build>
+                <plugins>
+		            <plugin>
+		                <groupId>org.apache.maven.plugins</groupId>
+		                <artifactId>maven-surefire-plugin</artifactId>
+		                <version>${maven-surefire-plugin-version}</version>
+		                <configuration>
+		                    <includes>
+		                        <include>**/*PerformanceTest.java</include>
+		                    </includes>
+		                </configuration>
+		            </plugin>
+                </plugins>
+            </build>
+        </profile>
 	</profiles>
 
 	<dependencies>
@@ -152,4 +183,3 @@
 		</dependency>
 	</dependencies>
 </project>
-

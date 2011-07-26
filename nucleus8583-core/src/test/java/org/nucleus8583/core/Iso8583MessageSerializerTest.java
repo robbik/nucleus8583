@@ -7,10 +7,10 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.util.BitSet;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.nucleus8583.core.util.BitmapHelper;
 
 public class Iso8583MessageSerializerTest {
 	private Iso8583MessageSerializer serializer;
@@ -23,7 +23,7 @@ public class Iso8583MessageSerializerTest {
 
 	@Before
 	public void initialize() throws Exception {
-		serializer = new Iso8583MessageSerializer("classpath:META-INF/codec8583.xml");
+		serializer = new Iso8583MessageSerializer("file:src/test/resources/META-INF/codec8583.xml");
 
 		packed = "0200C00000000001000104000000000000000603000000499980000000000000000301";
 		bpacked = packed.getBytes();
@@ -32,7 +32,7 @@ public class Iso8583MessageSerializerTest {
 		unpacked.setMti("0200");
 		unpacked.set(2, "030000");
 		unpacked.set(48, "9998");
-		unpacked.set(64, new BitSet());
+		unpacked.set(64, BitmapHelper.create(64));
 		unpacked.set(70, "301");
 	}
 

@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Serializable;
-import java.util.BitSet;
 
 import org.nucleus8583.core.charset.CharsetDecoder;
 import org.nucleus8583.core.charset.CharsetEncoder;
@@ -29,11 +28,11 @@ public abstract class FieldType implements Serializable {
 
 	public abstract void write(OutputStream out, CharsetEncoder enc, String value) throws IOException;
 
-	public abstract void write(OutputStream out, CharsetEncoder enc, BitSet value) throws IOException;
+	public abstract void write(OutputStream out, CharsetEncoder enc, byte[] value) throws IOException;
 
-	public abstract void read(InputStream in, CharsetDecoder dec, BitSet bits) throws IOException;
+	public abstract void read(InputStream in, CharsetDecoder dec, byte[] value) throws IOException;
 
-	public abstract BitSet readBinary(InputStream in, CharsetDecoder dec) throws IOException;
+	public abstract byte[] readBinary(InputStream in, CharsetDecoder dec) throws IOException;
 
 	public abstract String readString(InputStream in, CharsetDecoder dec) throws IOException;
 }

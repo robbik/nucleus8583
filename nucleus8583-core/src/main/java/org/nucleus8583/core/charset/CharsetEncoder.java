@@ -14,6 +14,4 @@ public interface CharsetEncoder {
 	void write(OutputStream out, char[] cbuf) throws IOException;
 
 	void write(OutputStream out, char[] cbuf, int off, int len) throws IOException;
-
-	byte[] toBytes(char[] cbuf, int off, int len);
 }

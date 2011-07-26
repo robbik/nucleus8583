@@ -48,8 +48,8 @@ public final class StringFieldType extends AbstractStringFieldType {
 		if (this.align == 'n') {
 			this.padWith = ' ';
 		} else {
-			if (StringUtils.isEmpty(def.getPadWith(), false)) {
-				if (StringUtils.isEmpty(defaultPadWith, false)) {
+			if (StringUtils.isEmpty(def.getPadWith())) {
+				if (StringUtils.isEmpty(defaultPadWith)) {
 					throw new IllegalArgumentException("pad-with required");
 				}
 

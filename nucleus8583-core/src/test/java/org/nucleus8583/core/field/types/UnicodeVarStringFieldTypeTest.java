@@ -5,7 +5,6 @@ import static org.junit.Assert.assertEquals;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.EOFException;
-import java.util.BitSet;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Unmarshaller;
@@ -19,7 +18,7 @@ import org.nucleus8583.core.field.type.FieldType;
 import org.nucleus8583.core.field.type.FieldTypes;
 import org.nucleus8583.core.xml.Iso8583FieldDefinition;
 
-public class StringLTest {
+public class UnicodeVarStringFieldTypeTest {
 
 	private CharsetEncoder encoder;
 
@@ -41,7 +40,7 @@ public class StringLTest {
 
 	@Test(expected = UnsupportedOperationException.class)
 	public void packBinary() throws Exception {
-		stringField.write(new ByteArrayOutputStream(), encoder, new BitSet());
+		stringField.write(new ByteArrayOutputStream(), encoder, new byte[0]);
 	}
 
 	@Test
@@ -66,7 +65,7 @@ public class StringLTest {
 
 	@Test(expected = UnsupportedOperationException.class)
 	public void unpackBinary1() throws Exception {
-		stringField.read(new ByteArrayInputStream("a".getBytes()), decoder, new BitSet());
+		stringField.read(new ByteArrayInputStream("a".getBytes()), decoder, new byte[0]);
 	}
 
 	@Test(expected = UnsupportedOperationException.class)
