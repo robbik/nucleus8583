@@ -1,4 +1,4 @@
-package org.nucleus8583.oim.component;
+package org.nucleus8583.oim.processor;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -6,9 +6,9 @@ import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.nucleus8583.oim.util.BeanUtil;
+import org.nucleus8583.oim.util.BeanUtils;
 import org.nucleus8583.oim.util.FastStringReader;
-import org.nucleus8583.oim.util.StringUtil;
+import org.nucleus8583.oim.util.StringUtils;
 
 public final class DataStructureComponent extends BaseComponent implements
 		HasFieldsComponent {
@@ -32,7 +32,7 @@ public final class DataStructureComponent extends BaseComponent implements
 
 		this.no = no;
 
-		if (StringUtil.hasText(className)) {
+		if (StringUtils.hasText(className)) {
 			try {
 				_class = Class.forName(className, true, Thread.currentThread()
 						.getContextClassLoader());
@@ -42,7 +42,7 @@ public final class DataStructureComponent extends BaseComponent implements
 			}
 
 			fields = new HashMap<String, Field>();
-			BeanUtil.collectFields(_class, fields);
+			BeanUtils.collectFields(_class, fields);
 		} else {
 			_class = null;
 			fields = parent.getFields();

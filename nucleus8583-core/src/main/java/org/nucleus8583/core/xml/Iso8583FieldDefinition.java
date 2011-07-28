@@ -15,16 +15,16 @@ public class Iso8583FieldDefinition {
 	private String type;
 
 	@XmlAttribute(name = "length")
-	private final int length;
+	private int length;
 
 	@XmlAttribute(name = "align")
-	private final Iso8583FieldAlignments align;
+	private Iso8583FieldAlignments align;
 
 	@XmlAttribute(name = "pad-with")
-	private final String padWith;
+	private String padWith;
 
 	@XmlAttribute(name = "empty-value")
-	private final String emptyValue;
+	private String emptyValue;
 
 	public Iso8583FieldDefinition() {
 		length = 0;

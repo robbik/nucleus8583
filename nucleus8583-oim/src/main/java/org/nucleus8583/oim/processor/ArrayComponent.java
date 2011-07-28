@@ -1,4 +1,4 @@
-package org.nucleus8583.oim.component;
+package org.nucleus8583.oim.processor;
 
 import java.io.IOException;
 import java.io.Reader;

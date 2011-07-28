@@ -1,9 +1,8 @@
-package org.nucleus8583.oim.component;
+package org.nucleus8583.oim.processor;
 
 import java.io.EOFException;
 import java.io.IOException;
 import java.io.Reader;
-import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.BitSet;
 import java.util.Map;
@@ -12,12 +11,10 @@ import org.nucleus8583.oim.converter.BinaryConverter;
 import org.nucleus8583.oim.converter.TypeConverter;
 import org.nucleus8583.oim.util.ElExpression;
 
-public final class BasicComponent extends BaseComponent {
+public final class TransientComponent extends BaseComponent {
 	private final int no;
 
 	private final String name;
-
-	private final Field field;
 
 	private final ElExpression generatedValue;
 
@@ -35,13 +32,10 @@ public final class BasicComponent extends BaseComponent {
 
 	private final int length;
 
-	public BasicComponent(HasFieldsComponent parent, int no, String name,
-			TypeConverter converter, char align, char padWith, int length,
-			ElExpression generatedValue) {
+	public TransientComponent(int no, String name, TypeConverter converter,
+			char align, char padWith, int length, ElExpression generatedValue) {
 		this.no = no;
 		this.name = name;
-
-		this.field = name == null ? null : parent.getField(name);
 
 		this.converter = converter;
 		this.binary = BinaryConverter.class.isInstance(converter);
@@ -79,42 +73,21 @@ public final class BasicComponent extends BaseComponent {
 		}
 	}
 
-	private void skip(Reader reader, int length) throws IOException {
-		int crem = length;
-
-		while (crem > 0) {
-			crem -= (int) reader.skip(crem);
-		}
-	}
-
-	private Object getValueFromPojo(Object pojo) {
+	private Object getValueFromSession(Object pojo, Map<String, Object> session) {
 		Object value;
 
-		if (field == null) {
-			if (generatedValue != null) {
-				value = generatedValue.eval(pojo);
+		if (generatedValue != null) {
+			value = generatedValue.eval(pojo);
+			if (value == null) {
+				session.remove(name);
 			} else {
-				value = null;
+				session.put(name, value);
 			}
 		} else {
-			try {
-				value = field.get(pojo);
-			} catch (IllegalAccessException e) {
-				throw new RuntimeException(e);
-			}
+			value = session.get(name);
 		}
 
 		return value;
-	}
-
-	private void setValueToPojo(Object pojo, Object value) {
-		if (field != null) {
-			try {
-				field.set(pojo, value);
-			} catch (IllegalAccessException e) {
-				throw new RuntimeException(e);
-			}
-		}
 	}
 
 	public int getNo() {
@@ -137,7 +110,8 @@ public final class BasicComponent extends BaseComponent {
 			throw new UnsupportedOperationException();
 		}
 
-		String value = converter.convertToIsoString(getValueFromPojo(pojo));
+		String value = converter.convertToIsoString(getValueFromSession(pojo,
+				session));
 		if (value == null) {
 			return;
 		}
@@ -167,9 +141,8 @@ public final class BasicComponent extends BaseComponent {
 			sb.append(cpadder, 0, length - vlen);
 			sb.append(value);
 			break;
-		default: // 'n'
+		default:
 			sb.append(value);
-			sb.append(cpadder, 0, length - vlen);
 			break;
 		}
 	}
@@ -180,7 +153,8 @@ public final class BasicComponent extends BaseComponent {
 			throw new UnsupportedOperationException();
 		}
 
-		String value = converter.convertToIsoString(getValueFromPojo(pojo));
+		String value = converter.convertToIsoString(getValueFromSession(pojo,
+				session));
 		if (value == null) {
 			return null;
 		}
@@ -205,7 +179,7 @@ public final class BasicComponent extends BaseComponent {
 		case 'r':
 			return padder.substring(0, length - vlen).intern() + value;
 		default:
-			return value + padder.substring(0, length - vlen).intern();
+			return value;
 		}
 	}
 
@@ -215,7 +189,7 @@ public final class BasicComponent extends BaseComponent {
 			return null;
 		}
 
-		return converter.convertToIsoBinary(getValueFromPojo(pojo));
+		return converter.convertToIsoBinary(getValueFromSession(pojo, session));
 	}
 
 	@Override
@@ -224,8 +198,10 @@ public final class BasicComponent extends BaseComponent {
 			throw new UnsupportedOperationException();
 		}
 
-		if (field != null) {
-			setValueToPojo(pojo, value);
+		if (value == null) {
+			session.remove(name);
+		} else {
+			session.put(name, value);
 		}
 	}
 
@@ -240,8 +216,11 @@ public final class BasicComponent extends BaseComponent {
 			throw new UnsupportedOperationException();
 		}
 
-		if (field != null) {
-			setValueToPojo(pojo, converter.convertToJavaObject(value));
+		Object ovalue = converter.convertToJavaObject(value);
+		if (ovalue == null) {
+			session.remove(name);
+		} else {
+			session.put(name, ovalue);
 		}
 	}
 
@@ -253,7 +232,12 @@ public final class BasicComponent extends BaseComponent {
 	@Override
 	public void decode(Reader reader, Object pojo, Map<String, Object> session)
 			throws IOException {
-		setValueToPojo(pojo, decode(reader, session));
+		Object ovalue = decode(reader, session);
+		if (ovalue == null) {
+			session.remove(name);
+		} else {
+			session.put(name, ovalue);
+		}
 	}
 
 	@Override
@@ -261,11 +245,6 @@ public final class BasicComponent extends BaseComponent {
 			throws IOException {
 		if (binary) {
 			throw new UnsupportedOperationException();
-		}
-
-		if (field == null) {
-			skip(reader, length);
-			return null;
 		}
 
 		char[] cbuf = new char[length];
@@ -284,7 +263,7 @@ public final class BasicComponent extends BaseComponent {
 				}
 			}
 
-			if (endIndex < 0) {
+			if (endIndex == -1) {
 				value = null;
 			} else {
 				value = converter.convertToJavaObject(cbuf, 0, endIndex);
@@ -301,7 +280,7 @@ public final class BasicComponent extends BaseComponent {
 				}
 			}
 
-			if (beginIndex < 0) {
+			if (beginIndex == -1) {
 				value = null;
 			} else {
 				value = converter.convertToJavaObject(cbuf, beginIndex, length
@@ -309,7 +288,7 @@ public final class BasicComponent extends BaseComponent {
 			}
 
 			break;
-		default: // 'n'
+		default:
 			value = converter.convertToJavaObject(cbuf, 0, cbuf.length);
 			break;
 		}

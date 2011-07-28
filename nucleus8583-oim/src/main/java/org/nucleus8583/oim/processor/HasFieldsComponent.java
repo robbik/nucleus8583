@@ -1,4 +1,4 @@
-package org.nucleus8583.oim.component;
+package org.nucleus8583.oim.processor;
 
 import java.lang.reflect.Field;
 import java.util.Map;

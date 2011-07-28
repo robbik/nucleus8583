@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.nucleus8583.Iso8583Message;
-import org.nucleus8583.oim.component.Iso8583MessageComponent;
+import org.nucleus8583.oim.processor.Iso8583MessageComponent;
 import org.nucleus8583.oim.xml.Iso8583MessagesFactory;
 
 public final class Iso8583MessageManager {

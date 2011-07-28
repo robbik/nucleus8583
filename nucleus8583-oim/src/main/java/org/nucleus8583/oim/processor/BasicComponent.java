@@ -1,8 +1,9 @@
-package org.nucleus8583.oim.component;
+package org.nucleus8583.oim.processor;
 
 import java.io.EOFException;
 import java.io.IOException;
 import java.io.Reader;
+import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.BitSet;
 import java.util.Map;
@@ -11,10 +12,12 @@ import org.nucleus8583.oim.converter.BinaryConverter;
 import org.nucleus8583.oim.converter.TypeConverter;
 import org.nucleus8583.oim.util.ElExpression;
 
-public final class TransientComponent extends BaseComponent {
+public final class BasicComponent extends BaseComponent {
 	private final int no;
 
 	private final String name;
+
+	private final Field field;
 
 	private final ElExpression generatedValue;
 
@@ -32,10 +35,13 @@ public final class TransientComponent extends BaseComponent {
 
 	private final int length;
 
-	public TransientComponent(int no, String name, TypeConverter converter,
-			char align, char padWith, int length, ElExpression generatedValue) {
+	public BasicComponent(HasFieldsComponent parent, int no, String name,
+			TypeConverter converter, char align, char padWith, int length,
+			ElExpression generatedValue) {
 		this.no = no;
 		this.name = name;
+
+		this.field = name == null ? null : parent.getField(name);
 
 		this.converter = converter;
 		this.binary = BinaryConverter.class.isInstance(converter);
@@ -73,21 +79,42 @@ public final class TransientComponent extends BaseComponent {
 		}
 	}
 
-	private Object getValueFromSession(Object pojo, Map<String, Object> session) {
+	private void skip(Reader reader, int length) throws IOException {
+		int crem = length;
+
+		while (crem > 0) {
+			crem -= (int) reader.skip(crem);
+		}
+	}
+
+	private Object getValueFromPojo(Object pojo) {
 		Object value;
 
-		if (generatedValue != null) {
-			value = generatedValue.eval(pojo);
-			if (value == null) {
-				session.remove(name);
+		if (field == null) {
+			if (generatedValue != null) {
+				value = generatedValue.eval(pojo);
 			} else {
-				session.put(name, value);
+				value = null;
 			}
 		} else {
-			value = session.get(name);
+			try {
+				value = field.get(pojo);
+			} catch (IllegalAccessException e) {
+				throw new RuntimeException(e);
+			}
 		}
 
 		return value;
+	}
+
+	private void setValueToPojo(Object pojo, Object value) {
+		if (field != null) {
+			try {
+				field.set(pojo, value);
+			} catch (IllegalAccessException e) {
+				throw new RuntimeException(e);
+			}
+		}
 	}
 
 	public int getNo() {
@@ -110,8 +137,7 @@ public final class TransientComponent extends BaseComponent {
 			throw new UnsupportedOperationException();
 		}
 
-		String value = converter.convertToIsoString(getValueFromSession(pojo,
-				session));
+		String value = converter.convertToIsoString(getValueFromPojo(pojo));
 		if (value == null) {
 			return;
 		}
@@ -141,8 +167,9 @@ public final class TransientComponent extends BaseComponent {
 			sb.append(cpadder, 0, length - vlen);
 			sb.append(value);
 			break;
-		default:
+		default: // 'n'
 			sb.append(value);
+			sb.append(cpadder, 0, length - vlen);
 			break;
 		}
 	}
@@ -153,8 +180,7 @@ public final class TransientComponent extends BaseComponent {
 			throw new UnsupportedOperationException();
 		}
 
-		String value = converter.convertToIsoString(getValueFromSession(pojo,
-				session));
+		String value = converter.convertToIsoString(getValueFromPojo(pojo));
 		if (value == null) {
 			return null;
 		}
@@ -179,7 +205,7 @@ public final class TransientComponent extends BaseComponent {
 		case 'r':
 			return padder.substring(0, length - vlen).intern() + value;
 		default:
-			return value;
+			return value + padder.substring(0, length - vlen).intern();
 		}
 	}
 
@@ -189,7 +215,7 @@ public final class TransientComponent extends BaseComponent {
 			return null;
 		}
 
-		return converter.convertToIsoBinary(getValueFromSession(pojo, session));
+		return converter.convertToIsoBinary(getValueFromPojo(pojo));
 	}
 
 	@Override
@@ -198,10 +224,8 @@ public final class TransientComponent extends BaseComponent {
 			throw new UnsupportedOperationException();
 		}
 
-		if (value == null) {
-			session.remove(name);
-		} else {
-			session.put(name, value);
+		if (field != null) {
+			setValueToPojo(pojo, value);
 		}
 	}
 
@@ -216,11 +240,8 @@ public final class TransientComponent extends BaseComponent {
 			throw new UnsupportedOperationException();
 		}
 
-		Object ovalue = converter.convertToJavaObject(value);
-		if (ovalue == null) {
-			session.remove(name);
-		} else {
-			session.put(name, ovalue);
+		if (field != null) {
+			setValueToPojo(pojo, converter.convertToJavaObject(value));
 		}
 	}
 
@@ -232,12 +253,7 @@ public final class TransientComponent extends BaseComponent {
 	@Override
 	public void decode(Reader reader, Object pojo, Map<String, Object> session)
 			throws IOException {
-		Object ovalue = decode(reader, session);
-		if (ovalue == null) {
-			session.remove(name);
-		} else {
-			session.put(name, ovalue);
-		}
+		setValueToPojo(pojo, decode(reader, session));
 	}
 
 	@Override
@@ -245,6 +261,11 @@ public final class TransientComponent extends BaseComponent {
 			throws IOException {
 		if (binary) {
 			throw new UnsupportedOperationException();
+		}
+
+		if (field == null) {
+			skip(reader, length);
+			return null;
 		}
 
 		char[] cbuf = new char[length];
@@ -263,7 +284,7 @@ public final class TransientComponent extends BaseComponent {
 				}
 			}
 
-			if (endIndex == -1) {
+			if (endIndex < 0) {
 				value = null;
 			} else {
 				value = converter.convertToJavaObject(cbuf, 0, endIndex);
@@ -280,7 +301,7 @@ public final class TransientComponent extends BaseComponent {
 				}
 			}
 
-			if (beginIndex == -1) {
+			if (beginIndex < 0) {
 				value = null;
 			} else {
 				value = converter.convertToJavaObject(cbuf, beginIndex, length
@@ -288,7 +309,7 @@ public final class TransientComponent extends BaseComponent {
 			}
 
 			break;
-		default:
+		default: // 'n'
 			value = converter.convertToJavaObject(cbuf, 0, cbuf.length);
 			break;
 		}

@@ -12,8 +12,7 @@ import java.util.Set;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 
-import org.cheetah.core.ServiceContextDefinition;
-import org.cheetah.core.ServiceDefinition;
+import org.nucleus8583.core.util.ResourceUtils;
 
 public abstract class JAXBUtils {
 	private static JAXBContext ctx;
@@ -26,8 +25,7 @@ public abstract class JAXBUtils {
 		classes.add(ServiceContextDefinition.class);
 		classes.add(ServiceDefinition.class);
 
-		URL[] urls = ResourceUtils
-				.getURLs("classpath:META-INF/cheetah/cheetah.actions");
+		URL[] urls = ResourceUtils.getURLs("classpath:META-INF/nucleus8583/cheetah.actions");
 
 		if (urls.length > 0) {
 			for (int i = 0; i < urls.length; ++i) {

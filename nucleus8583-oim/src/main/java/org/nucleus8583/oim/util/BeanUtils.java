@@ -3,7 +3,8 @@ package org.nucleus8583.oim.util;
 import java.lang.reflect.Field;
 import java.util.Map;
 
-public final class BeanUtil {
+public abstract class BeanUtils {
+	
 	public static void collectFields(Class<?> _class, Map<String, Field> fields) {
 		Class<?> current = _class;
 

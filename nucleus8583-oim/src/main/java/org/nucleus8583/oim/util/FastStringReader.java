@@ -14,7 +14,7 @@ public class FastStringReader extends Reader {
 
 	public FastStringReader(String value) {
 		this.value = value;
-		this.vlen = StringUtil.nullOrEmpty(value, false) ? 0 : value.length();
+		this.vlen = StringUtils.nullOrEmpty(value, false) ? 0 : value.length();
 
 		this.readIndex = 0;
 		this.remaining = this.vlen;

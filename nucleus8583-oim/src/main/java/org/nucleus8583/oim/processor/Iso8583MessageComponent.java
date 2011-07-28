@@ -1,4 +1,4 @@
-package org.nucleus8583.oim.component;
+package org.nucleus8583.oim.processor;
 
 import java.lang.reflect.Field;
 import java.util.BitSet;
@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.nucleus8583.Iso8583Message;
-import org.nucleus8583.oim.util.BeanUtil;
+import org.nucleus8583.oim.util.BeanUtils;
 
 public final class Iso8583MessageComponent implements HasFieldsComponent {
 	private final String name;
@@ -32,7 +32,7 @@ public final class Iso8583MessageComponent implements HasFieldsComponent {
 		this.isoFieldsCount = isoFieldsCount;
 
 		fields = new HashMap<String, Field>();
-		BeanUtil.collectFields(_class, fields);
+		BeanUtils.collectFields(_class, fields);
 	}
 
 	public void encode(Iso8583Message msg, Object pojo,

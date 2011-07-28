@@ -1,16 +1,20 @@
-package org.nucleus8583.oim.component;
+package org.nucleus8583.oim.processor;
 
 import java.io.EOFException;
 import java.io.IOException;
 import java.io.Reader;
 import java.util.Map;
 
-public final class SkipComponent extends BaseComponent {
+import org.nucleus8583.oim.xml.IgnoreDefinition;
+
+public final class IgnoreProcessor implements Processor {
 	private final String filler;
 
 	private final int length;
 
-	public SkipComponent(String filler, int length) {
+	public IgnoreProcessor(IgnoreDefinition def) {
+		
+		
 		this.filler = filler;
 		this.length = length;
 	}
