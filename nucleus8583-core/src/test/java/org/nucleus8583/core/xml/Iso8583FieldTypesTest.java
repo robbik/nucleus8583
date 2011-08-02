@@ -82,7 +82,7 @@ public class Iso8583FieldTypesTest {
 		Random rnd = new Random();
 
 		for (int i = 0; i < 200; ++i) {
-			for (String s : stringTypes) {
+			for (String s : Iso8583FieldTypesTest.stringTypes) {
 				xlen = rnd.nextInt(800) + 1;
 
 				x = unmarshaller.unmarshal(new ByteArrayInputStream(
@@ -105,15 +105,15 @@ public class Iso8583FieldTypesTest {
 		Random rnd = new Random();
 
 		for (int i = 0; i < 200; ++i) {
-			for (String s : binaryTypes) {
-				xlen = rnd.nextInt(800) + 1;
+			for (String s : Iso8583FieldTypesTest.binaryTypes) {
+				xlen = (1 + rnd.nextInt(399)) << 1;
 
 				x = unmarshaller.unmarshal(new ByteArrayInputStream(
 								("<iso-field id=\"1\" type=\"" + s
 										+ "\" length=\"" + xlen + "\" xmlns=\"http://www.nucleus8583.org/schema/iso-message\" />")
 										.getBytes()));
 
-				binaryFieldHelper(x, 1, xlen);
+				binaryFieldHelper(x, 1, xlen >> 1);
 			}
 		}
 	}
@@ -124,13 +124,13 @@ public class Iso8583FieldTypesTest {
 
 		Object x;
 
-		for (String s : stringTypes) {
-			for (int i = 0; i < dots.length; ++i) {
+		for (String s : Iso8583FieldTypesTest.stringTypes) {
+			for (int i = 0; i < Iso8583FieldTypesTest.dots.length; ++i) {
 				x = unmarshaller.unmarshal(new ByteArrayInputStream(
-								("<iso-field id=\"1\" type=\"" + s + dots[i] + "\" xmlns=\"http://www.nucleus8583.org/schema/iso-message\" />")
+								("<iso-field id=\"1\" type=\"" + s + Iso8583FieldTypesTest.dots[i] + "\" xmlns=\"http://www.nucleus8583.org/schema/iso-message\" />")
 										.getBytes()));
 
-				stringFieldHelper(x, 1, dotLen[i]);
+				stringFieldHelper(x, 1, Iso8583FieldTypesTest.dotLen[i]);
 			}
 		}
 	}
@@ -140,7 +140,7 @@ public class Iso8583FieldTypesTest {
 		Unmarshaller unmarshaller = JAXBContext.newInstance(
 				Iso8583FieldDefinition.class).createUnmarshaller();
 
-		for (String s : stringTypes) {
+		for (String s : Iso8583FieldTypesTest.stringTypes) {
 			Object x = unmarshaller
 					.unmarshal(new ByteArrayInputStream(
 							("<iso-field id=\"1\" type=\"" + s + "\" length=\"0\" xmlns=\"http://www.nucleus8583.org/schema/iso-message\" />")
@@ -158,7 +158,7 @@ public class Iso8583FieldTypesTest {
 		Unmarshaller unmarshaller = JAXBContext.newInstance(
 				Iso8583FieldDefinition.class).createUnmarshaller();
 
-		for (String s : binaryTypes) {
+		for (String s : Iso8583FieldTypesTest.binaryTypes) {
 			Object x = unmarshaller
 					.unmarshal(new ByteArrayInputStream(
 							("<iso-field id=\"1\" type=\"" + s + "\" length=\"0\" xmlns=\"http://www.nucleus8583.org/schema/iso-message\" />")

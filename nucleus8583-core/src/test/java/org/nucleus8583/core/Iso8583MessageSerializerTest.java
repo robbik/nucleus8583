@@ -25,7 +25,7 @@ public class Iso8583MessageSerializerTest {
 	public void initialize() throws Exception {
 		serializer = new Iso8583MessageSerializer("file:src/test/resources/META-INF/codec8583.xml");
 
-		packed = "0200C00000000001000104000000000000000603000000499980000000000000000301";
+		packed = "0200400000000001000104000000000000000603000000499980000000000000000301";
 		bpacked = packed.getBytes();
 
 		unpacked = new Iso8583Message();

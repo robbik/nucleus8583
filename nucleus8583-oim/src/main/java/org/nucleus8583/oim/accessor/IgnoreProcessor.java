@@ -1,4 +1,4 @@
-package org.nucleus8583.oim.processor;
+package org.nucleus8583.oim.accessor;
 
 import java.io.EOFException;
 import java.io.IOException;
@@ -7,7 +7,7 @@ import java.util.Map;
 
 import org.nucleus8583.oim.xml.IgnoreDefinition;
 
-public final class IgnoreProcessor implements Processor {
+public final class IgnoreProcessor implements ValueAccessor {
 	private final String filler;
 
 	private final int length;

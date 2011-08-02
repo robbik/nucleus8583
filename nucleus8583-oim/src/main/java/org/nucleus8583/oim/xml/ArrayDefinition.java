@@ -14,8 +14,11 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class ArrayDefinition {
 
-	@XmlElement(name = "name")
+	@XmlElement(name = "name", required = true)
 	private String name;
+
+    @XmlElement(name = "value-class", required = true)
+    private String valueClassName;
 
 	@XmlElementRefs({ @XmlElementRef(type = BasicDefinition.class),
 			@XmlElementRef(type = ConstantDefinition.class),
@@ -34,7 +37,15 @@ public class ArrayDefinition {
 		this.name = name;
 	}
 
-	public List<Object> getContents() {
+	public String getValueClassName() {
+        return valueClassName;
+    }
+
+    public void setValueClassName(String valueClassName) {
+        this.valueClassName = valueClassName;
+    }
+
+    public List<Object> getContents() {
 		return contents;
 	}
 

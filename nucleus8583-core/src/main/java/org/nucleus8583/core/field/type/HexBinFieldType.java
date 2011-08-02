@@ -27,7 +27,7 @@ public final class HexBinFieldType extends AbstractHexBinFieldType {
             throw new IllegalArgumentException("length must be greater than zero");
         }
 
-        length = def.getLength();
+        length = def.getLength() >> 1;
         streamLength = length << 1;
 
         padder = new char[streamLength];
@@ -50,13 +50,15 @@ public final class HexBinFieldType extends AbstractHexBinFieldType {
 	@Override
     public void write(OutputStream out, CharsetEncoder enc, byte[] value) throws IOException {
 	    int vlen = value.length;
-	    if (vlen > length) {
-	        throw new IllegalArgumentException("value of field #" + id + " is too long, expected " + length + " but actual is " + vlen);
-	    }
+//	    if (vlen > length) {
+//	        throw new IllegalArgumentException("value of field #" + id + " is too long, expected " + length + " but actual is " + vlen);
+//	    }
 
 	    // 1 binary byte = 2 hex bytes
         if (vlen == 0) {
             enc.write(out, padder, 0, streamLength);
+        } else if (vlen > length) {
+            super.write(out, enc, value, length);
         } else if (vlen == streamLength) {
             super.write(out, enc, value, vlen);
         } else {

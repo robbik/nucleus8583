@@ -35,7 +35,7 @@ public class HexBinFieldTypeTest {
 
 		binaryField = FieldTypes.getType((Iso8583FieldDefinition) unmarshaller
 				.unmarshal(new ByteArrayInputStream(
-						("<iso-field id=\"35\" type=\"b\" length=\"1\" xmlns=\"http://www.nucleus8583.org/schema/iso-message\" />")
+						("<iso-field id=\"35\" type=\"b\" length=\"2\" xmlns=\"http://www.nucleus8583.org/schema/iso-message\" />")
 								.getBytes())));
 
 		encoder = Charsets.getProvider("ASCII").getEncoder();

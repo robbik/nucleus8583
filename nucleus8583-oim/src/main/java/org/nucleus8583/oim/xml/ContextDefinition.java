@@ -9,16 +9,16 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement(name = "oim-context", namespace = "http://www.nucleus8583.org/schema/nucleus8583-oim")
 @XmlAccessorType(XmlAccessType.FIELD)
-public class OimContextDefinition {
+public class ContextDefinition {
 
 	@XmlElementRef
-	private List<Iso8583MessageDefinition> messages;
+	private List<EntityDefinition> messages;
 
-	public List<Iso8583MessageDefinition> getMessages() {
+	public List<EntityDefinition> getMessages() {
 		return messages;
 	}
 
-	public void setMessages(List<Iso8583MessageDefinition> messages) {
+	public void setMessages(List<EntityDefinition> messages) {
 		this.messages = messages;
 	}
 }

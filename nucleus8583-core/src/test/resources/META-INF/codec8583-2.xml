@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <iso-message encoding="ASCII" xmlns="http://www.nucleus8583.org/schema/iso-message">
 	<iso-field id="0" type="custom" length="4" align="none" />
-	<iso-field id="1" type="b" length="16" />
+	<iso-field id="1" type="b" length="32" />
 	<iso-field id="2" type="custom .." align="none" />
 	<iso-field id="3" type="custom" length="6" align="none" />
 	<iso-field id="4" type="custom" length="12" align="none" />
@@ -64,8 +64,8 @@
 	<iso-field id="61" type="custom ..." align="none" />
 	<iso-field id="62" type="custom ..." align="none" />
 	<iso-field id="63" type="custom ..." align="none" />
-	<iso-field id="64" type="b" length="8" />
-	<iso-field id="65" type="b" length="1" />
+	<iso-field id="64" type="b" length="16" />
+	<iso-field id="65" type="b" length="2" />
 	<iso-field id="66" type="custom" length="1" align="none" />
 	<iso-field id="67" type="custom" length="2" align="none" />
 	<iso-field id="68" type="custom" length="3" align="none" />
@@ -96,7 +96,7 @@
 	<iso-field id="93" type="custom" length="6" align="none" />
 	<iso-field id="94" type="custom" length="7" align="none" />
 	<iso-field id="95" type="custom" length="42" align="none" />
-	<iso-field id="96" type="b" length="16" />
+	<iso-field id="96" type="b" length="32" />
 	<iso-field id="97" type="custom" length="17" align="none" />
 	<iso-field id="98" type="custom" length="25" align="none" />
 	<iso-field id="99" type="custom .." align="none" />

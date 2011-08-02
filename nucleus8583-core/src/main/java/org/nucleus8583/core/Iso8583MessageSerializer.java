@@ -130,7 +130,7 @@ public final class Iso8583MessageSerializer {
 		Iso8583MessageDefinition definition;
 
 		try {
-			definition = (Iso8583MessageDefinition) ctx.createUnmarshaller()
+			definition = (Iso8583MessageDefinition) Iso8583MessageSerializer.ctx.createUnmarshaller()
 					.unmarshal(found);
 		} catch (Exception e) {
 			throw new RuntimeException(e);
@@ -150,7 +150,7 @@ public final class Iso8583MessageSerializer {
 		Iso8583MessageDefinition definition;
 
 		try {
-			definition = (Iso8583MessageDefinition) ctx.createUnmarshaller()
+			definition = (Iso8583MessageDefinition) Iso8583MessageSerializer.ctx.createUnmarshaller()
 					.unmarshal(in);
 		} catch (Exception e) {
 			throw new RuntimeException(e);
@@ -170,7 +170,7 @@ public final class Iso8583MessageSerializer {
 		Iso8583MessageDefinition definition;
 
 		try {
-			definition = (Iso8583MessageDefinition) ctx.createUnmarshaller()
+			definition = (Iso8583MessageDefinition) Iso8583MessageSerializer.ctx.createUnmarshaller()
 					.unmarshal(node);
 		} catch (Exception e) {
 			throw new RuntimeException(e);
@@ -190,7 +190,7 @@ public final class Iso8583MessageSerializer {
 		}
 
 		// sort fields by it's id
-		Arrays.sort(this.fields, sortByFieldId);
+		Arrays.sort(this.fields, Iso8583MessageSerializer.sortByFieldId);
 
 		// check for skipped fields
 		for (int i = 0; i < fieldsCount; ++i) {
@@ -323,8 +323,8 @@ public final class Iso8583MessageSerializer {
 			stringValues[65] = null;
 		}
 
-		// bit 1 is always on
-		BitmapHelper.set(bits1To128, 0);
+		// bit 1 is always off
+		BitmapHelper.clear(bits1To128, 0);
 
 		int count = msg.size();
 		if (count > fieldsCount) {

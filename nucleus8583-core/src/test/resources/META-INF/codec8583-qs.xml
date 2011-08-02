@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <iso-message encoding="ASCII" xmlns="http://www.nucleus8583.org/schema/iso-message">
         <iso-field id="0" length="4" type="custom" align="none" />
-        <iso-field id="1" length="16" type="b" />
+        <iso-field id="1" length="32" type="b" />
         <iso-field id="2" length="19" type="custom .." align="none" />
         <iso-field id="3" length="6" type="custom" align="none" />
         <iso-field id="4" length="12" type="custom" align="none" />
@@ -64,8 +64,8 @@
         <iso-field id="61" length="999" type="custom ..." align="none" />
         <iso-field id="62" length="999" type="custom ..." align="none" />
         <iso-field id="63" length="999" type="custom ..." align="none" />
-        <iso-field id="64" length="8" type="b" />
-        <iso-field id="65" length="16" type="b" />
+        <iso-field id="64" length="16" type="b" />
+        <iso-field id="65" length="32" type="b" />
         <iso-field id="66" length="1" type="custom" align="none" />
         <iso-field id="67" length="2" type="custom" align="none" />
         <iso-field id="68" length="3" type="custom" align="none" />
@@ -96,7 +96,7 @@
         <iso-field id="93" length="6" type="custom" align="none" />
         <iso-field id="94" length="7" type="custom" align="none" />
         <iso-field id="95" length="42" type="custom" align="none" />
-        <iso-field id="96" length="16" type="b" />
+        <iso-field id="96" length="32" type="b" />
         <iso-field id="97" length="17" type="custom" align="none" />
         <iso-field id="98" length="25" type="custom" align="none" />
         <iso-field id="99" length="11" type="custom .." align="none" />
@@ -128,5 +128,5 @@
         <iso-field id="125" length="999" type="custom ..." align="none" />
         <iso-field id="126" length="999" type="custom ..." align="none" />
         <iso-field id="127" length="999" type="custom ..." align="none" />
-        <iso-field id="128" length="8" type="b" />
+        <iso-field id="128" length="16" type="b" />
 </iso-message>
