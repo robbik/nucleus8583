@@ -8,8 +8,8 @@ import org.nucleus8583.core.charset.CharsetDecoder;
 import org.nucleus8583.core.charset.CharsetEncoder;
 import org.nucleus8583.core.util.FastInteger;
 import org.nucleus8583.core.util.IOUtils;
-import org.nucleus8583.core.xml.Iso8583FieldAlignments;
-import org.nucleus8583.core.xml.Iso8583FieldDefinition;
+import org.nucleus8583.core.xml.FieldAlignments;
+import org.nucleus8583.core.xml.FieldDefinition;
 
 public abstract class UnicodeVarStringFieldType extends AbstractStringFieldType {
 	private static final long serialVersionUID = -5615324004502124085L;
@@ -20,7 +20,7 @@ public abstract class UnicodeVarStringFieldType extends AbstractStringFieldType 
 
 	private final String emptyValue;
 
-	public UnicodeVarStringFieldType(Iso8583FieldDefinition def, Iso8583FieldAlignments defaultAlign,
+	public UnicodeVarStringFieldType(FieldDefinition def, FieldAlignments defaultAlign,
 			String defaultPadWith, String defaultEmptyValue, int lcount, int length) {
 		super(def, defaultAlign, defaultPadWith, defaultEmptyValue);
 

@@ -12,7 +12,7 @@
     <packaging>bundle</packaging>
 
 	<name>nucleus8583 Core</name>
-    <version>3.0.0.Beta</version>
+    <version>3.0.0.Beta2</version>
 
 	<description>OSGi bundle for ISO-8583 message standard implementation.</description>
 	<url>http://code.google.com/p/nucleus8583/</url>

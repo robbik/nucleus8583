@@ -7,8 +7,8 @@ import java.io.OutputStream;
 import org.nucleus8583.core.charset.CharsetDecoder;
 import org.nucleus8583.core.charset.CharsetEncoder;
 import org.nucleus8583.core.util.FastInteger;
-import org.nucleus8583.core.xml.Iso8583FieldAlignments;
-import org.nucleus8583.core.xml.Iso8583FieldDefinition;
+import org.nucleus8583.core.xml.FieldAlignments;
+import org.nucleus8583.core.xml.FieldDefinition;
 
 public abstract class UnicodeVarHexBinFieldType extends AbstractHexBinFieldType {
 	private static final long serialVersionUID = -5615324004502124085L;
@@ -17,7 +17,7 @@ public abstract class UnicodeVarHexBinFieldType extends AbstractHexBinFieldType 
 
 	private final int length;
 
-	public UnicodeVarHexBinFieldType(Iso8583FieldDefinition def, Iso8583FieldAlignments defaultAlign,
+	public UnicodeVarHexBinFieldType(FieldDefinition def, FieldAlignments defaultAlign,
 			String defaultPadWith, String defaultEmptyValue, int lcount, int length) {
 		super(def, defaultAlign, defaultPadWith, defaultEmptyValue);
 
@@ -29,8 +29,13 @@ public abstract class UnicodeVarHexBinFieldType extends AbstractHexBinFieldType 
     public void read(InputStream in, CharsetDecoder dec, byte[] value) throws IOException {
         int vlen = FastInteger.readUint(in, dec, lcount);
         if (vlen > 0) {
-            super.read(in, dec, value, vlen << 1);
+            super._read(in, dec, value, 0, vlen << 1);
         }
+    }
+
+    @Override
+    public void read(InputStream in, CharsetDecoder dec, byte[] value, int off, int vlen) throws IOException {
+        read(in, dec, value);
     }
 
     @Override
@@ -41,7 +46,7 @@ public abstract class UnicodeVarHexBinFieldType extends AbstractHexBinFieldType 
         }
 
         byte[] value = new byte[vlen];
-        super.read(in, dec, value, vlen << 1);
+        super._read(in, dec, value, 0, vlen << 1);
 
         return value;
     }
@@ -54,6 +59,16 @@ public abstract class UnicodeVarHexBinFieldType extends AbstractHexBinFieldType 
         }
 
         FastInteger.writeUint(out, enc, vlen, lcount);
-        super.write(out, enc, value, vlen);
+        super._write(out, enc, value, 0, vlen);
+    }
+
+    @Override
+    public void write(OutputStream out, CharsetEncoder enc, byte[] value, int off, int len) throws IOException {
+        if (len > length) {
+            throw new IllegalArgumentException("value of field #" + id + " is too long, expected 0-" + length + " but actual is " + len);
+        }
+
+        FastInteger.writeUint(out, enc, len, lcount);
+        super._write(out, enc, value, off, len);
     }
 }

@@ -12,33 +12,32 @@ import org.junit.Before;
 import org.junit.Test;
 import org.nucleus8583.core.util.BitmapHelper;
 
-public class Iso8583MessageSerializerTest {
-	private Iso8583MessageSerializer serializer;
+public class MessageSerializer64Test {
+	private MessageSerializer serializer;
 
 	private String packed;
 
 	private byte[] bpacked;
 
-	private Iso8583Message unpacked;
+	private Message unpacked;
 
 	@Before
 	public void initialize() throws Exception {
-		serializer = new Iso8583MessageSerializer("file:src/test/resources/META-INF/codec8583.xml");
+		serializer = new MessageSerializer("file:src/test/resources/META-INF/codec8583.xml");
 
-		packed = "0200400000000001000104000000000000000603000000499980000000000000000301";
+		packed = "020040000000000100010603000000499980000000000000000";
 		bpacked = packed.getBytes();
 
-		unpacked = new Iso8583Message();
+		unpacked = new Message();
 		unpacked.setMti("0200");
 		unpacked.set(2, "030000");
 		unpacked.set(48, "9998");
 		unpacked.set(64, BitmapHelper.create(64));
-		unpacked.set(70, "301");
 	}
 
 	@Test(expected = RuntimeException.class)
 	public void testCreateNewInstanceIfEncodingIsUnsupported() {
-		Iso8583MessageSerializer.create("classpath:META-INF/error8583.xml");
+		MessageSerializer.create("classpath:META-INF/error8583.xml");
 	}
 
 	@Test
@@ -46,7 +45,7 @@ public class Iso8583MessageSerializerTest {
 		String errorMsg = null;
 
 		try {
-			Iso8583MessageSerializer.create("classpath:META-INF/codec8583-4.xml");
+			MessageSerializer.create("classpath:META-INF/codec8583-4.xml");
 		} catch (IllegalArgumentException ex) {
 			errorMsg = ex.getMessage();
 		}
@@ -56,7 +55,7 @@ public class Iso8583MessageSerializerTest {
 
 	@Test
 	public void testReadFromBytes() throws Exception {
-		Iso8583Message unpacked = new Iso8583Message();
+		Message unpacked = new Message();
 		serializer.read(bpacked, unpacked);
 
 		assertEquals(this.unpacked, unpacked);
@@ -64,7 +63,7 @@ public class Iso8583MessageSerializerTest {
 
 	@Test
 	public void testReadFromString() throws Exception {
-		Iso8583Message unpacked = new Iso8583Message();
+		Message unpacked = new Message();
 		serializer.read(bpacked, unpacked);
 
 		assertEquals(this.unpacked, unpacked);
@@ -77,12 +76,12 @@ public class Iso8583MessageSerializerTest {
 
 	@Test
 	public void testReadAfterSerialized() throws Exception {
-		Iso8583Message unpacked = new Iso8583Message();
+		Message unpacked = new Message();
 
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		new ObjectOutputStream(out).writeObject(unpacked);
 
-		unpacked = (Iso8583Message) new ObjectInputStream(new ByteArrayInputStream(out.toByteArray())).readObject();
+		unpacked = (Message) new ObjectInputStream(new ByteArrayInputStream(out.toByteArray())).readObject();
 		serializer.read(bpacked, unpacked);
 
 		assertEquals(this.unpacked, unpacked);
@@ -101,7 +100,7 @@ public class Iso8583MessageSerializerTest {
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		new ObjectOutputStream(out).writeObject(unpacked);
 
-		unpacked = (Iso8583Message) new ObjectInputStream(new ByteArrayInputStream(out.toByteArray())).readObject();
+		unpacked = (Message) new ObjectInputStream(new ByteArrayInputStream(out.toByteArray())).readObject();
 
 		out = new ByteArrayOutputStream();
 		serializer.write(unpacked, out);

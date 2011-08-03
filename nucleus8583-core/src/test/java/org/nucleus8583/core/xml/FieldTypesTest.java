@@ -17,7 +17,7 @@ import org.nucleus8583.core.field.type.AbstractStringFieldType;
 import org.nucleus8583.core.field.type.FieldType;
 import org.nucleus8583.core.field.type.FieldTypes;
 
-public class Iso8583FieldTypesTest {
+public class FieldTypesTest {
 	private static String[] binaryTypes = new String[] { "b" };
 	private static String[] stringTypes = new String[] { "a", "n", "s", "an", "as", "ns", "ans" };
 
@@ -26,9 +26,9 @@ public class Iso8583FieldTypesTest {
 
 	private void stringFieldHelper(Object x, int id, int length) throws Exception {
 		assertNotNull(x);
-		assertTrue(x instanceof Iso8583FieldDefinition);
+		assertTrue(x instanceof FieldDefinition);
 
-		Iso8583FieldDefinition def = (Iso8583FieldDefinition) x;
+		FieldDefinition def = (FieldDefinition) x;
 		FieldType field = FieldTypes.getType(def);
 
 		assertTrue(field instanceof AbstractStringFieldType);
@@ -50,9 +50,9 @@ public class Iso8583FieldTypesTest {
 
 	private void binaryFieldHelper(Object x, int id, int length) throws Exception {
 		assertNotNull(x);
-		assertTrue(x instanceof Iso8583FieldDefinition);
+		assertTrue(x instanceof FieldDefinition);
 
-		Iso8583FieldDefinition def = (Iso8583FieldDefinition) x;
+		FieldDefinition def = (FieldDefinition) x;
 		FieldType field = FieldTypes.getType(def);
 
 		assertTrue(field instanceof AbstractHexBinFieldType);
@@ -74,7 +74,7 @@ public class Iso8583FieldTypesTest {
 
 	@Test
 	public void smokeTestStringField() throws Exception {
-		Unmarshaller unmarshaller = JAXBContext.newInstance(Iso8583FieldDefinition.class).createUnmarshaller();
+		Unmarshaller unmarshaller = JAXBContext.newInstance(FieldDefinition.class).createUnmarshaller();
 
 		int xlen;
 		Object x;
@@ -82,7 +82,7 @@ public class Iso8583FieldTypesTest {
 		Random rnd = new Random();
 
 		for (int i = 0; i < 200; ++i) {
-			for (String s : Iso8583FieldTypesTest.stringTypes) {
+			for (String s : FieldTypesTest.stringTypes) {
 				xlen = rnd.nextInt(800) + 1;
 
 				x = unmarshaller.unmarshal(new ByteArrayInputStream(
@@ -97,7 +97,7 @@ public class Iso8583FieldTypesTest {
 
 	@Test
 	public void smokeTestBinaryField() throws Exception {
-		Unmarshaller unmarshaller = JAXBContext.newInstance(Iso8583FieldDefinition.class).createUnmarshaller();
+		Unmarshaller unmarshaller = JAXBContext.newInstance(FieldDefinition.class).createUnmarshaller();
 
 		int xlen;
 		Object x;
@@ -105,32 +105,32 @@ public class Iso8583FieldTypesTest {
 		Random rnd = new Random();
 
 		for (int i = 0; i < 200; ++i) {
-			for (String s : Iso8583FieldTypesTest.binaryTypes) {
-				xlen = (1 + rnd.nextInt(399)) << 1;
+			for (String s : FieldTypesTest.binaryTypes) {
+				xlen = 1 + rnd.nextInt(799);
 
 				x = unmarshaller.unmarshal(new ByteArrayInputStream(
 								("<iso-field id=\"1\" type=\"" + s
 										+ "\" length=\"" + xlen + "\" xmlns=\"http://www.nucleus8583.org/schema/iso-message\" />")
 										.getBytes()));
 
-				binaryFieldHelper(x, 1, xlen >> 1);
+				binaryFieldHelper(x, 1, xlen);
 			}
 		}
 	}
 
 	@Test
 	public void testVarStringField() throws Exception {
-		Unmarshaller unmarshaller = JAXBContext.newInstance(Iso8583FieldDefinition.class).createUnmarshaller();
+		Unmarshaller unmarshaller = JAXBContext.newInstance(FieldDefinition.class).createUnmarshaller();
 
 		Object x;
 
-		for (String s : Iso8583FieldTypesTest.stringTypes) {
-			for (int i = 0; i < Iso8583FieldTypesTest.dots.length; ++i) {
+		for (String s : FieldTypesTest.stringTypes) {
+			for (int i = 0; i < FieldTypesTest.dots.length; ++i) {
 				x = unmarshaller.unmarshal(new ByteArrayInputStream(
-								("<iso-field id=\"1\" type=\"" + s + Iso8583FieldTypesTest.dots[i] + "\" xmlns=\"http://www.nucleus8583.org/schema/iso-message\" />")
+								("<iso-field id=\"1\" type=\"" + s + FieldTypesTest.dots[i] + "\" xmlns=\"http://www.nucleus8583.org/schema/iso-message\" />")
 										.getBytes()));
 
-				stringFieldHelper(x, 1, Iso8583FieldTypesTest.dotLen[i]);
+				stringFieldHelper(x, 1, FieldTypesTest.dotLen[i]);
 			}
 		}
 	}
@@ -138,43 +138,43 @@ public class Iso8583FieldTypesTest {
 	@Test(expected = IllegalArgumentException.class)
 	public void testStringFieldWithLenLT0() throws Exception {
 		Unmarshaller unmarshaller = JAXBContext.newInstance(
-				Iso8583FieldDefinition.class).createUnmarshaller();
+				FieldDefinition.class).createUnmarshaller();
 
-		for (String s : Iso8583FieldTypesTest.stringTypes) {
+		for (String s : FieldTypesTest.stringTypes) {
 			Object x = unmarshaller
 					.unmarshal(new ByteArrayInputStream(
 							("<iso-field id=\"1\" type=\"" + s + "\" length=\"0\" xmlns=\"http://www.nucleus8583.org/schema/iso-message\" />")
 									.getBytes()));
 
 			assertNotNull(x);
-			assertTrue(x instanceof Iso8583FieldDefinition);
+			assertTrue(x instanceof FieldDefinition);
 
-			FieldTypes.getType((Iso8583FieldDefinition) x);
+			FieldTypes.getType((FieldDefinition) x);
 		}
 	}
 
 	@Test(expected = IllegalArgumentException.class)
 	public void testBinaryFieldWithLenLT0() throws Exception {
 		Unmarshaller unmarshaller = JAXBContext.newInstance(
-				Iso8583FieldDefinition.class).createUnmarshaller();
+				FieldDefinition.class).createUnmarshaller();
 
-		for (String s : Iso8583FieldTypesTest.binaryTypes) {
+		for (String s : FieldTypesTest.binaryTypes) {
 			Object x = unmarshaller
 					.unmarshal(new ByteArrayInputStream(
 							("<iso-field id=\"1\" type=\"" + s + "\" length=\"0\" xmlns=\"http://www.nucleus8583.org/schema/iso-message\" />")
 									.getBytes()));
 
 			assertNotNull(x);
-			assertTrue(x instanceof Iso8583FieldDefinition);
+			assertTrue(x instanceof FieldDefinition);
 
-			FieldTypes.getType((Iso8583FieldDefinition) x);
+			FieldTypes.getType((FieldDefinition) x);
 		}
 	}
 
 	@Test(expected = RuntimeException.class)
 	public void shouldThrowUnknownType() throws Exception {
 		Unmarshaller unmarshaller = JAXBContext.newInstance(
-				Iso8583FieldDefinition.class).createUnmarshaller();
+				FieldDefinition.class).createUnmarshaller();
 
 		Object x = unmarshaller
 				.unmarshal(new ByteArrayInputStream(
@@ -182,8 +182,8 @@ public class Iso8583FieldTypesTest {
 								.getBytes()));
 
 		assertNotNull(x);
-		assertTrue(x instanceof Iso8583FieldDefinition);
+		assertTrue(x instanceof FieldDefinition);
 
-		FieldTypes.getType((Iso8583FieldDefinition) x);
+		FieldTypes.getType((FieldDefinition) x);
 	}
 }

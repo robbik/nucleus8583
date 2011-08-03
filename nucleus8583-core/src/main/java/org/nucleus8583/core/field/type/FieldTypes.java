@@ -11,8 +11,8 @@ import java.util.Map;
 import java.util.Properties;
 
 import org.nucleus8583.core.util.ResourceUtils;
-import org.nucleus8583.core.xml.Iso8583FieldAlignments;
-import org.nucleus8583.core.xml.Iso8583FieldDefinition;
+import org.nucleus8583.core.xml.FieldAlignments;
+import org.nucleus8583.core.xml.FieldDefinition;
 
 public abstract class FieldTypes {
 
@@ -20,7 +20,7 @@ public abstract class FieldTypes {
 
 		public Class<?> clazz;
 
-		public Iso8583FieldAlignments align;
+		public FieldAlignments align;
 
 		public String padWith;
 
@@ -62,7 +62,7 @@ public abstract class FieldTypes {
 				String value = line.substring(eqidx + 1);
 
 				if ("align".equals(name)) {
-					entry.align = Iso8583FieldAlignments.enumValueOf(value);
+					entry.align = FieldAlignments.enumValueOf(value);
 				} else if ("pad-with".equals(name)) {
 					entry.padWith = value;
 				} else if ("empty-value".equals(name)) {
@@ -141,14 +141,14 @@ public abstract class FieldTypes {
 		}
 	}
 
-	public static FieldType getType(Iso8583FieldDefinition def) {
+	public static FieldType getType(FieldDefinition def) {
 		Entry entry = types.get(def.getType().toUpperCase());
 		if (entry == null) {
 			throw new RuntimeException("an error occured while retrieving type " + def.getType() + ", type not found.");
 		}
 
 		try {
-			Constructor<?> ctor = entry.clazz.getConstructor(Iso8583FieldDefinition.class, Iso8583FieldAlignments.class, String.class, String.class);
+			Constructor<?> ctor = entry.clazz.getConstructor(FieldDefinition.class, FieldAlignments.class, String.class, String.class);
 
 			return (FieldType) ctor.newInstance(def, entry.align, entry.padWith, entry.emptyValue);
 		} catch (InvocationTargetException ex) {

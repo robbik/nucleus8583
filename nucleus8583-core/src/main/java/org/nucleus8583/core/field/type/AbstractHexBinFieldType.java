@@ -7,8 +7,8 @@ import java.io.OutputStream;
 import org.nucleus8583.core.charset.CharsetDecoder;
 import org.nucleus8583.core.charset.CharsetEncoder;
 import org.nucleus8583.core.util.IOUtils;
-import org.nucleus8583.core.xml.Iso8583FieldAlignments;
-import org.nucleus8583.core.xml.Iso8583FieldDefinition;
+import org.nucleus8583.core.xml.FieldAlignments;
+import org.nucleus8583.core.xml.FieldDefinition;
 
 public abstract class AbstractHexBinFieldType extends FieldType {
 	private static final long serialVersionUID = 3977789121124596289L;
@@ -69,7 +69,7 @@ public abstract class AbstractHexBinFieldType extends FieldType {
         return 0;
 	}
 
-	public AbstractHexBinFieldType(Iso8583FieldDefinition def, Iso8583FieldAlignments defaultAlign,
+	public AbstractHexBinFieldType(FieldDefinition def, FieldAlignments defaultAlign,
 			String defaultPadWith, String defaultEmptyValue) {
 		super(def, defaultAlign, defaultPadWith, defaultEmptyValue);
 	}
@@ -89,19 +89,19 @@ public abstract class AbstractHexBinFieldType extends FieldType {
 		throw new UnsupportedOperationException();
 	}
 
-	protected void read(InputStream in, CharsetDecoder dec, byte[] value, int streamLength) throws IOException {
+	protected void _read(InputStream in, CharsetDecoder dec, byte[] value, int off, int streamLength) throws IOException {
         char[] cbuf = new char[streamLength];
         IOUtils.readFully(in, dec, cbuf, streamLength);
 
-		for (int i = 0, j = 0; i < streamLength; i += 2, ++j) {
+		for (int i = 0, j = off; i < streamLength; i += 2, ++j) {
             value[j] = (byte) ((hex2int(cbuf[i]) << 4) | hex2int(cbuf[i + 1]));
 		}
 	}
 
-	protected void write(OutputStream out, CharsetEncoder enc, byte[] value, int valueLength) throws IOException {
-        for (int i = 0; i < valueLength; ++i) {
-            enc.write(out, HEX[(value[i] & 0xF0) >> 4]); // hi
-            enc.write(out, HEX[value[i] & 0x0F]); // lo
+    protected void _write(OutputStream out, CharsetEncoder enc, byte[] value, int off, int vlen) throws IOException {
+        for (int i = 0, j = off; i < vlen; ++i, ++j) {
+            enc.write(out, AbstractHexBinFieldType.HEX[(value[j] & 0xF0) >> 4]); // hi
+            enc.write(out, AbstractHexBinFieldType.HEX[value[j] & 0x0F]); // lo
         }
 	}
 }

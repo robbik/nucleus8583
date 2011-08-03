@@ -6,7 +6,7 @@ import javax.xml.bind.annotation.XmlType;
 
 @XmlType
 @XmlEnum(String.class)
-public enum Iso8583FieldAlignments {
+public enum FieldAlignments {
 	@XmlEnumValue("left") LEFT,
 	@XmlEnumValue("right") RIGHT,
 	@XmlEnumValue("none") NONE;
@@ -21,7 +21,7 @@ public enum Iso8583FieldAlignments {
 		return 'n';
 	}
 
-	public static Iso8583FieldAlignments enumValueOf(String str) {
+	public static FieldAlignments enumValueOf(String str) {
 		if ("left".equalsIgnoreCase(str)) {
 			return LEFT;
 		}

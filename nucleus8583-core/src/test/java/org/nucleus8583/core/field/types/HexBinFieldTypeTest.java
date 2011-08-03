@@ -18,7 +18,7 @@ import org.nucleus8583.core.field.type.FieldType;
 import org.nucleus8583.core.field.type.FieldTypes;
 import org.nucleus8583.core.util.BitmapHelper;
 import org.nucleus8583.core.util.NullOutputStream;
-import org.nucleus8583.core.xml.Iso8583FieldDefinition;
+import org.nucleus8583.core.xml.FieldDefinition;
 
 public class HexBinFieldTypeTest {
 
@@ -31,11 +31,11 @@ public class HexBinFieldTypeTest {
 	@Before
 	public void before() throws Exception {
 		Unmarshaller unmarshaller = JAXBContext.newInstance(
-				Iso8583FieldDefinition.class).createUnmarshaller();
+				FieldDefinition.class).createUnmarshaller();
 
-		binaryField = FieldTypes.getType((Iso8583FieldDefinition) unmarshaller
+		binaryField = FieldTypes.getType((FieldDefinition) unmarshaller
 				.unmarshal(new ByteArrayInputStream(
-						("<iso-field id=\"35\" type=\"b\" length=\"2\" xmlns=\"http://www.nucleus8583.org/schema/iso-message\" />")
+						("<iso-field id=\"35\" type=\"b\" length=\"1\" xmlns=\"http://www.nucleus8583.org/schema/iso-message\" />")
 								.getBytes())));
 
 		encoder = Charsets.getProvider("ASCII").getEncoder();

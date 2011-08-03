@@ -37,4 +37,14 @@ public abstract class BitmapHelper {
 
         return true;
     }
+
+    public static int realBytesInUse(byte[] bytes) {
+        for (int i = bytes.length - 1; i >= 0; --i) {
+            if (bytes[i] != 0) {
+                return i + 1;
+            }
+        }
+
+        return 0;
+    }
 }

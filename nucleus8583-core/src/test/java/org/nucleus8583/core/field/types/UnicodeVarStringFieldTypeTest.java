@@ -16,7 +16,7 @@ import org.nucleus8583.core.charset.CharsetEncoder;
 import org.nucleus8583.core.charset.Charsets;
 import org.nucleus8583.core.field.type.FieldType;
 import org.nucleus8583.core.field.type.FieldTypes;
-import org.nucleus8583.core.xml.Iso8583FieldDefinition;
+import org.nucleus8583.core.xml.FieldDefinition;
 
 public class UnicodeVarStringFieldTypeTest {
 
@@ -28,12 +28,12 @@ public class UnicodeVarStringFieldTypeTest {
 
 	@Before
 	public void before() throws Exception {
-		Unmarshaller unmarshaller = JAXBContext.newInstance(Iso8583FieldDefinition.class).createUnmarshaller();
+		Unmarshaller unmarshaller = JAXBContext.newInstance(FieldDefinition.class).createUnmarshaller();
 
 		encoder = Charsets.getProvider("ASCII").getEncoder();
 		decoder = Charsets.getProvider("ASCII").getDecoder();
 
-		stringField = FieldTypes.getType((Iso8583FieldDefinition) unmarshaller
+		stringField = FieldTypes.getType((FieldDefinition) unmarshaller
 				.unmarshal(new ByteArrayInputStream(
 						("<iso-field id=\"39\" type=\"a .\" xmlns=\"http://www.nucleus8583.org/schema/iso-message\" />").getBytes())));
 	}

@@ -7,13 +7,13 @@ import org.junit.Before;
 import org.junit.Test;
 
 public class ReadPerformanceTest {
-	private Iso8583MessageSerializer serializer;
+	private MessageSerializer serializer;
 
 	private InputStream ipacked;
 
 	@Before
 	public void initialize() throws Exception {
-		serializer = new Iso8583MessageSerializer("classpath:META-INF/codec8583.xml");
+		serializer = new MessageSerializer("classpath:META-INF/codec8583.xml");
 
 		final byte[] bpacked = "0200423800080A010000000000000000000004312501041324311     1324310104C010000001762745214  0003701000abcdefghijkl                    ".getBytes();
 
@@ -71,7 +71,7 @@ public class ReadPerformanceTest {
 	}
 
 	private long measure(int loops) throws Exception {
-		Iso8583Message msg = new Iso8583Message();
+		Message msg = new Message();
 
 		long startDate = System.currentTimeMillis();
 		for (int i = 0; i < loops; ++i) {

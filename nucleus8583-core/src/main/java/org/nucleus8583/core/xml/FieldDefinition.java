@@ -7,7 +7,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement(name = "iso-field", namespace = "http://www.nucleus8583.org/schema/iso-message")
 @XmlAccessorType(XmlAccessType.FIELD)
-public class Iso8583FieldDefinition {
+public class FieldDefinition {
 	@XmlAttribute(name = "id", required = true)
 	private int id;
 
@@ -18,7 +18,7 @@ public class Iso8583FieldDefinition {
 	private int length;
 
 	@XmlAttribute(name = "align")
-	private Iso8583FieldAlignments align;
+	private FieldAlignments align;
 
 	@XmlAttribute(name = "pad-with")
 	private String padWith;
@@ -26,7 +26,7 @@ public class Iso8583FieldDefinition {
 	@XmlAttribute(name = "empty-value")
 	private String emptyValue;
 
-	public Iso8583FieldDefinition() {
+	public FieldDefinition() {
 		length = 0;
 
 		align = null;
@@ -47,7 +47,7 @@ public class Iso8583FieldDefinition {
 		return length;
 	}
 
-	public Iso8583FieldAlignments getAlign() {
+	public FieldAlignments getAlign() {
 		return align;
 	}
 

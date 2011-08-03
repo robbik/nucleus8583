@@ -8,13 +8,13 @@ import org.nucleus8583.core.util.NullOutputStream;
 
 // @Ignore
 public class WritePerformanceTest {
-	private Iso8583MessageSerializer serializer;
+	private MessageSerializer serializer;
 
 	private OutputStream nullOut;
 
 	@Before
 	public void initialize() throws Exception {
-		serializer = new Iso8583MessageSerializer("classpath:META-INF/codec8583.xml");
+		serializer = new MessageSerializer("classpath:META-INF/codec8583.xml");
 
 		nullOut = new NullOutputStream();
 	}
@@ -23,7 +23,7 @@ public class WritePerformanceTest {
 		long startDate = System.currentTimeMillis();
 
 		for (int i = loops - 1; i >= 0; --i) {
-			Iso8583Message msg = new Iso8583Message();
+			Message msg = new Message();
 
 			msg.setMti("0200");
 			msg.set(2, "3125");

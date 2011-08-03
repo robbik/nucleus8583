@@ -10,19 +10,19 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement(name = "iso-message", namespace = "http://www.nucleus8583.org/schema/iso-message")
 @XmlAccessorType(XmlAccessType.FIELD)
-public class Iso8583MessageDefinition {
+public class MessageDefinition {
 
 	@XmlAttribute(name = "encoding", required = true)
 	private String encoding;
 
 	@XmlElementRef
-	private List<Iso8583FieldDefinition> fields;
+	private List<FieldDefinition> fields;
 
 	public String getEncoding() {
 		return encoding;
 	}
 
-	public List<Iso8583FieldDefinition> getFields() {
+	public List<FieldDefinition> getFields() {
 		return fields;
 	}
 }

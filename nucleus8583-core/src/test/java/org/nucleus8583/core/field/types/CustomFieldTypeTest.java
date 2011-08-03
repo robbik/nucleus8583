@@ -16,7 +16,7 @@ import org.nucleus8583.core.charset.CharsetEncoder;
 import org.nucleus8583.core.charset.Charsets;
 import org.nucleus8583.core.field.type.FieldType;
 import org.nucleus8583.core.field.type.FieldTypes;
-import org.nucleus8583.core.xml.Iso8583FieldDefinition;
+import org.nucleus8583.core.xml.FieldDefinition;
 
 public class CustomFieldTypeTest {
 
@@ -29,7 +29,7 @@ public class CustomFieldTypeTest {
 
 	@Test
 	public void testDummyField() throws Exception {
-		Unmarshaller unmarshaller = JAXBContext.newInstance(Iso8583FieldDefinition.class).createUnmarshaller();
+		Unmarshaller unmarshaller = JAXBContext.newInstance(FieldDefinition.class).createUnmarshaller();
 
 		Object x = unmarshaller
 				.unmarshal(new ByteArrayInputStream(
@@ -37,9 +37,9 @@ public class CustomFieldTypeTest {
 								.getBytes()));
 
 		assertNotNull(x);
-		assertTrue(x instanceof Iso8583FieldDefinition);
+		assertTrue(x instanceof FieldDefinition);
 
-		FieldType f = FieldTypes.getType((Iso8583FieldDefinition) x);
+		FieldType f = FieldTypes.getType((FieldDefinition) x);
 
 		assertNotNull(f);
 		assertTrue(f instanceof DummyField);
@@ -64,7 +64,7 @@ public class CustomFieldTypeTest {
 	@Test(expected = RuntimeException.class)
 	public void testDummyField2() throws Exception {
 		Unmarshaller unmarshaller = JAXBContext.newInstance(
-				Iso8583FieldDefinition.class).createUnmarshaller();
+				FieldDefinition.class).createUnmarshaller();
 
 		Object x = unmarshaller
 				.unmarshal(new ByteArrayInputStream(
@@ -72,15 +72,15 @@ public class CustomFieldTypeTest {
 								.getBytes()));
 
 		assertNotNull(x);
-		assertTrue(x instanceof Iso8583FieldDefinition);
+		assertTrue(x instanceof FieldDefinition);
 
-		FieldTypes.getType((Iso8583FieldDefinition) x);
+		FieldTypes.getType((FieldDefinition) x);
 	}
 
 	@Test(expected = RuntimeException.class)
 	public void testDummyField3() throws Exception {
 		Unmarshaller unmarshaller = JAXBContext.newInstance(
-				Iso8583FieldDefinition.class).createUnmarshaller();
+				FieldDefinition.class).createUnmarshaller();
 
 		Object x = unmarshaller
 				.unmarshal(new ByteArrayInputStream(
@@ -88,8 +88,8 @@ public class CustomFieldTypeTest {
 								.getBytes()));
 
 		assertNotNull(x);
-		assertTrue(x instanceof Iso8583FieldDefinition);
+		assertTrue(x instanceof FieldDefinition);
 
-		FieldTypes.getType((Iso8583FieldDefinition) x);
+		FieldTypes.getType((FieldDefinition) x);
 	}
 }

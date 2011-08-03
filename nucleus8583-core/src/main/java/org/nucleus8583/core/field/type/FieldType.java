@@ -7,15 +7,15 @@ import java.io.Serializable;
 
 import org.nucleus8583.core.charset.CharsetDecoder;
 import org.nucleus8583.core.charset.CharsetEncoder;
-import org.nucleus8583.core.xml.Iso8583FieldAlignments;
-import org.nucleus8583.core.xml.Iso8583FieldDefinition;
+import org.nucleus8583.core.xml.FieldAlignments;
+import org.nucleus8583.core.xml.FieldDefinition;
 
 public abstract class FieldType implements Serializable {
 	private static final long serialVersionUID = -1162912563090715434L;
 
 	protected final int id;
 
-	public FieldType(Iso8583FieldDefinition def, Iso8583FieldAlignments defaultAlign,
+	public FieldType(FieldDefinition def, FieldAlignments defaultAlign,
 			String defaultPadWith, String defaultEmptyValue) {
 		this.id = def.getId();
 	}
@@ -30,7 +30,11 @@ public abstract class FieldType implements Serializable {
 
 	public abstract void write(OutputStream out, CharsetEncoder enc, byte[] value) throws IOException;
 
+    public abstract void write(OutputStream out, CharsetEncoder enc, byte[] value, int off, int len) throws IOException;
+
 	public abstract void read(InputStream in, CharsetDecoder dec, byte[] value) throws IOException;
+
+    public abstract void read(InputStream in, CharsetDecoder dec, byte[] value, int off, int len) throws IOException;
 
 	public abstract byte[] readBinary(InputStream in, CharsetDecoder dec) throws IOException;
 

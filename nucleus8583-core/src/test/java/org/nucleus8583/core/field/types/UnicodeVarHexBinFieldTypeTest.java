@@ -16,7 +16,7 @@ import org.nucleus8583.core.charset.CharsetEncoder;
 import org.nucleus8583.core.charset.Charsets;
 import org.nucleus8583.core.field.type.FieldType;
 import org.nucleus8583.core.field.type.FieldTypes;
-import org.nucleus8583.core.xml.Iso8583FieldDefinition;
+import org.nucleus8583.core.xml.FieldDefinition;
 
 public class UnicodeVarHexBinFieldTypeTest {
 
@@ -32,18 +32,18 @@ public class UnicodeVarHexBinFieldTypeTest {
 
 	@Before
 	public void before() throws Exception {
-		Unmarshaller unmarshaller = JAXBContext.newInstance(Iso8583FieldDefinition.class).createUnmarshaller();
+		Unmarshaller unmarshaller = JAXBContext.newInstance(FieldDefinition.class).createUnmarshaller();
 
 		encoder = Charsets.getProvider("ASCII").getEncoder();
 		decoder = Charsets.getProvider("ASCII").getDecoder();
 
-		binaryL = FieldTypes.getType((Iso8583FieldDefinition) unmarshaller
+		binaryL = FieldTypes.getType((FieldDefinition) unmarshaller
 				.unmarshal(new ByteArrayInputStream(
 						("<iso-field id=\"120\" type=\"b.\" xmlns=\"http://www.nucleus8583.org/schema/iso-message\" />").getBytes())));
-        binaryLL = FieldTypes.getType((Iso8583FieldDefinition) unmarshaller
+        binaryLL = FieldTypes.getType((FieldDefinition) unmarshaller
                 .unmarshal(new ByteArrayInputStream(
                         ("<iso-field id=\"120\" type=\"b..\" xmlns=\"http://www.nucleus8583.org/schema/iso-message\" />").getBytes())));
-        binaryLLL = FieldTypes.getType((Iso8583FieldDefinition) unmarshaller
+        binaryLLL = FieldTypes.getType((FieldDefinition) unmarshaller
                 .unmarshal(new ByteArrayInputStream(
                         ("<iso-field id=\"120\" type=\"b...\" xmlns=\"http://www.nucleus8583.org/schema/iso-message\" />").getBytes())));
 	}

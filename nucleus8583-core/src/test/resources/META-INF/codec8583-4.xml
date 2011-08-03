@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <iso-message xmlns="http://www.nucleus8583.org/schema/iso-message" encoding="ASCII">
     <iso-field id="0" type="n" length="4"/>
-    <iso-field id="1" type="b" length="32"/>
+    <iso-field id="1" type="b" length="16"/>
     <iso-field id="2" type="n .." length="16"/>
     <iso-field id="3" type="n" length="6"/>
     <iso-field id="4" type="n" length="12"/>
@@ -61,8 +61,8 @@
     <iso-field id="61" type="ans ..." length="999"/>
     <iso-field id="62" type="ans ..." length="999"/>
     <iso-field id="63" type="ans ..." length="999"/>
-    <iso-field id="64" type="b" length="16"/>
-    <iso-field id="65" type="b" length="2"/>
+    <iso-field id="64" type="b" length="8"/>
+    <iso-field id="65" type="b" length="1"/>
     <iso-field id="66" type="n" length="1"/>
     <iso-field id="67" type="n" length="2"/>
     <iso-field id="68" type="n" length="3"/>
@@ -93,7 +93,7 @@
     <iso-field id="93" type="s" length="6"/>
     <iso-field id="94" type="s" length="7"/>
     <iso-field id="95" type="s" length="42"/>
-    <iso-field id="96" type="b" length="32"/>
+    <iso-field id="96" type="b" length="16"/>
     <iso-field id="98" type="s" length="25"/>
     <iso-field id="99" type="n .." length="11"/>
     <iso-field id="100" type="n .." length="11"/>
@@ -124,5 +124,5 @@
     <iso-field id="125" type="ans ..." length="999"/>
     <iso-field id="126" type="ans ..." length="999"/>
     <iso-field id="127" type="ans ..." length="999"/>
-    <iso-field id="128" type="b" length="16"/>
+    <iso-field id="128" type="b" length="8"/>
 </iso-message>

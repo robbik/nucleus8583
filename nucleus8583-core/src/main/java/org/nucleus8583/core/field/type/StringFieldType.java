@@ -9,8 +9,8 @@ import org.nucleus8583.core.charset.CharsetDecoder;
 import org.nucleus8583.core.charset.CharsetEncoder;
 import org.nucleus8583.core.util.IOUtils;
 import org.nucleus8583.core.util.StringUtils;
-import org.nucleus8583.core.xml.Iso8583FieldAlignments;
-import org.nucleus8583.core.xml.Iso8583FieldDefinition;
+import org.nucleus8583.core.xml.FieldAlignments;
+import org.nucleus8583.core.xml.FieldDefinition;
 
 public final class StringFieldType extends AbstractStringFieldType {
 	private static final long serialVersionUID = -5615324004502124085L;
@@ -25,7 +25,7 @@ public final class StringFieldType extends AbstractStringFieldType {
 
 	private final char[] emptyValue;
 
-	public StringFieldType(Iso8583FieldDefinition def, Iso8583FieldAlignments defaultAlign,
+	public StringFieldType(FieldDefinition def, FieldAlignments defaultAlign,
 			String defaultPadWith, String defaultEmptyValue) {
 		super(def, defaultAlign, defaultPadWith, defaultEmptyValue);
 

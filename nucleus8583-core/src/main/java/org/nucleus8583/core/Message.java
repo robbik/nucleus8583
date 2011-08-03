@@ -14,7 +14,7 @@ import org.nucleus8583.core.util.BitmapHelper;
  * @author Robbi Kurniawan
  *
  */
-public final class Iso8583Message implements Serializable {
+public final class Message implements Serializable {
 	private static final long serialVersionUID = -1503040549193848604L;
 
 	private final int count;
@@ -32,9 +32,9 @@ public final class Iso8583Message implements Serializable {
 	/**
 	 * create a new instance of this class with 192 number of fields defined.
 	 *
-	 * same as <code>Iso8583Message(192)</code>.
+	 * same as <code>Message(192)</code>.
 	 */
-	public Iso8583Message() {
+	public Message() {
 		this(192);
 	}
 
@@ -45,7 +45,7 @@ public final class Iso8583Message implements Serializable {
 	 * @param count
 	 *            the number of fields.
 	 */
-	public Iso8583Message(int count) {
+	public Message(int count) {
 		if ((count < 64) || (count > 192)) {
 			throw new IllegalArgumentException(
 					"number of fields must in range 64-192");
@@ -54,11 +54,12 @@ public final class Iso8583Message implements Serializable {
 		this.count = count + 1;
 
 		this.mti = "";
+
 		this.stringValues = new String[this.count];
 		this.binaryValues = new byte[this.count][];
 
 		this.bits1To128 = BitmapHelper.create(128);
-		this.bits129To192 = BitmapHelper.create(128);
+		this.bits129To192 = BitmapHelper.create(64);
 	}
 
 	/**
@@ -101,9 +102,7 @@ public final class Iso8583Message implements Serializable {
 	 *            new binary value
 	 * @throws IllegalArgumentException
 	 *             if <code>no</code> less than <code>2</code> or more than
-	 *             <code>192</code> or equals to <code>65</code> or more than
-	 *             number of fields defined in configuration used by
-	 *             {@link Iso8583MessageFactory} that instantiates this object
+	 *             <code>192</code> or equals to <code>65</code>
 	 *             or the field is a string field. otherwise <code>true</code>
 	 */
 	public void set(int no, byte[] value) {
@@ -135,10 +134,7 @@ public final class Iso8583Message implements Serializable {
 	 *            new value
 	 * @throws IllegalArgumentException
 	 *             if <code>no</code> less than <code>2</code> or more than
-	 *             <code>192</code> or equals to <code>65</code> or more than
-	 *             number of fields defined in configuration used by
-	 *             {@link Iso8583MessageFactory} that instantiates this object
-	 *             or the field is a binary field. otherwise <code>true</code>
+	 *             <code>192</code> or equals to <code>65</code>, otherwise <code>true</code>
 	 */
 	public void set(int no, String value) {
 		if (no == 0) {
@@ -219,9 +215,7 @@ public final class Iso8583Message implements Serializable {
 	 *            <code>2-192</code>, exclude <code>65<code>.
 	 * @throws IllegalArgumentException
 	 *             if <code>no</code> less than <code>2</code> or more than
-	 *             <code>192</code> or equals to <code>65</code> or more than
-	 *             number of fields defined in configuration used by
-	 *             {@link Iso8583MessageFactory} that instantiates this object.
+	 *             <code>192</code> or equals to <code>65</code>,
 	 *             otherwise <code>true</code>
 	 */
 	public void unset(int no) {
@@ -272,9 +266,7 @@ public final class Iso8583Message implements Serializable {
 	 * @return field value or null if the bit has not been set yet.
 	 * @throws IllegalArgumentException
 	 *             if <code>no</code> less than <code>2</code> or more than
-	 *             <code>192</code> or equals to <code>65</code> or more than
-	 *             number of fields defined in configuration used by
-	 *             {@link Iso8583MessageFactory} that instantiates this object.
+	 *             <code>192</code> or equals to <code>65</code>,
 	 *             otherwise the field value.
 	 */
 	public Object get(int no) {
@@ -304,9 +296,7 @@ public final class Iso8583Message implements Serializable {
 	 * @return field value or null if the bit has not been set yet.
 	 * @throws IllegalArgumentException
 	 *             if <code>no</code> less than <code>2</code> or more than
-	 *             <code>192</code> or equals to <code>65</code> or more than
-	 *             number of fields defined in configuration used by
-	 *             {@link Iso8583MessageFactory} that instantiates this object
+	 *             <code>192</code> or equals to <code>65</code>
 	 *             or the field has binary (<code>b</code> data element) type.
 	 *             otherwise the field value or the field is a binary field.
 	 */
@@ -330,9 +320,7 @@ public final class Iso8583Message implements Serializable {
 	 *            number of field to be get, should in range <code>2-192</code>,
 	 *            exclude <code>65<code>.
 	 * @return <code>null<code> if <code>no</code> less than <code>2</code> or
-	 *         more than <code>192</code> or equals to <code>65</code> or more
-	 *         than number of fields defined in configuration used by
-	 *         {@link Iso8583MessageFactory} that instantiates this object or
+	 *         more than <code>192</code> or equals to <code>65</code> or
 	 *         the field type is not binary (non <code>b</code> data element).
 	 *         otherwise the field value.
 	 */
@@ -459,11 +447,11 @@ public final class Iso8583Message implements Serializable {
 			return false;
 		}
 
-		if (!(object instanceof Iso8583Message)) {
+		if (!(object instanceof Message)) {
 			return false;
 		}
 
-		Iso8583Message another = (Iso8583Message) object;
+		Message another = (Message) object;
 		if (!equals(this.mti, another.mti)) {
 			return false;
 		}

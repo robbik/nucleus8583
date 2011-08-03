@@ -1,6 +1,7 @@
 package org.nucleus8583.core;
 
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -12,7 +13,11 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 
+import javax.xml.XMLConstants;
 import javax.xml.bind.JAXBContext;
+import javax.xml.bind.Unmarshaller;
+import javax.xml.validation.Schema;
+import javax.xml.validation.SchemaFactory;
 
 import org.nucleus8583.core.charset.CharsetDecoder;
 import org.nucleus8583.core.charset.CharsetEncoder;
@@ -22,20 +27,22 @@ import org.nucleus8583.core.field.type.FieldType;
 import org.nucleus8583.core.field.type.FieldTypes;
 import org.nucleus8583.core.util.BitmapHelper;
 import org.nucleus8583.core.util.ResourceUtils;
-import org.nucleus8583.core.xml.Iso8583FieldDefinition;
-import org.nucleus8583.core.xml.Iso8583MessageDefinition;
+import org.nucleus8583.core.xml.FieldDefinition;
+import org.nucleus8583.core.xml.MessageDefinition;
 import org.w3c.dom.Node;
 
 /**
- * Serialize/deserialize {@link Iso8583Message} object. Creating this class
+ * Serialize/deserialize {@link Message} object. Creating this class
  * requires configuration.
  *
  * @author Robbi Kurniawan
  *
  */
-public final class Iso8583MessageSerializer {
+public final class MessageSerializer {
 
 	private static final JAXBContext ctx;
+
+	private static final Schema xsd;
 
 	private static final Comparator<FieldType> sortByFieldId = new Comparator<FieldType>() {
 
@@ -46,7 +53,10 @@ public final class Iso8583MessageSerializer {
 
 	static {
 		try {
-			ctx = JAXBContext.newInstance(Iso8583MessageDefinition.class);
+			ctx = JAXBContext.newInstance(MessageDefinition.class);
+
+			xsd = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI).newSchema(
+			        ResourceUtils.getURL("classpath:META-INF/nucleus8583/schema/iso-message.xsd"));
 		} catch (Exception e) {
 			StringWriter w = new StringWriter();
 			PrintWriter pw = new PrintWriter(w);
@@ -60,38 +70,38 @@ public final class Iso8583MessageSerializer {
 
 	/**
 	 * same as <code>
-	 *     return new Iso8583MessageFactory(location);
+	 *     return new MessageSerializer(location);
 	 * </code>
 	 *
 	 * @param location
-	 * @return a new instance of Iso8583MessageFactory.
+	 * @return a new instance of MessageSerializer.
 	 */
-	public static Iso8583MessageSerializer create(String location) {
-		return new Iso8583MessageSerializer(location);
+	public static MessageSerializer create(String location) {
+		return new MessageSerializer(location);
 	}
 
 	/**
 	 * same as <code>
-	 *     return new Iso8583MessageFactory(in);
+	 *     return new MessageSerializer(in);
 	 * </code>
 	 *
 	 * @param in
-	 * @return a new instance of Iso8583MessageFactory.
+	 * @return a new instance of MessageSerializer.
 	 */
-	public static Iso8583MessageSerializer create(InputStream in) {
-		return new Iso8583MessageSerializer(in);
+	public static MessageSerializer create(InputStream in) {
+		return new MessageSerializer(in);
 	}
 
 	/**
 	 * same as <code>
-	 *     return new Iso8583MessageFactory(node);
+	 *     return new MessageSerializer(node);
 	 * </code>
 	 *
 	 * @param node
-	 * @return a new instance of Iso8583MessageFactory.
+	 * @return a new instance of MessageSerializer.
 	 */
-	public static Iso8583MessageSerializer create(Node node) {
-		return new Iso8583MessageSerializer(node);
+	public static MessageSerializer create(Node node) {
+		return new MessageSerializer(node);
 	}
 
 	private FieldType[] fields;
@@ -107,7 +117,7 @@ public final class Iso8583MessageSerializer {
 	private CharsetDecoder charsetDecoder;
 
 	/**
-	 * create a new instance of {@link Iso8583MessageSerializer} using given
+	 * create a new instance of {@link MessageSerializer} using given
 	 * configuration.
 	 *
 	 * For example, if you want to load "nucleus8583.xml" from "META-INF"
@@ -121,17 +131,19 @@ public final class Iso8583MessageSerializer {
 	 * @param location
 	 *            configuration location (in URI)
 	 */
-	public Iso8583MessageSerializer(String location) {
+	public MessageSerializer(String location) {
 		URL found = ResourceUtils.getURL(location);
 		if (found == null) {
 			throw new RuntimeException("unable to find " + location);
 		}
 
-		Iso8583MessageDefinition definition;
+		MessageDefinition definition;
 
 		try {
-			definition = (Iso8583MessageDefinition) Iso8583MessageSerializer.ctx.createUnmarshaller()
-					.unmarshal(found);
+            Unmarshaller unmarshaller = MessageSerializer.ctx.createUnmarshaller();
+            unmarshaller.setSchema(MessageSerializer.xsd);
+
+			definition = (MessageDefinition) unmarshaller.unmarshal(found);
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
@@ -140,18 +152,20 @@ public final class Iso8583MessageSerializer {
 	}
 
 	/**
-	 * create a new instance of {@link Iso8583MessageSerializer} using given
+	 * create a new instance of {@link MessageSerializer} using given
 	 * configuration
 	 *
 	 * @param in
 	 *            input stream
 	 */
-	public Iso8583MessageSerializer(InputStream in) {
-		Iso8583MessageDefinition definition;
+	public MessageSerializer(InputStream in) {
+		MessageDefinition definition;
 
 		try {
-			definition = (Iso8583MessageDefinition) Iso8583MessageSerializer.ctx.createUnmarshaller()
-					.unmarshal(in);
+            Unmarshaller unmarshaller = MessageSerializer.ctx.createUnmarshaller();
+            unmarshaller.setSchema(MessageSerializer.xsd);
+
+			definition = (MessageDefinition) unmarshaller.unmarshal(in);
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
@@ -160,18 +174,20 @@ public final class Iso8583MessageSerializer {
 	}
 
 	/**
-	 * create a new instance of {@link Iso8583MessageSerializer} using given
+	 * create a new instance of {@link MessageSerializer} using given
 	 * configuration
 	 *
 	 * @param node
 	 *            an DOM node where the entire XML start from
 	 */
-	public Iso8583MessageSerializer(Node node) {
-		Iso8583MessageDefinition definition;
+	public MessageSerializer(Node node) {
+		MessageDefinition definition;
 
 		try {
-			definition = (Iso8583MessageDefinition) Iso8583MessageSerializer.ctx.createUnmarshaller()
-					.unmarshal(node);
+		    Unmarshaller unmarshaller = MessageSerializer.ctx.createUnmarshaller();
+		    unmarshaller.setSchema(MessageSerializer.xsd);
+
+			definition = (MessageDefinition) unmarshaller.unmarshal(node);
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
@@ -179,8 +195,8 @@ public final class Iso8583MessageSerializer {
 		init(definition);
 	}
 
-	private void init(Iso8583MessageDefinition definition) {
-		List<Iso8583FieldDefinition> fields = definition.getFields();
+	private void init(MessageDefinition definition) {
+		List<FieldDefinition> fields = definition.getFields();
 
 		this.fieldsCount = fields.size();
 
@@ -190,7 +206,7 @@ public final class Iso8583MessageSerializer {
 		}
 
 		// sort fields by it's id
-		Arrays.sort(this.fields, Iso8583MessageSerializer.sortByFieldId);
+		Arrays.sort(this.fields, MessageSerializer.sortByFieldId);
 
 		// check for skipped fields
 		for (int i = 0; i < fieldsCount; ++i) {
@@ -226,31 +242,31 @@ public final class Iso8583MessageSerializer {
 
 	/**
 	 * read serialized data from buffer and set it's values to given
-	 * {@link Iso8583Message} object
+	 * {@link Message} object
 	 *
 	 * @param buf
 	 *            The buffer
 	 * @param out
-	 *            The {@link Iso8583Message} object
+	 *            The {@link Message} object
 	 * @throws IOException
 	 *             thrown if the buffer length is shorter than expected.
 	 */
-	public void read(byte[] buf, Iso8583Message out) throws IOException {
+	public void read(byte[] buf, Message out) throws IOException {
 		read(new ByteArrayInputStream(buf), out);
 	}
 
 	/**
 	 * read serialized data from stream and set it's values to given
-	 * {@link Iso8583Message} object
+	 * {@link Message} object
 	 *
 	 * @param in
 	 *            The stream
 	 * @param out
-	 *            The {@link Iso8583Message} object
+	 *            The {@link Message} object
 	 * @throws IOException
 	 *             thrown if an IO error occurred while serializing.
 	 */
-	public void read(InputStream in, Iso8583Message out) throws IOException {
+	public void read(InputStream in, Message out) throws IOException {
 		byte[] bits1To128 = out.directBits1To128();
 		byte[] bits129To192 = out.directBits129To192();
 
@@ -263,13 +279,17 @@ public final class Iso8583MessageSerializer {
 		out.setMti(fields[0].readString(in, charsetDecoder));
 
 		// read bit-1
-		fields[1].read(in, charsetDecoder, bits1To128);
+		fields[1].read(in, charsetDecoder, bits1To128, 0, 8);
+
+		if (BitmapHelper.get(bits1To128, 0)) {
+		    fields[1].read(in, charsetDecoder, bits1To128, 8, 8);
+		}
 
 		// read bit-i
 		for (int i = 2, iMin1 = 1, iMin129 = -127; i < count; ++i, ++iMin1, ++iMin129) {
 			if (i == 65) {
 				if (BitmapHelper.get(bits1To128, 64)) {
-					fields[i].read(in, charsetDecoder, bits129To192);
+					fields[i].read(in, charsetDecoder, bits129To192, 0, 8);
 				}
 			} else if (i < 129) {
 				if (BitmapHelper.get(bits1To128, iMin1)) {
@@ -291,17 +311,35 @@ public final class Iso8583MessageSerializer {
 		}
 	}
 
+    /**
+     * serialize {@link Message} object into internal byte buffer and return the buffer
+     *
+     * @param msg
+     *            The {@link Message} object
+     */
+    public byte[] write(Message msg) {
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+
+        try {
+            write(msg, out);
+        } catch (IOException e) {
+            // never been here
+        }
+
+        return out.toByteArray();
+    }
+
 	/**
-	 * serialize {@link Iso8583Message} object into given stream
+	 * serialize {@link Message} object into given stream
 	 *
 	 * @param msg
-	 *            The {@link Iso8583Message} object
+	 *            The {@link Message} object
 	 * @param out
 	 *            The stream
 	 * @throws IOException
 	 *             thrown if an IO error occurred while serializing.
 	 */
-	public void write(Iso8583Message msg, OutputStream out) throws IOException {
+	public void write(Message msg, OutputStream out) throws IOException {
 	    byte[] bits1To128 = msg.directBits1To128();
 	    byte[] bits129To192 = msg.directBits129To192();
 
@@ -310,6 +348,16 @@ public final class Iso8583MessageSerializer {
 		byte[][] binaryValues = msg.directBinaryValues();
 		String[] stringValues = msg.directStringValues();
 
+        // is bit 1 on?
+		boolean bit1IsOn = false;
+
+		if (BitmapHelper.realBytesInUse(bits1To128) > 8) {
+		    BitmapHelper.set(bits1To128, 0);
+		    bit1IsOn = true;
+		} else {
+		    BitmapHelper.clear(bits1To128, 0);
+		}
+
 		// is bit 65 on?
 		if (BitmapHelper.isEmpty(bits129To192)) {
 		    BitmapHelper.clear(bits1To128, 64);
@@ -317,14 +365,15 @@ public final class Iso8583MessageSerializer {
 			binaryValues[65] = null;
 			stringValues[65] = null;
 		} else {
+		    if (!bit1IsOn) {
+		        BitmapHelper.set(bits1To128, 0); // bit 1 must be on
+		        bit1IsOn = true;
+		    }
 		    BitmapHelper.set(bits1To128, 64);
 
 			binaryValues[65] = bits129To192;
 			stringValues[65] = null;
 		}
-
-		// bit 1 is always off
-		BitmapHelper.clear(bits1To128, 0);
 
 		int count = msg.size();
 		if (count > fieldsCount) {
@@ -333,15 +382,19 @@ public final class Iso8583MessageSerializer {
 
 		// pack!
 		fields[0].write(out, charsetEncoder, mti);
-		fields[1].write(out, charsetEncoder, bits1To128);
+		fields[1].write(out, charsetEncoder, bits1To128, 0, bit1IsOn ? 16 : 8);
 
 		for (int i = 2, j = 1; (i < count) && (i < 129); ++i, ++j) {
 			if (BitmapHelper.get(bits1To128, j)) {
-				if (binaries[i]) {
-					fields[i].write(out, charsetEncoder, binaryValues[i]);
-				} else {
-					fields[i].write(out, charsetEncoder, stringValues[i]);
-				}
+			    if (i == 65) {
+			        fields[i].write(out, charsetEncoder, binaryValues[i], 0, 8);
+			    } else {
+    				if (binaries[i]) {
+    					fields[i].write(out, charsetEncoder, binaryValues[i]);
+    				} else {
+    					fields[i].write(out, charsetEncoder, stringValues[i]);
+    				}
+			    }
 			}
 		}
 

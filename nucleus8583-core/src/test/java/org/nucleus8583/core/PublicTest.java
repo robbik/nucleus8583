@@ -10,12 +10,12 @@ public class PublicTest {
 
     @Test
     public void case1() throws Exception {
-        Iso8583Message msg = new Iso8583Message();
+        Message msg = new Message();
         msg.setMti("0330");
         msg.set(2, "suka2 ");
         msg.set(4, "89");
 
-        Iso8583MessageSerializer serializer = Iso8583MessageSerializer
+        MessageSerializer serializer = MessageSerializer
                 .create("file:src/test/resources/META-INF/public/iso-1.xml");
 
         ByteArrayOutputStream out = new ByteArrayOutputStream();

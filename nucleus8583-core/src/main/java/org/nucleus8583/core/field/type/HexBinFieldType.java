@@ -7,8 +7,8 @@ import java.util.Arrays;
 
 import org.nucleus8583.core.charset.CharsetDecoder;
 import org.nucleus8583.core.charset.CharsetEncoder;
-import org.nucleus8583.core.xml.Iso8583FieldAlignments;
-import org.nucleus8583.core.xml.Iso8583FieldDefinition;
+import org.nucleus8583.core.xml.FieldAlignments;
+import org.nucleus8583.core.xml.FieldDefinition;
 
 public final class HexBinFieldType extends AbstractHexBinFieldType {
 	private static final long serialVersionUID = -5615324004502124085L;
@@ -19,7 +19,7 @@ public final class HexBinFieldType extends AbstractHexBinFieldType {
 
     private final char[] padder;
 
-	public HexBinFieldType(Iso8583FieldDefinition def, Iso8583FieldAlignments defaultAlign,
+	public HexBinFieldType(FieldDefinition def, FieldAlignments defaultAlign,
 			String defaultPadWith, String defaultEmptyValue) {
 		super(def, defaultAlign, defaultPadWith, defaultEmptyValue);
 
@@ -27,7 +27,7 @@ public final class HexBinFieldType extends AbstractHexBinFieldType {
             throw new IllegalArgumentException("length must be greater than zero");
         }
 
-        length = def.getLength() >> 1;
+        length = def.getLength();
         streamLength = length << 1;
 
         padder = new char[streamLength];
@@ -36,34 +36,42 @@ public final class HexBinFieldType extends AbstractHexBinFieldType {
 
 	@Override
     public void read(InputStream in, CharsetDecoder dec, byte[] value) throws IOException {
-		super.read(in, dec, value, streamLength);
+		super._read(in, dec, value, 0, streamLength);
 	}
+
+    @Override
+    public void read(InputStream in, CharsetDecoder dec, byte[] value, int off, int len) throws IOException {
+        super._read(in, dec, value, off, len << 1);
+    }
 
 	@Override
     public byte[] readBinary(InputStream in, CharsetDecoder dec) throws IOException {
 		byte[] value = new byte[length];
-		super.read(in, dec, value, streamLength);
+		super._read(in, dec, value, 0, streamLength);
 
 		return value;
 	}
 
-	@Override
+    @Override
     public void write(OutputStream out, CharsetEncoder enc, byte[] value) throws IOException {
-	    int vlen = value.length;
-//	    if (vlen > length) {
-//	        throw new IllegalArgumentException("value of field #" + id + " is too long, expected " + length + " but actual is " + vlen);
-//	    }
+        int vlen = value.length;
+        if (vlen > length) {
+            throw new IllegalArgumentException("value of field #" + id + " is too long, expected " + length + " but actual is " + vlen);
+        }
 
-	    // 1 binary byte = 2 hex bytes
+        // 1 binary byte = 2 hex bytes
         if (vlen == 0) {
             enc.write(out, padder, 0, streamLength);
-        } else if (vlen > length) {
-            super.write(out, enc, value, length);
-        } else if (vlen == streamLength) {
-            super.write(out, enc, value, vlen);
+        } else if (vlen == length) {
+            super._write(out, enc, value, 0, vlen);
         } else {
-            super.write(out, enc, value, vlen);
+            super._write(out, enc, value, 0, vlen);
             enc.write(out, padder, 0, streamLength - (vlen << 1));
         }
+    }
+
+    @Override
+    public void write(OutputStream out, CharsetEncoder enc, byte[] value, int off, int vlen) throws IOException {
+        super._write(out, enc, value, off, vlen);
 	}
 }

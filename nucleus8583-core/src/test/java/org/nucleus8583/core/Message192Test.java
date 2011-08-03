@@ -12,42 +12,25 @@ import org.junit.Before;
 import org.junit.Test;
 import org.nucleus8583.core.util.BitmapHelper;
 
-public class Iso8583MessageTest {
-	private Iso8583Message msg1;
+public class Message192Test {
+	private Message msg1;
 
-	private Iso8583Message msg2;
+	private Message msg2;
 
 	@Before
 	public void before() {
-		msg1 = new Iso8583Message(128);
-		msg2 = new Iso8583Message(128);
-	}
+		msg1 = new Message(192);
 
-	@Test(expected = IllegalArgumentException.class)
-	public void testInstantiateCountOutOfRangeCase1() {
-		new Iso8583Message(63);
-	}
-
-	@Test(expected = IllegalArgumentException.class)
-	public void testInstantiateCountOutOfRangeCase2() {
-		new Iso8583Message(193);
+		msg2 = new Message(192);
 	}
 
 	@Test
 	public void testManipulateMti() {
-		msg1.setMti(null);
-		assertEquals("", msg1.getMti());
-
 		msg1.setMti("0200");
 		assertEquals("0200", msg1.getMti());
 
 		msg1.unsetMti();
 		assertEquals("", msg1.getMti());
-
-		msg1.set(0, "0200");
-		assertEquals("0200", msg1.getMti());
-		assertEquals("0200", msg1.get(0));
-		assertEquals("0200", msg1.getString(0));
 	}
 
 	@Test
@@ -109,15 +92,14 @@ public class Iso8583MessageTest {
 			} catch (IllegalArgumentException ex) {
 				error = true;
 			}
-			assertTrue(error);
 
-			error = false;
 			try {
 				msg1.set(129, new byte[0]);
+				error &= false;
 			} catch (IllegalArgumentException ex) {
-				error = true;
+				error &= true;
 			}
-			assertTrue(error);
+			assertFalse(error);
 		}
 
 		error = false;
@@ -139,65 +121,68 @@ public class Iso8583MessageTest {
 
 	@Test
 	public void testManipulateStringField() {
-		msg1.set(2, "9000");
-		assertTrue(msg1.get(2) instanceof String);
+		msg1.set(162, "9000");
+		assertTrue(msg1.get(162) instanceof String);
 
-		assertNull(msg1.getBinary(2));
-		assertEquals("9000", msg1.getString(2));
+		assertNull(msg1.getBinary(162));
+		assertEquals("9000", msg1.getString(162));
 
-		msg1.unset(2);
-		assertNull(msg1.getBinary(2));
+		msg1.unset(162);
+		assertNull(msg1.getBinary(162));
+		assertNull(msg1.getString(162));
+
+		msg1.set(162, "0200");
+		msg1.set(162, (String) null);
+
+		assertNull(msg1.getBinary(162));
 		assertNull(msg1.getString(2));
 
-		msg1.set(2, "0200");
-		msg1.set(2, (String) null);
+		msg1.unsafeSet(162, "9000");
+		assertTrue(msg1.get(162) instanceof String);
 
-		assertNull(msg1.getBinary(2));
-		assertNull(msg1.getString(2));
+		assertNull(msg1.unsafeGetBinary(162));
+		assertEquals("9000", msg1.unsafeGetString(162));
 
-		msg1.unsafeSet(2, "9000");
-		assertTrue(msg1.get(2) instanceof String);
-
-		assertNull(msg1.unsafeGetBinary(2));
-		assertEquals("9000", msg1.unsafeGetString(2));
-
-		msg1.unsafeUnset(2);
-		assertNull(msg1.getBinary(2));
-		assertNull(msg1.getString(2));
+		msg1.unsafeUnset(162);
+		assertNull(msg1.getBinary(162));
+		assertNull(msg1.getString(162));
 	}
 
 	@Test
 	public void testManipulateBinaryField() {
-		byte[] ori = BitmapHelper.create(8);
-		BitmapHelper.set(ori, 1);
+	    byte[] ori = BitmapHelper.create(8);
+	    BitmapHelper.set(ori, 1);
 
-		msg1.set(64, ori);
-		assertTrue(msg1.get(64) instanceof byte[]);
+		msg1.set(190, ori);
+		assertTrue(msg1.get(190) instanceof byte[]);
 
-		assertNull(msg1.getString(64));
-		assertEquals(ori, msg1.getBinary(64));
+		assertNull(msg1.getString(190));
+		assertEquals(ori, msg1.getBinary(190));
 
 		msg1.clear();
-		assertNull(msg1.getBinary(64));
-		assertNull(msg1.getString(64));
+		assertNull(msg1.getBinary(190));
+		assertNull(msg1.getString(190));
 
-		msg1.set(64, ori);
-		msg1.set(64, (byte[]) null);
+		msg1.set(190, ori);
+		msg1.set(190, (byte[]) null);
 
-		assertNull(msg1.getBinary(64));
-		assertNull(msg1.getString(64));
+		assertNull(msg1.getBinary(190));
+		assertNull(msg1.getString(190));
 
-		msg1.unsafeSet(64, ori);
-		assertTrue(msg1.get(64) instanceof byte[]);
+		msg1.unsafeSet(190, ori);
+		assertTrue(msg1.get(190) instanceof byte[]);
 
-		assertNull(msg1.getString(64));
-		assertEquals(ori, msg1.getBinary(64));
+		assertNull(msg1.getString(190));
+		assertEquals(ori, msg1.getBinary(190));
 	}
 
 	@Test
 	public void equalityTest() {
 		assertEquals(msg1, msg1);
+		assertEquals(msg2, msg2);
+
 		assertEquals(msg1, msg2);
+		assertEquals(msg2, msg1);
 
 		assertFalse(msg1.equals(null));
 		assertFalse(msg1.equals("abcde"));
@@ -212,27 +197,9 @@ public class Iso8583MessageTest {
 		assertFalse(msg2.equals(msg1));
 
 		msg1.setMti("0200");
-		msg1.set(2, "400");
+		msg1.set(163, "400");
 		msg2.setMti("0200");
-		msg2.set(2, "401");
-		assertFalse(msg1.equals(msg2));
-		assertFalse(msg2.equals(msg1));
-
-		msg1.clear();
-		msg2.clear();
-
-		msg1.setMti("0200");
-		msg1.set(2, "400");
-		msg2.setMti("0200");
-		assertFalse(msg1.equals(msg2));
-		assertFalse(msg2.equals(msg1));
-
-		msg1.clear();
-		msg2.clear();
-
-		msg1.setMti("0200");
-		msg1.set(64, new byte[0]);
-		msg2.setMti("0200");
+		msg2.set(163, "401");
 		assertFalse(msg1.equals(msg2));
 		assertFalse(msg2.equals(msg1));
 
@@ -240,23 +207,24 @@ public class Iso8583MessageTest {
 		msg2.clear();
 
         byte[] bits = BitmapHelper.create(8);
-        BitmapHelper.set(bits, 1);
+        BitmapHelper.set(bits, 0);
 
 		msg1.setMti("0200");
-		msg1.set(64, bits);
+		msg1.set(190, bits);
 
         bits = BitmapHelper.create(8);
-        BitmapHelper.set(bits, 1);
+        BitmapHelper.set(bits, 0);
 
 		msg2.setMti("0200");
-		msg2.set(64, bits);
+		msg2.set(190, bits);
+
 		assertEquals(msg1, msg2);
 		assertEquals(msg2, msg1);
 
 		msg1.setMti("0200");
-		msg1.set(2, "400");
+		msg1.set(163, "400");
 		msg2.setMti("0200");
-		msg2.set(2, "400");
+		msg2.set(163, "400");
 		assertEquals(msg1, msg2);
 		assertEquals(msg2, msg1);
 
@@ -280,26 +248,26 @@ public class Iso8583MessageTest {
 		msg1.clear();
 
 		msg1.setMti("0200");
-		msg1.set(2, "400");
+		msg1.set(163, "400");
 		msg1.dump(dump);
 
 		expected.put(Integer.valueOf(0), "0200");
-		expected.put(Integer.valueOf(2), "400");
+		expected.put(Integer.valueOf(163), "400");
 		assertEquals(expected, dump);
 
 		expected.clear();
 		dump.clear();
 		msg1.clear();
 
-        byte[] bits = BitmapHelper.create(8);
-        BitmapHelper.set(bits, 1);
+		byte[] bits = BitmapHelper.create(8);
+		BitmapHelper.set(bits, 0);
 
 		msg1.setMti("0200");
-		msg1.set(64, bits);
+		msg1.set(190, bits);
 		msg1.dump(dump);
 
 		expected.put(Integer.valueOf(0), "0200");
-		expected.put(Integer.valueOf(64), bits);
+		expected.put(Integer.valueOf(190), bits);
 		assertEquals(expected, dump);
 
 		expected.clear();

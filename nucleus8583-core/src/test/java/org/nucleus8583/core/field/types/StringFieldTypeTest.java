@@ -15,7 +15,7 @@ import org.nucleus8583.core.charset.CharsetEncoder;
 import org.nucleus8583.core.charset.Charsets;
 import org.nucleus8583.core.field.type.FieldType;
 import org.nucleus8583.core.field.type.FieldTypes;
-import org.nucleus8583.core.xml.Iso8583FieldDefinition;
+import org.nucleus8583.core.xml.FieldDefinition;
 
 public class StringFieldTypeTest {
 
@@ -31,22 +31,22 @@ public class StringFieldTypeTest {
 
 	@Before
 	public void before() throws Exception {
-		Unmarshaller unmarshaller = JAXBContext.newInstance(Iso8583FieldDefinition.class).createUnmarshaller();
+		Unmarshaller unmarshaller = JAXBContext.newInstance(FieldDefinition.class).createUnmarshaller();
 
 		encoder = Charsets.getProvider("ASCII").getEncoder();
 		decoder = Charsets.getProvider("ASCII").getDecoder();
 
-		stringFieldAlignL = FieldTypes.getType((Iso8583FieldDefinition) unmarshaller
+		stringFieldAlignL = FieldTypes.getType((FieldDefinition) unmarshaller
 				.unmarshal(new ByteArrayInputStream(
 						("<iso-field id=\"39\" type=\"a\" length=\"2\" xmlns=\"http://www.nucleus8583.org/schema/iso-message\" />")
 								.getBytes())));
 
-		stringFieldAlignR = FieldTypes.getType((Iso8583FieldDefinition) unmarshaller
+		stringFieldAlignR = FieldTypes.getType((FieldDefinition) unmarshaller
 				.unmarshal(new ByteArrayInputStream(
 						("<iso-field id=\"39\" type=\"custom\" align=\"right\" pad-with=\" \" length=\"2\" xmlns=\"http://www.nucleus8583.org/schema/iso-message\" />")
 								.getBytes())));
 
-		stringFieldAlignN = FieldTypes.getType((Iso8583FieldDefinition) unmarshaller
+		stringFieldAlignN = FieldTypes.getType((FieldDefinition) unmarshaller
 				.unmarshal(new ByteArrayInputStream(
 						("<iso-field id=\"39\" type=\"custom\" align=\"none\" pad-with=\"\" length=\"2\" xmlns=\"http://www.nucleus8583.org/schema/iso-message\" />")
 								.getBytes())));
