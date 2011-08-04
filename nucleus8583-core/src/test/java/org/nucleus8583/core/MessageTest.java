@@ -33,21 +33,40 @@ public class MessageTest {
 		new Message(193);
 	}
 
-	@Test
-	public void testManipulateMti() {
-		msg1.setMti(null);
-		assertEquals("", msg1.getMti());
+    @Test(expected = IllegalArgumentException.class)
+    public void testSetMtiIfNull() {
+        msg1.setMti(null);
+    }
 
+    @Test(expected = IllegalArgumentException.class)
+    public void testSetMtiIf1Character() {
+        msg1.setMti("1");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testSetMtiIf2Characters() {
+        msg1.setMti("11");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testSetMtiIf3Characters() {
+        msg1.setMti("111");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testSetMtiIf5Characters() {
+        msg1.setMti("12345");
+    }
+
+	@Test
+	public void testSetMtiIfValid() {
 		msg1.setMti("0200");
 		assertEquals("0200", msg1.getMti());
 
-		msg1.unsetMti();
-		assertEquals("", msg1.getMti());
-
-		msg1.set(0, "0200");
-		assertEquals("0200", msg1.getMti());
-		assertEquals("0200", msg1.get(0));
-		assertEquals("0200", msg1.getString(0));
+		msg1.set(0, "0300");
+		assertEquals("0300", msg1.getMti());
+		assertEquals("0300", msg1.get(0));
+		assertEquals("0300", msg1.getString(0));
 	}
 
 	@Test
@@ -306,4 +325,48 @@ public class MessageTest {
 		dump.clear();
 		msg1.clear();
 	}
+
+	@Test
+	public void testSetResponseMti() {
+	    char[] in = new char[] { '0', '2', '0', '0' };
+
+	    Message msg = new Message();
+
+	    for (int i = 0; i < 8; i += 2) {
+	        in[2] = (char) (i + '0');
+
+	        msg.setMti(new String(in));
+	        assertTrue(msg.isRequest());
+            assertFalse(msg.isResponse());
+
+            msg.setResponseMti();
+            in[2] = (char) (i + '1');
+
+            assertEquals(new String(in), msg.getMti());
+
+            assertFalse(msg.isRequest());
+            assertTrue(msg.isResponse());
+	    }
+	}
+
+    @Test
+    public void testSetResponseMtiIfMtiIsRequest() {
+        char[] in = new char[] { '0', '2', '0', '0' };
+
+        Message msg = new Message();
+
+        for (int i = 0; i < 8; i += 2) {
+            in[2] = (char) (i + '1');
+
+            msg.setMti(new String(in));
+            assertFalse(msg.isRequest());
+            assertTrue(msg.isResponse());
+
+            msg.setResponseMti();
+            assertEquals(new String(in), msg.getMti());
+
+            assertFalse(msg.isRequest());
+            assertTrue(msg.isResponse());
+        }
+    }
 }

@@ -104,6 +104,8 @@ public final class MessageSerializer {
 		return new MessageSerializer(node);
 	}
 
+	private boolean hasMti;
+
 	private FieldType[] fields;
 
 	private boolean[] binaries;
@@ -195,21 +197,52 @@ public final class MessageSerializer {
 		init(definition);
 	}
 
+    private boolean replace(int id, FieldDefinition newdef, List<FieldDefinition> fields, int count) {
+        for (int i = 0; i < count; ++i) {
+            FieldDefinition def = fields.get(i);
+
+            if (def.getId() == id) {
+                fields.set(i, newdef);
+                return true;
+            }
+        }
+
+        return false;
+    }
+
 	private void init(MessageDefinition definition) {
 		List<FieldDefinition> fields = definition.getFields();
 
-		this.fieldsCount = fields.size();
+		int count = fields.size();
 
-		this.fields = new FieldType[this.fieldsCount];
-		for (int i = 0; i < fieldsCount; ++i) {
-			this.fields[i] = FieldTypes.getType(fields.get(i));
+		// automatic override field no 0 (if any)
+        hasMti = replace(0, FieldDefinition.FIELD_0, fields, count);
+        if (!hasMti) {
+		    fields.add(FieldDefinition.FIELD_0);
 		}
+
+        // automatic set field no 1
+		if (!replace(1, FieldDefinition.FIELD_1, fields, count)) {
+		    fields.add(FieldDefinition.FIELD_1);
+		}
+
+        // automatic set field no 65
+        if (!replace(65, FieldDefinition.FIELD_65, fields, count)) {
+            fields.add(FieldDefinition.FIELD_65);
+        }
+
+        this.fieldsCount = fields.size();
+        this.fields = new FieldType[this.fieldsCount];
+
+        for (int i = 0; i < fieldsCount; ++i) {
+            this.fields[i] = FieldTypes.getType(fields.get(i));
+        }
 
 		// sort fields by it's id
 		Arrays.sort(this.fields, MessageSerializer.sortByFieldId);
 
 		// check for skipped fields
-		for (int i = 0; i < fieldsCount; ++i) {
+		for (int i = 1; i < fieldsCount; ++i) {
 			if (this.fields[i].getId() != i) {
 				throw new IllegalArgumentException("field #" + i + " is not defined");
 			}
@@ -275,8 +308,10 @@ public final class MessageSerializer {
 			count = fieldsCount;
 		}
 
-		// read bit-0
-		out.setMti(fields[0].readString(in, charsetDecoder));
+		if (hasMti) {
+    		// read bit-0
+    		out.setMti(fields[0].readString(in, charsetDecoder));
+		}
 
 		// read bit-1
 		fields[1].read(in, charsetDecoder, bits1To128, 0, 8);
@@ -381,7 +416,10 @@ public final class MessageSerializer {
 		}
 
 		// pack!
-		fields[0].write(out, charsetEncoder, mti);
+		if (hasMti) {
+		    fields[0].write(out, charsetEncoder, mti);
+		}
+
 		fields[1].write(out, charsetEncoder, bits1To128, 0, bit1IsOn ? 16 : 8);
 
 		for (int i = 2, j = 1; (i < count) && (i < 129); ++i, ++j) {

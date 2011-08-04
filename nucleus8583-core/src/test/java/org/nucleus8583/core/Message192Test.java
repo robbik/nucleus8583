@@ -28,9 +28,6 @@ public class Message192Test {
 	public void testManipulateMti() {
 		msg1.setMti("0200");
 		assertEquals("0200", msg1.getMti());
-
-		msg1.unsetMti();
-		assertEquals("", msg1.getMti());
 	}
 
 	@Test

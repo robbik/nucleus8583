@@ -63,24 +63,17 @@ public final class Message implements Serializable {
 	}
 
 	/**
-	 * set MTI field value, field number 0 in standard ISO-8583 message
+	 * set MTI field value, field number 0 in standard ISO-8583 message, must be 4 characters length
 	 *
 	 * @param mti
 	 *            new MTI field value
 	 */
 	public void setMti(String mti) {
-		if (mti == null) {
-			mti = "";
-		}
+        if ((mti == null) || (mti.length() != 4)) {
+            throw new IllegalArgumentException("mti is not valid, must be 4 characters length");
+        }
 
 		this.mti = mti;
-	}
-
-	/**
-	 * clear MTI field value, field number 0 in standard ISO-8583 message
-	 */
-	public void unsetMti() {
-		mti = "";
 	}
 
 	/**
@@ -271,7 +264,7 @@ public final class Message implements Serializable {
 	 */
 	public Object get(int no) {
 		if (no == 0) {
-			return mti;
+			return getMti();
 		}
 
 		if ((no <= 1) || (no > 192) || (no == 65) || (no >= count)) {
@@ -302,7 +295,7 @@ public final class Message implements Serializable {
 	 */
 	public String getString(int no) {
 		if (no == 0) {
-			return mti;
+			return getMti();
 		}
 
 		if ((no <= 1) || (no > 192) || (no == 65) || (no >= count)) {
@@ -417,6 +410,39 @@ public final class Message implements Serializable {
 		}
 	}
 
+	/**
+	 * set MTI to become a response one if and only-if the MTI is a request MTI
+	 */
+	public void setResponseMti() {
+        char[] chars = getMti().toCharArray();
+
+        int num = Character.getNumericValue(chars[2]);
+        if ((num & 0x01) == 0x00) {
+            chars[2] = (char) (num + '1');
+            setMti(new String(chars));
+        }
+	}
+
+	/**
+	 * check whether the MTI is a request MTI.
+	 *
+	 * @return <code>true</code> if the MTI is a request MTI, otherwise <code>false</code>
+	 */
+	public boolean isRequest() {
+        char[] chars = getMti().toCharArray();
+
+        return (Character.getNumericValue(chars[2]) & 0x01) == 0x00;
+	}
+
+    /**
+     * check whether the MTI is a response MTI.
+     *
+     * @return <code>true</code> if the MTI is a response MTI, otherwise <code>false</code>
+     */
+    public boolean isResponse() {
+        return !isRequest();
+    }
+
     private boolean equals(byte[] a, byte[] b) {
         if (a == b) {
             return true;
@@ -441,6 +467,10 @@ public final class Message implements Serializable {
 		return a.equals(b);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
 	@Override
 	public boolean equals(Object object) {
 		if (object == null) {
@@ -475,6 +505,10 @@ public final class Message implements Serializable {
 		return true;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
 	@Override
 	public int hashCode() {
 		return toString().hashCode();
