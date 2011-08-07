@@ -25,6 +25,13 @@
 		</xsd:restriction>
 	</xsd:simpleType>
 
+	<xsd:simpleType name="id">
+		<xsd:restriction base="xsd:unsignedInt">
+			<xsd:minInclusive value="0" />
+			<xsd:maxInclusive value="192" />
+		</xsd:restriction>
+	</xsd:simpleType>
+
 	<xsd:complexType name="iso-message">
 		<xsd:sequence>
 			<xsd:element name="iso-field" type="iso-field" minOccurs="1" maxOccurs="unbounded" />
@@ -35,7 +42,7 @@
 	</xsd:complexType>
 
 	<xsd:complexType name="iso-field">
-		<xsd:attribute name="id" use="required" type="xsd:unsignedInt" />
+		<xsd:attribute name="id" use="required" type="id" />
 		<xsd:attribute name="type" use="required" type="xsd:string" />
 
 		<xsd:attribute name="length" type="xsd:unsignedLong" default="0" />

@@ -53,7 +53,7 @@ public final class Message implements Serializable {
 
 		this.count = count + 1;
 
-		this.mti = "";
+		this.mti = null;
 
 		this.stringValues = new String[this.count];
 		this.binaryValues = new byte[this.count][];
@@ -362,7 +362,7 @@ public final class Message implements Serializable {
 	 * clear all fields value
 	 */
 	public void clear() {
-		mti = "";
+		mti = null;
 
 		Arrays.fill(binaryValues, null);
 		Arrays.fill(stringValues, null);
@@ -381,7 +381,9 @@ public final class Message implements Serializable {
 	 *            the map
 	 */
 	public void dump(Map<Integer, Object> map) {
-		map.put(Integer.valueOf(0), mti);
+	    if (mti != null) {
+			map.put(Integer.valueOf(0), mti);
+		}
 
 		for (int i = 2, iMin1 = 1, iMin129 = -127; i < count; ++i, ++iMin1, ++iMin129) {
 			if (i == 65) {
@@ -524,9 +526,12 @@ public final class Message implements Serializable {
 		StringBuffer sbuf = new StringBuffer();
 
 		sbuf.append("<iso-message>\n");
-		sbuf.append("    <iso-field id=\"0\" value=\"");
-		sbuf.append(mti);
-		sbuf.append("\" />\n");
+		
+		if (mti != null) {
+			sbuf.append("    <iso-field id=\"0\" value=\"");
+			sbuf.append(mti);
+			sbuf.append("\" />\n");
+		}
 
 		for (int i = 2, iMin1 = 1, iMin129 = -127; i < count; ++i, ++iMin1, ++iMin129) {
 			if (i == 65) {

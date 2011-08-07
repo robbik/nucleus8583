@@ -11,7 +11,9 @@ import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.xml.XMLConstants;
 import javax.xml.bind.JAXBContext;
@@ -210,6 +212,20 @@ public final class MessageSerializer {
         return false;
     }
 
+    private void checkDuplicateId(List<FieldDefinition> list, int count) {
+    	Set<Integer> set = new HashSet<Integer>();
+    	
+    	for (int i = 0; i < count; ++i) {
+    		Integer id = Integer.valueOf(list.get(i).getId());
+    		
+    		if (set.contains(id)) {
+    			throw new IllegalArgumentException("duplicate id " + id + " found");
+    		}
+    		
+    		set.add(id);
+    	}
+    }
+
 	private void init(MessageDefinition definition) {
 		List<FieldDefinition> fields = definition.getFields();
 
@@ -230,6 +246,8 @@ public final class MessageSerializer {
         if (!replace(65, FieldDefinition.FIELD_65, fields, count)) {
             fields.add(FieldDefinition.FIELD_65);
         }
+
+		checkDuplicateId(fields, count);
 
         this.fieldsCount = fields.size();
         this.fields = new FieldType[this.fieldsCount];
@@ -300,6 +318,8 @@ public final class MessageSerializer {
 	 *             thrown if an IO error occurred while serializing.
 	 */
 	public void read(InputStream in, Message out) throws IOException {
+		out.clear();
+	
 		byte[] bits1To128 = out.directBits1To128();
 		byte[] bits129To192 = out.directBits129To192();
 
@@ -307,7 +327,7 @@ public final class MessageSerializer {
 		if (count > fieldsCount) {
 			count = fieldsCount;
 		}
-
+		
 		if (hasMti) {
     		// read bit-0
     		out.setMti(fields[0].readString(in, charsetDecoder));
@@ -378,8 +398,6 @@ public final class MessageSerializer {
 	    byte[] bits1To128 = msg.directBits1To128();
 	    byte[] bits129To192 = msg.directBits129To192();
 
-		String mti = msg.getMti();
-
 		byte[][] binaryValues = msg.directBinaryValues();
 		String[] stringValues = msg.directStringValues();
 
@@ -415,13 +433,15 @@ public final class MessageSerializer {
 			count = fieldsCount;
 		}
 
-		// pack!
+		// write bit 0
 		if (hasMti) {
-		    fields[0].write(out, charsetEncoder, mti);
+		    fields[0].write(out, charsetEncoder, msg.getMti());
 		}
 
+		// write bit 1
 		fields[1].write(out, charsetEncoder, bits1To128, 0, bit1IsOn ? 16 : 8);
 
+		// write bit i
 		for (int i = 2, j = 1; (i < count) && (i < 129); ++i, ++j) {
 			if (BitmapHelper.get(bits1To128, j)) {
 			    if (i == 65) {

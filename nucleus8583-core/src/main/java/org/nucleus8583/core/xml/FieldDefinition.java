@@ -26,7 +26,7 @@ public class FieldDefinition {
 
         FIELD_1 = new FieldDefinition();
         FieldDefinition.FIELD_1.id = 1;
-        FieldDefinition.FIELD_1.type = "b";
+        FieldDefinition.FIELD_1.type = "bitmap";
         FieldDefinition.FIELD_1.length = 16;
         FieldDefinition.FIELD_1.align = FieldAlignments.NONE;
         FieldDefinition.FIELD_1.padWith = null;
@@ -34,7 +34,7 @@ public class FieldDefinition {
 
         FIELD_65 = new FieldDefinition();
         FieldDefinition.FIELD_65.id = 65;
-        FieldDefinition.FIELD_65.type = "b";
+        FieldDefinition.FIELD_65.type = "bitmap";
         FieldDefinition.FIELD_65.length = 8;
         FieldDefinition.FIELD_65.align = FieldAlignments.NONE;
         FieldDefinition.FIELD_65.padWith = null;
