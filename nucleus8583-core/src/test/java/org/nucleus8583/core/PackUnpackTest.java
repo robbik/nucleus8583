@@ -12,7 +12,6 @@ import java.util.BitSet;
 import org.junit.Before;
 import org.junit.Test;
 
-@SuppressWarnings("deprecation")
 public class PackUnpackTest {
 	private Iso8583MessageFactory messageFactory;
 
@@ -45,16 +44,33 @@ public class PackUnpackTest {
 	}
 
 	@Test
-	public void quickstartTest() throws Exception {
+	public void publicTest1() throws Exception {
 		Iso8583Message msg = new Iso8583MessageFactory("classpath:META-INF/codec8583-qs.xml").createMessage();
-
 		msg.setMti("0800");
 		msg.set(7, "0627180510");
 		msg.set(11, "123456");
 		msg.set(70, "301");
+		
 		byte[] packed = msg.pack();
-
 		assertEquals("0800822000000000000004000000000000000627180510123456301", new String(packed));
+	}
+
+	@Test
+	public void publicTest2() throws Exception {
+		Iso8583MessageFactory factory = new Iso8583MessageFactory("classpath:META-INF/codec8583-qs.xml");
+		
+		Iso8583Message msg = factory.createMessage();
+		msg.setMti("0800");
+		msg.set(7, "0627180510");
+		msg.set(11, "123456");
+		
+		byte[] packed = msg.pack();
+		assertEquals("080002200000000000000627180510123456", new String(packed));
+		
+		Iso8583Message msg2 = factory.createMessage();
+		msg2.unpack("080002200000000000000627180510123456");
+		
+		assertEquals(msg, msg2);
 	}
 
 	@Test

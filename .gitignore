@@ -1,7 +1,6 @@
-target
 bin
 temp
-.classpath
-.project
+target
 .settings
-
+.project
+.classpath

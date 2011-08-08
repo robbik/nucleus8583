@@ -7,9 +7,10 @@ import javax.xml.bind.annotation.XmlType;
 @XmlType
 @XmlEnum(String.class)
 public enum Iso8583FieldAlignments {
-	@XmlEnumValue("left") LEFT,
-	@XmlEnumValue("right") RIGHT,
-	@XmlEnumValue("none") NONE;
+	@XmlEnumValue("left")
+	LEFT, @XmlEnumValue("right")
+	RIGHT, @XmlEnumValue("none")
+	NONE;
 
 	public char symbolicValue() {
 		if (this == LEFT) {
@@ -19,21 +20,5 @@ public enum Iso8583FieldAlignments {
 			return 'r';
 		}
 		return 'n';
-	}
-
-	public static Iso8583FieldAlignments enumValueOf(String str) {
-		if ("left".equalsIgnoreCase(str)) {
-			return LEFT;
-		}
-
-		if ("right".equalsIgnoreCase(str)) {
-			return RIGHT;
-		}
-
-		if ("none".equalsIgnoreCase(str)) {
-			return NONE;
-		}
-
-		return null;
 	}
 }
