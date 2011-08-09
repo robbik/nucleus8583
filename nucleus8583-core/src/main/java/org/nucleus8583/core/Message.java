@@ -218,9 +218,9 @@ public final class Message implements Serializable {
 		}
 
 		if (no > 128) {
-		    BitmapHelper.set(bits129To192, no - 129);
+		    BitmapHelper.clear(bits129To192, no - 129);
 		} else {
-		    BitmapHelper.set(bits1To128, no - 1);
+		    BitmapHelper.clear(bits1To128, no - 1);
 		}
 
 		// let gc do it's work
@@ -240,9 +240,9 @@ public final class Message implements Serializable {
 	 */
 	public void unsafeUnset(int no) {
 		if (no > 128) {
-		    BitmapHelper.set(bits129To192, no - 129);
+		    BitmapHelper.clear(bits129To192, no - 129);
 		} else {
-		    BitmapHelper.set(bits1To128, no - 1);
+		    BitmapHelper.clear(bits1To128, no - 1);
 		}
 
 		// let gc do it's work
@@ -370,7 +370,6 @@ public final class Message implements Serializable {
 		BitmapHelper.clear(bits1To128);
 		BitmapHelper.clear(bits129To192);
 	}
-
 
 	/**
 	 * dump active fields value to a map. The map key is the field number and
@@ -526,7 +525,7 @@ public final class Message implements Serializable {
 		StringBuffer sbuf = new StringBuffer();
 
 		sbuf.append("<iso-message>\n");
-		
+
 		if (mti != null) {
 			sbuf.append("    <iso-field id=\"0\" value=\"");
 			sbuf.append(mti);
