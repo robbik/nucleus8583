@@ -1,12 +1,5 @@
 package org.nucleus8583.core.xml;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlRootElement;
-
-@XmlRootElement(name = "iso-field", namespace = "http://www.nucleus8583.org/schema/iso-message")
-@XmlAccessorType(XmlAccessType.FIELD)
 public class FieldDefinition {
 
     public static final FieldDefinition FIELD_0;
@@ -41,54 +34,72 @@ public class FieldDefinition {
         FieldDefinition.FIELD_65.emptyValue = null;
     }
 
-	@XmlAttribute(name = "id", required = true)
-	private int id;
+    private int id;
 
-	@XmlAttribute(name = "type", required = true)
-	private String type;
+    private String type;
 
-	@XmlAttribute(name = "length")
-	private int length;
+    private int length;
 
-	@XmlAttribute(name = "align")
-	private FieldAlignments align;
+    private FieldAlignments align;
 
-	@XmlAttribute(name = "pad-with")
-	private String padWith;
+    private String padWith;
 
-	@XmlAttribute(name = "empty-value")
-	private String emptyValue;
+    private String emptyValue;
 
-	public FieldDefinition() {
-		length = 0;
+    public FieldDefinition() {
+        length = 0;
 
-		align = null;
-		padWith = null;
+        align = null;
+        padWith = null;
 
-		emptyValue = null;
-	}
+        emptyValue = null;
+    }
 
-	public int getId() {
-		return id;
-	}
+    public int getId() {
+        return id;
+    }
 
-	public String getType() {
-		return type;
-	}
+    public void setId(int id) {
+        this.id = id;
+    }
 
-	public int getLength() {
-		return length;
-	}
+    public String getType() {
+        return type;
+    }
 
-	public FieldAlignments getAlign() {
-		return align;
-	}
+    public void setType(String type) {
+        this.type = type;
+    }
 
-	public String getPadWith() {
-		return padWith;
-	}
+    public int getLength() {
+        return length;
+    }
 
-	public String getEmptyValue() {
-		return emptyValue;
-	}
+    public void setLength(int length) {
+        this.length = length;
+    }
+
+    public FieldAlignments getAlign() {
+        return align;
+    }
+
+    public void setAlign(FieldAlignments align) {
+        this.align = align;
+    }
+
+    public String getPadWith() {
+        return padWith;
+    }
+
+    public void setPadWith(String padWith) {
+        this.padWith = padWith;
+    }
+
+    public String getEmptyValue() {
+        return emptyValue;
+    }
+
+    public void setEmptyValue(String emptyValue) {
+        this.emptyValue = emptyValue;
+    }
 }

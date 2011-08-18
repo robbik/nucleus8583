@@ -5,8 +5,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.util.Arrays;
@@ -14,12 +12,6 @@ import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
-import javax.xml.XMLConstants;
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.Unmarshaller;
-import javax.xml.validation.Schema;
-import javax.xml.validation.SchemaFactory;
 
 import org.nucleus8583.core.charset.CharsetDecoder;
 import org.nucleus8583.core.charset.CharsetEncoder;
@@ -31,6 +23,7 @@ import org.nucleus8583.core.util.BitmapHelper;
 import org.nucleus8583.core.util.ResourceUtils;
 import org.nucleus8583.core.xml.FieldDefinition;
 import org.nucleus8583.core.xml.MessageDefinition;
+import org.nucleus8583.core.xml.MessageDefinitionReader;
 import org.w3c.dom.Node;
 
 /**
@@ -42,33 +35,12 @@ import org.w3c.dom.Node;
  */
 public final class MessageSerializer {
 
-	private static final JAXBContext ctx;
-
-	private static final Schema xsd;
-
 	private static final Comparator<FieldType> sortByFieldId = new Comparator<FieldType>() {
 
 		public int compare(FieldType a, FieldType b) {
 			return a.getId() - b.getId();
 		}
 	};
-
-	static {
-		try {
-			ctx = JAXBContext.newInstance(MessageDefinition.class);
-
-			xsd = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI).newSchema(
-			        ResourceUtils.getURL("classpath:META-INF/nucleus8583/schema/iso-message.xsd"));
-		} catch (Exception e) {
-			StringWriter w = new StringWriter();
-			PrintWriter pw = new PrintWriter(w);
-
-			e.printStackTrace(pw);
-			pw.flush();
-
-			throw new InternalError(w.toString());
-		}
-	}
 
 	/**
 	 * same as <code>
@@ -144,10 +116,7 @@ public final class MessageSerializer {
 		MessageDefinition definition;
 
 		try {
-            Unmarshaller unmarshaller = MessageSerializer.ctx.createUnmarshaller();
-            unmarshaller.setSchema(MessageSerializer.xsd);
-
-			definition = (MessageDefinition) unmarshaller.unmarshal(found);
+			definition = new MessageDefinitionReader().unmarshal(found);
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
@@ -166,10 +135,7 @@ public final class MessageSerializer {
 		MessageDefinition definition;
 
 		try {
-            Unmarshaller unmarshaller = MessageSerializer.ctx.createUnmarshaller();
-            unmarshaller.setSchema(MessageSerializer.xsd);
-
-			definition = (MessageDefinition) unmarshaller.unmarshal(in);
+			definition = new MessageDefinitionReader().unmarshal(in);
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
@@ -188,10 +154,7 @@ public final class MessageSerializer {
 		MessageDefinition definition;
 
 		try {
-		    Unmarshaller unmarshaller = MessageSerializer.ctx.createUnmarshaller();
-		    unmarshaller.setSchema(MessageSerializer.xsd);
-
-			definition = (MessageDefinition) unmarshaller.unmarshal(node);
+			definition = new MessageDefinitionReader().unmarshal(node);
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
@@ -214,14 +177,14 @@ public final class MessageSerializer {
 
     private void checkDuplicateId(List<FieldDefinition> list, int count) {
     	Set<Integer> set = new HashSet<Integer>();
-    	
+
     	for (int i = 0; i < count; ++i) {
     		Integer id = Integer.valueOf(list.get(i).getId());
-    		
+
     		if (set.contains(id)) {
     			throw new IllegalArgumentException("duplicate id " + id + " found");
     		}
-    		
+
     		set.add(id);
     	}
     }
@@ -319,7 +282,7 @@ public final class MessageSerializer {
 	 */
 	public void read(InputStream in, Message out) throws IOException {
 		out.clear();
-	
+
 		byte[] bits1To128 = out.directBits1To128();
 		byte[] bits129To192 = out.directBits129To192();
 
@@ -327,7 +290,7 @@ public final class MessageSerializer {
 		if (count > fieldsCount) {
 			count = fieldsCount;
 		}
-		
+
 		if (hasMti) {
     		// read bit-0
     		out.setMti(fields[0].readString(in, charsetDecoder));

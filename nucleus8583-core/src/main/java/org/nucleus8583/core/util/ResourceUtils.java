@@ -2,7 +2,6 @@ package org.nucleus8583.core.util;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -17,7 +16,7 @@ public abstract class ResourceUtils {
 
 	private static void addResources(List<URL> resolved,
 			Set<String> doubleChecker, ClassLoader cl, String name) {
-		Enumeration<URL> en;
+		Enumeration<URL> en = null;
 
 		try {
 			if (cl == null) {
@@ -25,8 +24,8 @@ public abstract class ResourceUtils {
 			} else {
 				en = cl.getResources(name);
 			}
-		} catch (IOException e) {
-			en = null;
+		} catch (Throwable t) {
+			// do nothing
 		}
 
 		if (en != null) {
@@ -46,23 +45,42 @@ public abstract class ResourceUtils {
 		List<URL> resolved = new ArrayList<URL>();
 		Set<String> doubleChecker = new HashSet<String>();
 
-		if (location.startsWith(LOCATION_PREFIX_CLASSPATH)) {
+		if (location.startsWith(ResourceUtils.LOCATION_PREFIX_CLASSPATH)) {
 			location = location.substring(10);
 
-			addResources(resolved, doubleChecker, Thread.currentThread()
-					.getContextClassLoader(), location);
-			addResources(resolved, doubleChecker,
-					ResourceUtils.class.getClassLoader(), location);
-			addResources(resolved, doubleChecker,
-					ClassLoader.getSystemClassLoader(), location);
-			addResources(resolved, doubleChecker, null, location);
+			try {
+				addResources(resolved, doubleChecker, Thread.currentThread()
+						.getContextClassLoader(), location);
+			} catch (Throwable t) {
+				// do nothing
+			}
+
+			try {
+				addResources(resolved, doubleChecker,
+						ResourceUtils.class.getClassLoader(), location);
+			} catch (Throwable t) {
+				// do nothing
+			}
+
+			try {
+				addResources(resolved, doubleChecker,
+						ClassLoader.getSystemClassLoader(), location);
+			} catch (Throwable t) {
+				// do nothing
+			}
+
+			try {
+				addResources(resolved, doubleChecker, null, location);
+			} catch (Throwable t) {
+				// do nothing
+			}
 		} else {
 			URL resolved1;
 
 			try {
 				resolved1 = new URL(location);
 			} catch (MalformedURLException ex) {
-				if (location.startsWith(LOCATION_PREFIX_FILE))
+				if (location.startsWith(ResourceUtils.LOCATION_PREFIX_FILE))
 					location = location.substring(5);
 
 				try {
@@ -82,28 +100,47 @@ public abstract class ResourceUtils {
 	}
 
 	public static URL getURL(String location) {
-		URL resolved;
+		URL resolved = null;
 
-		if (location.startsWith(LOCATION_PREFIX_CLASSPATH)) {
+		if (location.startsWith(ResourceUtils.LOCATION_PREFIX_CLASSPATH)) {
 			location = location.substring(10);
 
-			resolved = Thread.currentThread().getContextClassLoader()
-					.getResource(location);
-			if (resolved == null) {
-				resolved = ResourceUtils.class.getResource(location);
+			try {
+				resolved = Thread.currentThread().getContextClassLoader()
+						.getResource(location);
+			} catch (Throwable t) {
+				// do nothing
 			}
+
 			if (resolved == null) {
-				resolved = ClassLoader.getSystemClassLoader().getResource(
-						location);
+				try {
+					resolved = ResourceUtils.class.getResource(location);
+				} catch (Throwable t) {
+					// do nothing
+				}
 			}
+
 			if (resolved == null) {
-				resolved = ClassLoader.getSystemResource(location);
+				try {
+					resolved = ClassLoader.getSystemClassLoader().getResource(
+							location);
+				} catch (Throwable t) {
+					// do nothing
+				}
+			}
+
+			if (resolved == null) {
+				try {
+					resolved = ClassLoader.getSystemResource(location);
+				} catch (Throwable t) {
+					// do nothing
+				}
 			}
 		} else {
 			try {
 				resolved = new URL(location);
 			} catch (MalformedURLException ex) {
-				if (location.startsWith(LOCATION_PREFIX_FILE))
+				if (location.startsWith(ResourceUtils.LOCATION_PREFIX_FILE))
 					location = location.substring(5);
 
 				try {
@@ -116,5 +153,21 @@ public abstract class ResourceUtils {
 		}
 
 		return resolved;
+	}
+
+	public static ClassLoader getDefaultClassLoader() {
+	    ClassLoader cl = null;
+
+        try {
+            cl = Thread.currentThread().getContextClassLoader();
+        } catch (Throwable t) {
+            // do nothing
+        }
+
+        if (cl == null) {
+            cl = ResourceUtils.class.getClassLoader();
+        }
+
+        return cl;
 	}
 }

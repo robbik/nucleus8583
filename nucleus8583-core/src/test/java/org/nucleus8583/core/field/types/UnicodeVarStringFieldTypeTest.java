@@ -6,9 +6,6 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.EOFException;
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.Unmarshaller;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.nucleus8583.core.charset.CharsetDecoder;
@@ -28,14 +25,14 @@ public class UnicodeVarStringFieldTypeTest {
 
 	@Before
 	public void before() throws Exception {
-		Unmarshaller unmarshaller = JAXBContext.newInstance(FieldDefinition.class).createUnmarshaller();
-
 		encoder = Charsets.getProvider("ASCII").getEncoder();
 		decoder = Charsets.getProvider("ASCII").getDecoder();
 
-		stringField = FieldTypes.getType((FieldDefinition) unmarshaller
-				.unmarshal(new ByteArrayInputStream(
-						("<iso-field id=\"39\" type=\"a .\" xmlns=\"http://www.nucleus8583.org/schema/iso-message\" />").getBytes())));
+        FieldDefinition def = new FieldDefinition();
+        def.setId(39);
+        def.setType("a .");
+
+        stringField = FieldTypes.getType(def);
 	}
 
 	@Test(expected = UnsupportedOperationException.class)

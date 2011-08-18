@@ -5,9 +5,6 @@ import static org.junit.Assert.assertEquals;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.Unmarshaller;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.nucleus8583.core.charset.CharsetDecoder;
@@ -15,6 +12,7 @@ import org.nucleus8583.core.charset.CharsetEncoder;
 import org.nucleus8583.core.charset.Charsets;
 import org.nucleus8583.core.field.type.FieldType;
 import org.nucleus8583.core.field.type.FieldTypes;
+import org.nucleus8583.core.xml.FieldAlignments;
 import org.nucleus8583.core.xml.FieldDefinition;
 
 public class StringFieldTypeTest {
@@ -31,25 +29,33 @@ public class StringFieldTypeTest {
 
 	@Before
 	public void before() throws Exception {
-		Unmarshaller unmarshaller = JAXBContext.newInstance(FieldDefinition.class).createUnmarshaller();
-
 		encoder = Charsets.getProvider("ASCII").getEncoder();
 		decoder = Charsets.getProvider("ASCII").getDecoder();
 
-		stringFieldAlignL = FieldTypes.getType((FieldDefinition) unmarshaller
-				.unmarshal(new ByteArrayInputStream(
-						("<iso-field id=\"39\" type=\"a\" length=\"2\" xmlns=\"http://www.nucleus8583.org/schema/iso-message\" />")
-								.getBytes())));
+        FieldDefinition def = new FieldDefinition();
+        def.setId(39);
+        def.setType("a");
+        def.setLength(2);
 
-		stringFieldAlignR = FieldTypes.getType((FieldDefinition) unmarshaller
-				.unmarshal(new ByteArrayInputStream(
-						("<iso-field id=\"39\" type=\"custom\" align=\"right\" pad-with=\" \" length=\"2\" xmlns=\"http://www.nucleus8583.org/schema/iso-message\" />")
-								.getBytes())));
+        stringFieldAlignL = FieldTypes.getType(def);
 
-		stringFieldAlignN = FieldTypes.getType((FieldDefinition) unmarshaller
-				.unmarshal(new ByteArrayInputStream(
-						("<iso-field id=\"39\" type=\"custom\" align=\"none\" pad-with=\"\" length=\"2\" xmlns=\"http://www.nucleus8583.org/schema/iso-message\" />")
-								.getBytes())));
+        def = new FieldDefinition();
+        def.setId(39);
+        def.setType("custom");
+        def.setAlign(FieldAlignments.RIGHT);
+        def.setPadWith(" ");
+        def.setLength(2);
+
+        stringFieldAlignR = FieldTypes.getType(def);
+
+        def = new FieldDefinition();
+        def.setId(39);
+        def.setType("custom");
+        def.setAlign(FieldAlignments.NONE);
+        def.setPadWith("");
+        def.setLength(2);
+
+		stringFieldAlignN = FieldTypes.getType(def);
 	}
 
 	@Test(expected = UnsupportedOperationException.class)

@@ -6,9 +6,6 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.EOFException;
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.Unmarshaller;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.nucleus8583.core.charset.CharsetDecoder;
@@ -30,13 +27,12 @@ public class HexBinFieldTypeTest {
 
 	@Before
 	public void before() throws Exception {
-		Unmarshaller unmarshaller = JAXBContext.newInstance(
-				FieldDefinition.class).createUnmarshaller();
+        FieldDefinition def = new FieldDefinition();
+        def.setId(35);
+        def.setType("b");
+        def.setLength(1);
 
-		binaryField = FieldTypes.getType((FieldDefinition) unmarshaller
-				.unmarshal(new ByteArrayInputStream(
-						("<iso-field id=\"35\" type=\"b\" length=\"1\" xmlns=\"http://www.nucleus8583.org/schema/iso-message\" />")
-								.getBytes())));
+        binaryField = FieldTypes.getType(def);
 
 		encoder = Charsets.getProvider("ASCII").getEncoder();
 		decoder = Charsets.getProvider("ASCII").getDecoder();

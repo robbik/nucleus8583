@@ -6,9 +6,6 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.EOFException;
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.Unmarshaller;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.nucleus8583.core.charset.CharsetDecoder;
@@ -32,20 +29,26 @@ public class UnicodeVarHexBinFieldTypeTest {
 
 	@Before
 	public void before() throws Exception {
-		Unmarshaller unmarshaller = JAXBContext.newInstance(FieldDefinition.class).createUnmarshaller();
-
 		encoder = Charsets.getProvider("ASCII").getEncoder();
 		decoder = Charsets.getProvider("ASCII").getDecoder();
 
-		binaryL = FieldTypes.getType((FieldDefinition) unmarshaller
-				.unmarshal(new ByteArrayInputStream(
-						("<iso-field id=\"120\" type=\"b.\" xmlns=\"http://www.nucleus8583.org/schema/iso-message\" />").getBytes())));
-        binaryLL = FieldTypes.getType((FieldDefinition) unmarshaller
-                .unmarshal(new ByteArrayInputStream(
-                        ("<iso-field id=\"120\" type=\"b..\" xmlns=\"http://www.nucleus8583.org/schema/iso-message\" />").getBytes())));
-        binaryLLL = FieldTypes.getType((FieldDefinition) unmarshaller
-                .unmarshal(new ByteArrayInputStream(
-                        ("<iso-field id=\"120\" type=\"b...\" xmlns=\"http://www.nucleus8583.org/schema/iso-message\" />").getBytes())));
+        FieldDefinition def = new FieldDefinition();
+        def.setId(120);
+        def.setType("b.");
+
+		binaryL = FieldTypes.getType(def);
+
+        def = new FieldDefinition();
+        def.setId(120);
+        def.setType("b..");
+
+        binaryLL = FieldTypes.getType(def);
+
+        def = new FieldDefinition();
+        def.setId(120);
+        def.setType("b...");
+
+        binaryLLL = FieldTypes.getType(def);
 	}
 
     @Test

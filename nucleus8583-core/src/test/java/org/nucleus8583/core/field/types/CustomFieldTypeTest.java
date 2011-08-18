@@ -4,11 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.Unmarshaller;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -29,17 +25,12 @@ public class CustomFieldTypeTest {
 
 	@Test
 	public void testDummyField() throws Exception {
-		Unmarshaller unmarshaller = JAXBContext.newInstance(FieldDefinition.class).createUnmarshaller();
+        FieldDefinition def = new FieldDefinition();
+        def.setId(1);
+        def.setType("dummy");
+        def.setLength(4);
 
-		Object x = unmarshaller
-				.unmarshal(new ByteArrayInputStream(
-						("<iso-field id=\"1\" type=\"dummy\" xmlns=\"http://www.nucleus8583.org/schema/iso-message\" length=\"4\" />")
-								.getBytes()));
-
-		assertNotNull(x);
-		assertTrue(x instanceof FieldDefinition);
-
-		FieldType f = FieldTypes.getType((FieldDefinition) x);
+		FieldType f = FieldTypes.getType(def);
 
 		assertNotNull(f);
 		assertTrue(f instanceof DummyField);
@@ -63,33 +54,21 @@ public class CustomFieldTypeTest {
 
 	@Test(expected = RuntimeException.class)
 	public void testDummyField2() throws Exception {
-		Unmarshaller unmarshaller = JAXBContext.newInstance(
-				FieldDefinition.class).createUnmarshaller();
+        FieldDefinition def = new FieldDefinition();
+        def.setId(1);
+        def.setType("dummy2");
+        def.setLength(4);
 
-		Object x = unmarshaller
-				.unmarshal(new ByteArrayInputStream(
-						("<iso-field id=\"1\" type=\"dummy2\" xmlns=\"http://www.nucleus8583.org/schema/iso-message\" length=\"4\" />")
-								.getBytes()));
-
-		assertNotNull(x);
-		assertTrue(x instanceof FieldDefinition);
-
-		FieldTypes.getType((FieldDefinition) x);
+		FieldTypes.getType(def);
 	}
 
 	@Test(expected = RuntimeException.class)
 	public void testDummyField3() throws Exception {
-		Unmarshaller unmarshaller = JAXBContext.newInstance(
-				FieldDefinition.class).createUnmarshaller();
+        FieldDefinition def = new FieldDefinition();
+        def.setId(1);
+        def.setType("dummy3");
+        def.setLength(4);
 
-		Object x = unmarshaller
-				.unmarshal(new ByteArrayInputStream(
-						("<iso-field id=\"1\" type=\"dummy3\" xmlns=\"http://www.nucleus8583.org/schema/iso-message\" length=\"4\" />")
-								.getBytes()));
-
-		assertNotNull(x);
-		assertTrue(x instanceof FieldDefinition);
-
-		FieldTypes.getType((FieldDefinition) x);
+		FieldTypes.getType(def);
 	}
 }
