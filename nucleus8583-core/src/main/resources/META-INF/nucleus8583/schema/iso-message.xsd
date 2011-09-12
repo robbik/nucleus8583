@@ -37,20 +37,20 @@
 			<xsd:element name="iso-field" type="iso-field" minOccurs="1" maxOccurs="unbounded" />
 		</xsd:sequence>
 
-		<xsd:attribute name="encoding" type="xsd:string" default="ASCII" />
-		<xsd:attribute name="description" type="xsd:string" default="" />
+		<xsd:attribute name="encoding" use="optional" type="xsd:string" default="ASCII" />
+		<xsd:attribute name="description" use="optional" type="xsd:string" default="" />
 	</xsd:complexType>
 
 	<xsd:complexType name="iso-field">
 		<xsd:attribute name="id" use="required" type="id" />
 		<xsd:attribute name="type" use="required" type="xsd:string" />
 
-		<xsd:attribute name="length" type="xsd:unsignedLong" default="0" />
-		<xsd:attribute name="align" type="align" default="none" />
-		<xsd:attribute name="pad-with" type="char" default=" " />
-		<xsd:attribute name="empty-value" type="xsd:string" default="" />
+		<xsd:attribute name="length" use="optional" type="xsd:unsignedInt" default="0" />
+		<xsd:attribute name="align" use="optional" type="align" default="none" />
+		<xsd:attribute name="pad-with" use="optional" type="char" default=" " />
+		<xsd:attribute name="empty-value" use="optional" type="xsd:string" default="" />
 
-		<xsd:attribute name="description" type="xsd:string" default="" />
+		<xsd:attribute name="description" use="optional" type="xsd:string" default="" />
 	</xsd:complexType>
 
 	<xsd:element name="iso-message" type="iso-message" />

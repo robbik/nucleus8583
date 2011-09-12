@@ -13,6 +13,23 @@ public enum FieldAlignments {
         return 'n';
     }
 
+    @Override
+    public String toString() {
+        if (this == LEFT) {
+            return "left";
+        }
+
+        if (this == RIGHT) {
+            return "right";
+        }
+
+        if (this == NONE) {
+            return "none";
+        }
+
+        return null;
+    }
+
     public static FieldAlignments enumValueOf(String str) {
         if ("left".equalsIgnoreCase(str)) {
             return LEFT;

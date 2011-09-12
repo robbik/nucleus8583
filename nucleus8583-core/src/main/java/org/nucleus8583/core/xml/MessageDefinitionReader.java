@@ -10,8 +10,10 @@ import java.util.ArrayList;
 import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.transform.dom.DOMSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
+import javax.xml.validation.Validator;
 
 import org.nucleus8583.core.util.ResourceUtils;
 import org.w3c.dom.Attr;
@@ -38,17 +40,20 @@ public class MessageDefinitionReader implements ErrorHandler {
 
     private static final DocumentBuilderFactory factory;
 
+    private static Schema schema;
+
     static {
         factory = DocumentBuilderFactory.newInstance();
 
-        MessageDefinitionReader.factory.setIgnoringComments(true);
-        MessageDefinitionReader.factory.setIgnoringElementContentWhitespace(true);
-        MessageDefinitionReader.factory.setNamespaceAware(true);
-        MessageDefinitionReader.factory.setValidating(false);
-        MessageDefinitionReader.factory.setXIncludeAware(true);
+        factory.setIgnoringComments(true);
+        factory.setIgnoringElementContentWhitespace(true);
+        factory.setNamespaceAware(true);
+        factory.setValidating(false);
+        factory.setXIncludeAware(true);
 
         URL schemaURL = ResourceUtils.getURL("classpath:META-INF/nucleus8583/schema/iso-message.xsd");
-        Schema schema = null;
+
+        schema = null;
 
         if (schemaURL != null) {
             try {
@@ -60,19 +65,18 @@ public class MessageDefinitionReader implements ErrorHandler {
 
         if (schema == null) {
             try {
-                MessageDefinitionReader.factory.setAttribute(MessageDefinitionReader.JAXP_SCHEMA_LANGUAGE, MessageDefinitionReader.W3C_XML_SCHEMA);
+                factory.setAttribute(MessageDefinitionReader.JAXP_SCHEMA_LANGUAGE,
+                        MessageDefinitionReader.W3C_XML_SCHEMA);
             } catch (Throwable t) {
                 // do nothing
             }
 
             try {
-                MessageDefinitionReader.factory.setAttribute(MessageDefinitionReader.JAXP_SCHEMA_SOURCE,
+                factory.setAttribute(MessageDefinitionReader.JAXP_SCHEMA_SOURCE,
                         new File(ResourceUtils.getURL(MessageDefinitionReader.SCHEMA_LOCATION).toURI()));
             } catch (Throwable t) {
                 // do nothing
             }
-        } else {
-            MessageDefinitionReader.factory.setSchema(schema);
         }
     }
 
@@ -80,7 +84,7 @@ public class MessageDefinitionReader implements ErrorHandler {
 
     public MessageDefinitionReader() {
         try {
-            docBuilder = MessageDefinitionReader.factory.newDocumentBuilder();
+            docBuilder = factory.newDocumentBuilder();
         } catch (RuntimeException ex) {
             throw ex;
         } catch (Throwable t) {
@@ -129,13 +133,24 @@ public class MessageDefinitionReader implements ErrorHandler {
         return bean;
     }
 
-    public MessageDefinition unmarshal(Node node) {
+    public MessageDefinition unmarshal(Node node) throws SAXException {
         if (node instanceof Document) {
             return unmarshal(((Document) node).getDocumentElement());
         }
 
         if (!(node instanceof Element)) {
             throw new IllegalArgumentException("node must be an element");
+        }
+
+        if (schema != null) {
+            try {
+                Validator validator = schema.newValidator();
+
+                validator.setErrorHandler(this);
+                validator.validate(new DOMSource(node));
+            } catch (IOException e) {
+                // should not be here
+            }
         }
 
         Element el = (Element) node;
@@ -145,7 +160,7 @@ public class MessageDefinitionReader implements ErrorHandler {
         bean.setEncoding(getAttributeValue(el, "encoding", "ASCII"));
         bean.setFields(fields);
 
-        NodeList nodes = el.getElementsByTagNameNS(MessageDefinitionReader.NAMESPACE_URI, "iso-field");
+        NodeList nodes = el.getElementsByTagNameNS(NAMESPACE_URI, "iso-field");
 
         int len = nodes.getLength();
         for (int i = 0; i < len; ++i) {

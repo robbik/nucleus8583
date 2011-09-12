@@ -55,6 +55,15 @@ public class FieldDefinition {
         emptyValue = null;
     }
 
+    public FieldDefinition(int id, String type, int length, FieldAlignments align, String padWith, String emptyValue) {
+        this.id = id;
+        this.type = type;
+        this.length = length;
+        this.align = align;
+        this.padWith = padWith;
+        this.emptyValue = emptyValue;
+    }
+
     public int getId() {
         return id;
     }
