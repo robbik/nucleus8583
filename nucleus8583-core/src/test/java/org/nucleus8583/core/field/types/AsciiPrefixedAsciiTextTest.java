@@ -8,26 +8,16 @@ import java.io.EOFException;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.nucleus8583.core.charset.CharsetDecoder;
-import org.nucleus8583.core.charset.CharsetEncoder;
-import org.nucleus8583.core.charset.Charsets;
 import org.nucleus8583.core.field.type.FieldType;
 import org.nucleus8583.core.field.type.FieldTypes;
 import org.nucleus8583.core.xml.FieldDefinition;
 
-public class UnicodeVarStringFieldTypeTest {
-
-	private CharsetEncoder encoder;
-
-	private CharsetDecoder decoder;
+public class AsciiPrefixedAsciiTextTest {
 
 	private FieldType stringField;
 
 	@Before
 	public void before() throws Exception {
-		encoder = Charsets.getProvider("ASCII").getEncoder();
-		decoder = Charsets.getProvider("ASCII").getDecoder();
-
         FieldDefinition def = new FieldDefinition();
         def.setId(39);
         def.setType("a .");
@@ -37,51 +27,51 @@ public class UnicodeVarStringFieldTypeTest {
 
 	@Test(expected = UnsupportedOperationException.class)
 	public void packBinary() throws Exception {
-		stringField.write(new ByteArrayOutputStream(), encoder, new byte[0]);
+		stringField.write(new ByteArrayOutputStream(), new byte[0]);
 	}
 
 	@Test
 	public void packString() throws Exception {
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
-		stringField.write(out, encoder, "20");
+		stringField.write(out, "20");
 		assertEquals("220", out.toString());
 	}
 
 	@Test
 	public void packEmptyString() throws Exception {
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
-		stringField.write(out, encoder, "");
+		stringField.write(out, "");
 		assertEquals("0", out.toString());
 	}
 
 	@Test(expected = IllegalArgumentException.class)
 	public void packStringOverflow() throws Exception {
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
-		stringField.write(out, encoder, "abcdefghji");
+		stringField.write(out, "abcdefghji");
 	}
 
 	@Test(expected = UnsupportedOperationException.class)
 	public void unpackBinary1() throws Exception {
-		stringField.read(new ByteArrayInputStream("a".getBytes()), decoder, new byte[0]);
+		stringField.read(new ByteArrayInputStream("a".getBytes()), new byte[0], 0, 0);
 	}
 
 	@Test(expected = UnsupportedOperationException.class)
 	public void unpackBinary2() throws Exception {
-		stringField.readBinary(new ByteArrayInputStream("a".getBytes()), decoder);
+		stringField.readBinary(new ByteArrayInputStream("a".getBytes()));
 	}
 
 	@Test
 	public void unpackString() throws Exception {
-		assertEquals("20", stringField.readString(new ByteArrayInputStream("220".getBytes()), decoder));
+		assertEquals("20", stringField.readString(new ByteArrayInputStream("220".getBytes())));
 	}
 
 	@Test
 	public void unpackEmptyString() throws Exception {
-		assertEquals("", stringField.readString(new ByteArrayInputStream("0".getBytes()), decoder));
+		assertEquals("", stringField.readString(new ByteArrayInputStream("0".getBytes())));
 	}
 
 	@Test(expected = EOFException.class)
 	public void unpackStringUnpadOverflow() throws Exception {
-		stringField.readString(new ByteArrayInputStream("5ab".getBytes()), decoder);
+		stringField.readString(new ByteArrayInputStream("5ab".getBytes()));
 	}
 }

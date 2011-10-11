@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<iso-message encoding="ASCII" xmlns="http://www.nucleus8583.org/schema/iso-message">
+<iso-message xmlns="http://www.nucleus8583.org/schema/iso-message">
 	<iso-field id="0" type="custom" length="4" align="none" />
 	<iso-field id="1" type="b" length="16" />
 	<iso-field id="2" type="custom .." align="none" />
@@ -190,7 +190,7 @@
     <iso-field id="187" type="custom ." align="none" />
     <iso-field id="188" type="custom ." align="none" />
     <iso-field id="189" type="custom ." align="none" />
-    <iso-field id="190" type="b" length="12" />
+    <iso-field id="190" type="b" length="24" />
     <iso-field id="191" type="custom ." align="none" />
     <iso-field id="192" type="custom ." align="none" />
 </iso-message>

@@ -3,10 +3,11 @@ package org.nucleus8583.core.field.type;
 import org.nucleus8583.core.xml.FieldAlignments;
 import org.nucleus8583.core.xml.FieldDefinition;
 
-public final class UnicodeLVarHexBinFieldType extends UnicodeVarHexBinFieldType {
-	private static final long serialVersionUID = -5615324004502124085L;
+public class AsciiLAsciiText extends AsciiPrefixedAsciiText {
 
-	public UnicodeLVarHexBinFieldType(FieldDefinition def, FieldAlignments defaultAlign,
+	private static final long serialVersionUID = 6562019703061572067L;
+
+	public AsciiLAsciiText(FieldDefinition def, FieldAlignments defaultAlign,
 			String defaultPadWith, String defaultEmptyValue) {
 		super(def, defaultAlign, defaultPadWith, defaultEmptyValue, 1, 9);
 	}

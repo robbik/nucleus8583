@@ -37,7 +37,6 @@
 			<xsd:element name="iso-field" type="iso-field" minOccurs="1" maxOccurs="unbounded" />
 		</xsd:sequence>
 
-		<xsd:attribute name="encoding" use="optional" type="xsd:string" default="ASCII" />
 		<xsd:attribute name="description" use="optional" type="xsd:string" default="" />
 	</xsd:complexType>
 

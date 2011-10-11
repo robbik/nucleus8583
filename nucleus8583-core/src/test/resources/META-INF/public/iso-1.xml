@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<iso-message encoding="ASCII" xmlns="http://www.nucleus8583.org/schema/iso-message">
+<iso-message xmlns="http://www.nucleus8583.org/schema/iso-message">
     <iso-field description="MESSAGE TYPE INDICATOR" length="4" type="n" id="0"/>
-    <iso-field description="BIT MAP" length="16" type="b" id="1"/>
+    <iso-field description="BIT MAP" length="16" type="bitmap" id="1"/>
     <iso-field description="PAN - PRIMARY ACCOUNT NUMBER" length="16" type="n .." id="2"/>
     <iso-field description="PROCESSING CODE" length="6" type="n" id="3"/>
     <iso-field description="AMOUNT, TRANSACTION" length="12" type="n" id="4"/>
@@ -65,7 +65,7 @@
     <iso-field description="RESERVED PRIVATE" length="999" type="ans ..." id="62"/>
     <iso-field description="RESERVED PRIVATE" length="999" type="ans ..." id="63"/>
     <iso-field description="MESSAGE AUTHENTICATION CODE FIELD" length="8" type="b" id="64"/>
-    <iso-field description="BITMAP, EXTENDED" length="1" type="b" id="65"/>
+    <iso-field description="BITMAP, EXTENDED" length="1" type="bitmap" id="65"/>
     <iso-field description="SETTLEMENT CODE" length="1" type="n" id="66"/>
     <iso-field description="EXTENDED PAYMENT CODE" length="2" type="n" id="67"/>
     <iso-field description="RECEIVING INSTITUTION COUNTRY CODE" length="3" type="n" id="68"/>

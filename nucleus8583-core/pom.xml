@@ -1,34 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
-	                         http://maven.apache.org/maven-v4_0_0.xsd">
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+                             http://maven.apache.org/maven-v4_0_0.xsd">
 
-	<modelVersion>4.0.0</modelVersion>
+    <modelVersion>4.0.0</modelVersion>
 
-	<groupId>org.nucleus8583</groupId>
-	<artifactId>nucleus8583-core</artifactId>
+    <groupId>org.nucleus8583</groupId>
+    <artifactId>nucleus8583-core</artifactId>
 
     <packaging>bundle</packaging>
 
-	<name>nucleus8583 Core</name>
+    <name>nucleus8583 Core</name>
     <version>3.0.0</version>
 
-	<description>OSGi bundle for ISO-8583 message standard implementation.</description>
-	<url>http://code.google.com/p/nucleus8583/</url>
+    <description>OSGi bundle for ISO-8583 message standard implementation.</description>
+    <url>http://code.google.com/p/nucleus8583/</url>
 
-	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<maven-surefire-plugin-version>2.7.1</maven-surefire-plugin-version>
-	</properties>
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven-surefire-plugin-version>2.7.1</maven-surefire-plugin-version>
+    </properties>
 
-	<licenses>
-	   <license>
-	       <name>The Apache Software License, Version 2.0</name>
-	       <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
-	       <distribution>repo</distribution>
-	   </license>
-	</licenses>
+    <licenses>
+       <license>
+           <name>The Apache Software License, Version 2.0</name>
+           <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+           <distribution>repo</distribution>
+       </license>
+    </licenses>
 
     <issueManagement>
         <url>http://code.google.com/p/nucleus8583/issues/</url>
@@ -48,33 +48,33 @@
         </developer>
     </developers>
 
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<version>2.0.2</version>
-				<configuration>
-					<source>1.5</source>
-					<target>1.5</target>
-				</configuration>
-			</plugin>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>2.0.2</version>
+                <configuration>
+                    <source>1.5</source>
+                    <target>1.5</target>
+                </configuration>
+            </plugin>
 
-			<plugin>
-				<groupId>org.apache.felix</groupId>
-				<artifactId>maven-bundle-plugin</artifactId>
-				<extensions>true</extensions>
+            <plugin>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-bundle-plugin</artifactId>
+                <extensions>true</extensions>
                 <version>2.1.0</version>
-				<configuration>
-					<instructions>
+                <configuration>
+                    <instructions>
                         <Bundle-DocURL>${project.url}</Bundle-DocURL>
-						<Import-Package>*</Import-Package>
-						<DynamicImport-Package>*</DynamicImport-Package>
-						<Export-Package>org.nucleus8583.core.*;version=${project.version}</Export-Package>
-						<Private-Package></Private-Package>
-					</instructions>
-				</configuration>
-			</plugin>
+                        <Import-Package>*</Import-Package>
+                        <DynamicImport-Package>*</DynamicImport-Package>
+                        <Export-Package>org.nucleus8583.core.*;version=${project.version}</Export-Package>
+                        <Private-Package></Private-Package>
+                    </instructions>
+                </configuration>
+            </plugin>
 
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -86,10 +86,10 @@
                     </excludes>
                 </configuration>
             </plugin>
-		</plugins>
-	</build>
+        </plugins>
+    </build>
 
-	<profiles>
+    <profiles>
         <profile>
             <id>snapshots</id>
 
@@ -101,27 +101,27 @@
             </distributionManagement>
         </profile>
 
-		<profile>
-			<id>releases</id>
+        <profile>
+            <id>releases</id>
 
-			<build>
-				<plugins>
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-gpg-plugin</artifactId>
-						<version>1.1</version>
-						<executions>
-							<execution>
-								<id>sign-artifacts</id>
-								<phase>package</phase>
-								<goals>
-									<goal>sign</goal>
-								</goals>
-							</execution>
-						</executions>
-					</plugin>
-				</plugins>
-			</build>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-gpg-plugin</artifactId>
+                        <version>1.1</version>
+                        <executions>
+                            <execution>
+                                <id>sign-artifacts</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>sign</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
 
             <distributionManagement>
                 <repository>
@@ -129,34 +129,52 @@
                     <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
                 </repository>
             </distributionManagement>
-		</profile>
+        </profile>
 
         <profile>
             <id>performance-test</id>
 
             <build>
                 <plugins>
-		            <plugin>
-		                <groupId>org.apache.maven.plugins</groupId>
-		                <artifactId>maven-surefire-plugin</artifactId>
-		                <version>${maven-surefire-plugin-version}</version>
-		                <configuration>
-		                    <includes>
-		                        <include>**/*PerformanceTest.java</include>
-		                    </includes>
-		                </configuration>
-		            </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <version>${maven-surefire-plugin-version}</version>
+                        <configuration>
+                            <includes>
+                                <include>**/*PerformanceTest.java</include>
+                            </includes>
+                        </configuration>
+                    </plugin>
                 </plugins>
             </build>
+            
+            <repositories>
+            	<repository>
+            		<id>jpos</id>
+            		<name>jPOS Central Repository</name>
+            		<url>http://jpos.org/maven</url>
+            		<layout>default</layout>
+            	</repository>
+            </repositories>
+            
+            <dependencies>
+                <dependency>
+                    <groupId>org.jpos</groupId>
+                    <artifactId>jpos</artifactId>
+                    <version>1.8.0</version>
+                    <scope>test</scope>
+                </dependency>
+            </dependencies>
         </profile>
-	</profiles>
+    </profiles>
 
-	<dependencies>
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>4.8.1</version>
-			<scope>test</scope>
-		</dependency>
-	</dependencies>
+    <dependencies>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.8.1</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
 </project>

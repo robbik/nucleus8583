@@ -5,7 +5,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -13,10 +12,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.nucleus8583.core.charset.CharsetDecoder;
-import org.nucleus8583.core.charset.CharsetEncoder;
-import org.nucleus8583.core.charset.CharsetProvider;
-import org.nucleus8583.core.charset.Charsets;
 import org.nucleus8583.core.field.type.FieldType;
 import org.nucleus8583.core.field.type.FieldTypes;
 import org.nucleus8583.core.util.BitmapHelper;
@@ -85,12 +80,6 @@ public final class MessageSerializer {
 	private boolean[] binaries;
 
 	private int fieldsCount;
-
-	private String encoding;
-
-	private CharsetEncoder charsetEncoder;
-
-	private CharsetDecoder charsetDecoder;
 
 	/**
 	 * create a new instance of {@link MessageSerializer} using given
@@ -200,16 +189,6 @@ public final class MessageSerializer {
 		    fields.add(FieldDefinition.FIELD_0);
 		}
 
-        // automatic set field no 1
-		if (!replace(1, FieldDefinition.FIELD_1, fields, count)) {
-		    fields.add(FieldDefinition.FIELD_1);
-		}
-
-        // automatic set field no 65
-        if (!replace(65, FieldDefinition.FIELD_65, fields, count)) {
-            fields.add(FieldDefinition.FIELD_65);
-        }
-
 		checkDuplicateId(fields, count);
 
         this.fieldsCount = fields.size();
@@ -233,25 +212,6 @@ public final class MessageSerializer {
 		for (int i = fieldsCount - 1; i >= 0; --i) {
 			this.binaries[i] = this.fields[i].isBinary();
 		}
-
-		this.encoding = definition.getEncoding();
-
-		CharsetProvider charsetProvider = Charsets.getProvider(this.encoding);
-		if (charsetProvider == null) {
-			throw new RuntimeException(new UnsupportedEncodingException(this.encoding));
-		}
-
-		charsetEncoder = charsetProvider.getEncoder();
-		charsetDecoder = charsetProvider.getDecoder();
-	}
-
-	/**
-	 * retrieve encoding used by this instance
-	 *
-	 * @return used encoding
-	 */
-	public String getEncoding() {
-		return encoding;
 	}
 
 	/**
@@ -293,36 +253,36 @@ public final class MessageSerializer {
 
 		if (hasMti) {
     		// read bit-0
-    		out.setMti(fields[0].readString(in, charsetDecoder));
+    		out.setMti(fields[0].readString(in));
 		}
 
 		// read bit-1
-		fields[1].read(in, charsetDecoder, bits1To128, 0, 8);
+		fields[1].read(in, bits1To128, 0, 8);
 
 		if (BitmapHelper.get(bits1To128, 0)) {
-		    fields[1].read(in, charsetDecoder, bits1To128, 8, 8);
+		    fields[1].read(in, bits1To128, 8, 8);
 		}
 
 		// read bit-i
 		for (int i = 2, iMin1 = 1, iMin129 = -127; i < count; ++i, ++iMin1, ++iMin129) {
 			if (i == 65) {
 				if (BitmapHelper.get(bits1To128, 64)) {
-					fields[i].read(in, charsetDecoder, bits129To192, 0, 8);
+					fields[i].read(in, bits129To192, 0, 8);
 				}
 			} else if (i < 129) {
 				if (BitmapHelper.get(bits1To128, iMin1)) {
 					if (binaries[i]) {
-						out.unsafeSet(i, fields[i].readBinary(in, charsetDecoder));
+						out.unsafeSet(i, fields[i].readBinary(in));
 					} else {
-						out.unsafeSet(i, fields[i].readString(in, charsetDecoder));
+						out.unsafeSet(i, fields[i].readString(in));
 					}
 				}
 			} else {
 				if (BitmapHelper.get(bits129To192, iMin129)) {
 					if (binaries[i]) {
-						out.unsafeSet(i, fields[i].readBinary(in, charsetDecoder));
+						out.unsafeSet(i, fields[i].readBinary(in));
 					} else {
-						out.unsafeSet(i, fields[i].readString(in, charsetDecoder));
+						out.unsafeSet(i, fields[i].readString(in));
 					}
 				}
 			}
@@ -398,22 +358,22 @@ public final class MessageSerializer {
 
 		// write bit 0
 		if (hasMti) {
-		    fields[0].write(out, charsetEncoder, msg.getMti());
+		    fields[0].write(out, msg.getMti());
 		}
 
 		// write bit 1
-		fields[1].write(out, charsetEncoder, bits1To128, 0, bit1IsOn ? 16 : 8);
+		fields[1].write(out, bits1To128, 0, bit1IsOn ? 16 : 8);
 
 		// write bit i
 		for (int i = 2, j = 1; (i < count) && (i < 129); ++i, ++j) {
 			if (BitmapHelper.get(bits1To128, j)) {
 			    if (i == 65) {
-			        fields[i].write(out, charsetEncoder, binaryValues[i], 0, 8);
+			        fields[i].write(out, binaryValues[i], 0, 8);
 			    } else {
     				if (binaries[i]) {
-    					fields[i].write(out, charsetEncoder, binaryValues[i]);
+    					fields[i].write(out, binaryValues[i]);
     				} else {
-    					fields[i].write(out, charsetEncoder, stringValues[i]);
+    					fields[i].write(out, stringValues[i]);
     				}
 			    }
 			}
@@ -422,9 +382,9 @@ public final class MessageSerializer {
 		for (int i = 129, j = 0; i < count; ++i, ++j) {
 			if (BitmapHelper.get(bits129To192, j)) {
 				if (binaries[i]) {
-					fields[i].write(out, charsetEncoder, binaryValues[i]);
+					fields[i].write(out, binaryValues[i]);
 				} else {
-					fields[i].write(out, charsetEncoder, stringValues[i]);
+					fields[i].write(out, stringValues[i]);
 				}
 			}
 		}

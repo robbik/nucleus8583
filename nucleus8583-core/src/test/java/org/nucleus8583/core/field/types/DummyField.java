@@ -4,8 +4,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-import org.nucleus8583.core.charset.CharsetDecoder;
-import org.nucleus8583.core.charset.CharsetEncoder;
 import org.nucleus8583.core.field.type.FieldType;
 import org.nucleus8583.core.util.IOUtils;
 import org.nucleus8583.core.xml.FieldAlignments;
@@ -25,59 +23,34 @@ public class DummyField extends FieldType {
 	}
 
 	@Override
-    public void write(OutputStream out, CharsetEncoder enc, String value) throws IOException {
+    public void write(OutputStream out, String value) throws IOException {
 		if (value == null) {
-			enc.write(out, "xx");
+			out.write("xx".getBytes());
 		} else {
 			int vlen = value.length();
 			switch (vlen) {
 			case 0:
-				enc.write(out, "xx");
+				out.write("xx".getBytes());
 				break;
 			case 1:
-				enc.write(out, "x");
-				enc.write(out, value);
+				out.write("x".getBytes());
+				out.write(value.getBytes());
 				break;
 			case 2:
-				enc.write(out, value);
+				out.write(value.getBytes());
 				break;
 			default:
-				enc.write(out, value.substring(0, 2));
+				out.write(value.substring(0, 2).getBytes());
 				break;
 			}
 		}
 	}
 
 	@Override
-    public void write(OutputStream out, CharsetEncoder enc, byte[] value) throws IOException {
-		throw new UnsupportedOperationException();
-	}
+    public String readString(InputStream in) throws IOException {
+		byte[] buf = new byte[2];
+		IOUtils.readFully(in, buf, 2);
 
-    @Override
-    public void write(OutputStream out, CharsetEncoder enc, byte[] value, int off, int len) throws IOException {
-        throw new UnsupportedOperationException();
-    }
-
-	@Override
-    public void read(InputStream in, CharsetDecoder dec, byte[] value) throws IOException {
-		throw new UnsupportedOperationException();
-	}
-
-    @Override
-    public void read(InputStream in, CharsetDecoder dec, byte[] value, int off, int len) throws IOException {
-        throw new UnsupportedOperationException();
-    }
-
-	@Override
-    public byte[] readBinary(InputStream in, CharsetDecoder dec) throws IOException {
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-    public String readString(InputStream in, CharsetDecoder dec) throws IOException {
-		char[] cbuf = new char[2];
-		IOUtils.readFully(in, dec, cbuf, 2);
-
-		return new String(cbuf);
+		return new String(buf);
 	}
 }

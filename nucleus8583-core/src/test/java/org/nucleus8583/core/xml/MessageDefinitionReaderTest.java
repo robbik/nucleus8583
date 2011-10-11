@@ -20,8 +20,7 @@ public class MessageDefinitionReaderTest {
     public void testUnmarshalFromURL() throws Exception {
         MessageDefinition def = reader.unmarshal(ResourceUtils.getURL("file:src/test/resources/META-INF/codec8583.xml"));
 
-        assertEquals("ASCII", def.getEncoding());
-        assertEquals(127, def.getFields().size());
+        assertEquals(129, def.getFields().size());
 
         assertEquals(0, def.getFields().get(0).getId());
         assertEquals("custom", def.getFields().get(0).getType());
@@ -34,8 +33,7 @@ public class MessageDefinitionReaderTest {
     public void testUnmarshalFromInputStream() throws Exception {
         MessageDefinition def = reader.unmarshal(ResourceUtils.getURL("file:src/test/resources/META-INF/codec8583.xml").openStream());
 
-        assertEquals("ASCII", def.getEncoding());
-        assertEquals(127, def.getFields().size());
+        assertEquals(129, def.getFields().size());
 
         assertEquals(0, def.getFields().get(0).getId());
         assertEquals("custom", def.getFields().get(0).getType());

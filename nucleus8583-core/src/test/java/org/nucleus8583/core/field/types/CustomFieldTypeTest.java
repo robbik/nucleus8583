@@ -6,22 +6,12 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.ByteArrayOutputStream;
 
-import org.junit.Before;
 import org.junit.Test;
-import org.nucleus8583.core.charset.CharsetEncoder;
-import org.nucleus8583.core.charset.Charsets;
 import org.nucleus8583.core.field.type.FieldType;
 import org.nucleus8583.core.field.type.FieldTypes;
 import org.nucleus8583.core.xml.FieldDefinition;
 
 public class CustomFieldTypeTest {
-
-	private CharsetEncoder encoder;
-
-	@Before
-	public void before() throws Exception {
-		encoder = Charsets.getProvider("ASCII").getEncoder();
-	}
 
 	@Test
 	public void testDummyField() throws Exception {
@@ -36,19 +26,19 @@ public class CustomFieldTypeTest {
 		assertTrue(f instanceof DummyField);
 
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
-		((DummyField) f).write(out, encoder, "abcdefg");
+		((DummyField) f).write(out, "abcdefg");
 		assertEquals("ab", out.toString());
 
 		out = new ByteArrayOutputStream();
-		((DummyField) f).write(out, encoder, "a");
+		((DummyField) f).write(out, "a");
 		assertEquals("xa", out.toString());
 
 		out = new ByteArrayOutputStream();
-		((DummyField) f).write(out, encoder, "");
+		((DummyField) f).write(out, "");
 		assertEquals("xx", out.toString());
 
 		out = new ByteArrayOutputStream();
-		((DummyField) f).write(out, encoder, (String) null);
+		((DummyField) f).write(out, (String) null);
 		assertEquals("xx", out.toString());
 	}
 

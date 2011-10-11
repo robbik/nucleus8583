@@ -7,37 +7,27 @@ import java.io.ByteArrayOutputStream;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.nucleus8583.core.charset.CharsetDecoder;
-import org.nucleus8583.core.charset.CharsetEncoder;
-import org.nucleus8583.core.charset.Charsets;
 import org.nucleus8583.core.field.type.FieldType;
 import org.nucleus8583.core.field.type.FieldTypes;
 import org.nucleus8583.core.xml.FieldAlignments;
 import org.nucleus8583.core.xml.FieldDefinition;
 
-public class StringFieldTypeTest {
+public class AsciiTextTest {
 
-	private CharsetEncoder encoder;
+	private FieldType alignL;
 
-	private CharsetDecoder decoder;
+	private FieldType alignR;
 
-	private FieldType stringFieldAlignL;
-
-	private FieldType stringFieldAlignR;
-
-	private FieldType stringFieldAlignN;
+	private FieldType alignN;
 
 	@Before
 	public void before() throws Exception {
-		encoder = Charsets.getProvider("ASCII").getEncoder();
-		decoder = Charsets.getProvider("ASCII").getDecoder();
-
         FieldDefinition def = new FieldDefinition();
         def.setId(39);
         def.setType("a");
         def.setLength(2);
 
-        stringFieldAlignL = FieldTypes.getType(def);
+        alignL = FieldTypes.getType(def);
 
         def = new FieldDefinition();
         def.setId(39);
@@ -46,7 +36,7 @@ public class StringFieldTypeTest {
         def.setPadWith(" ");
         def.setLength(2);
 
-        stringFieldAlignR = FieldTypes.getType(def);
+        alignR = FieldTypes.getType(def);
 
         def = new FieldDefinition();
         def.setId(39);
@@ -55,12 +45,12 @@ public class StringFieldTypeTest {
         def.setPadWith("");
         def.setLength(2);
 
-		stringFieldAlignN = FieldTypes.getType(def);
+		alignN = FieldTypes.getType(def);
 	}
 
 	@Test(expected = UnsupportedOperationException.class)
 	public void packBinary() throws Exception {
-		stringFieldAlignL.write(new ByteArrayOutputStream(), encoder, new byte[0]);
+		alignL.write(new ByteArrayOutputStream(), new byte[0]);
 	}
 
 	@Test
@@ -69,7 +59,7 @@ public class StringFieldTypeTest {
 		String errorMsg = null;
 
 		try {
-			stringFieldAlignL.write(out, encoder, "1124134=2343434");
+			alignL.write(out, "1124134=2343434");
 		} catch (IllegalArgumentException ex) {
 			errorMsg = ex.getMessage();
 		}
@@ -80,99 +70,99 @@ public class StringFieldTypeTest {
 	@Test
 	public void packStringNoPad() throws Exception {
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
-		stringFieldAlignL.write(out, encoder, "20");
+		alignL.write(out, "20");
 		assertEquals("20", out.toString());
 
 		out = new ByteArrayOutputStream();
-		stringFieldAlignR.write(out, encoder, "20");
+		alignR.write(out, "20");
 		assertEquals("20", out.toString());
 
 		out = new ByteArrayOutputStream();
-		stringFieldAlignN.write(out, encoder, "20");
+		alignN.write(out, "20");
 		assertEquals("20", out.toString());
 	}
 
 	@Test
 	public void packEmptyString() throws Exception {
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
-		stringFieldAlignL.write(out, encoder, "");
+		alignL.write(out, "");
 		assertEquals("  ", out.toString());
 
 		out = new ByteArrayOutputStream();
-		stringFieldAlignR.write(out, encoder, "");
+		alignR.write(out, "");
 		assertEquals("  ", out.toString());
 
 		out = new ByteArrayOutputStream();
-		stringFieldAlignN.write(out, encoder, "");
+		alignN.write(out, "");
 		assertEquals("  ", out.toString());
 	}
 
 	@Test
 	public void packStringWithPad() throws Exception {
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
-		stringFieldAlignL.write(out, encoder, "j");
+		alignL.write(out, "j");
 		out.flush();
 		assertEquals("j ", out.toString());
 
 		out = new ByteArrayOutputStream();
-		stringFieldAlignR.write(out, encoder, "j");
+		alignR.write(out, "j");
 		out.flush();
 		assertEquals(" j", out.toString());
 
 		out = new ByteArrayOutputStream();
-		stringFieldAlignN.write(out, encoder, "j");
+		alignN.write(out, "j");
 		out.flush();
 		assertEquals("j ", out.toString());
 	}
 
 	@Test(expected = IllegalArgumentException.class)
 	public void packStringOverflow() throws Exception {
-		stringFieldAlignL.write(new ByteArrayOutputStream(), encoder, "300");
+		alignL.write(new ByteArrayOutputStream(), "300");
 	}
 
 	@Test(expected = UnsupportedOperationException.class)
 	public void unpackBinary1() throws Exception {
-		stringFieldAlignL.read(new ByteArrayInputStream("a".getBytes()), decoder, new byte[0]);
+		alignL.read(new ByteArrayInputStream("a".getBytes()), new byte[0], 0, 0);
 	}
 
 	@Test(expected = UnsupportedOperationException.class)
 	public void unpackBinary2() throws Exception {
-		stringFieldAlignL.readBinary(new ByteArrayInputStream("a".getBytes()), decoder);
+		alignL.readBinary(new ByteArrayInputStream("a".getBytes()));
 	}
 
 	@Test
 	public void unpackStringNoUnpad() throws Exception {
-		assertEquals("20", stringFieldAlignL.readString(new ByteArrayInputStream("20".getBytes()), decoder));
+		assertEquals("20", alignL.readString(new ByteArrayInputStream("20".getBytes())));
 
-		assertEquals("20", stringFieldAlignR.readString(new ByteArrayInputStream("20".getBytes()), decoder));
+		assertEquals("20", alignR.readString(new ByteArrayInputStream("20".getBytes())));
 
-		assertEquals("20", stringFieldAlignN.readString(new ByteArrayInputStream("20".getBytes()), decoder));
+		assertEquals("20", alignN.readString(new ByteArrayInputStream("20".getBytes())));
 	}
 
 	@Test
 	public void unpackEmptyString() throws Exception {
-		assertEquals("", stringFieldAlignL.readString(new ByteArrayInputStream("  ".getBytes()), decoder));
+		assertEquals("", alignL.readString(new ByteArrayInputStream("  ".getBytes())));
 
-		assertEquals("", stringFieldAlignR.readString(new ByteArrayInputStream("  ".getBytes()), decoder));
+		assertEquals("", alignR.readString(new ByteArrayInputStream("  ".getBytes())));
 
-		assertEquals("  ", stringFieldAlignN.readString(new ByteArrayInputStream("  ".getBytes()), decoder));
+		assertEquals("  ", alignN.readString(new ByteArrayInputStream("  ".getBytes())));
 	}
 
 	@Test
 	public void unpackStringUnpad() throws Exception {
-		assertEquals("j", stringFieldAlignL.readString(new ByteArrayInputStream("j ".getBytes()), decoder));
+		assertEquals("j", alignL.readString(new ByteArrayInputStream("j ".getBytes())));
 
-		assertEquals("j", stringFieldAlignR.readString(new ByteArrayInputStream(" j".getBytes()), decoder));
+		assertEquals("j", alignR.readString(new ByteArrayInputStream(" j".getBytes())));
 
-		assertEquals("j ", stringFieldAlignN.readString(new ByteArrayInputStream("j ".getBytes()), decoder));
+		assertEquals("j ", alignN.readString(new ByteArrayInputStream("j ".getBytes())));
 	}
 
 	@Test
 	public void unpackStringUnpadOverflow() throws Exception {
-		assertEquals("j", stringFieldAlignL.readString(new ByteArrayInputStream("j kl".getBytes()), decoder));
+		assertEquals("j", alignL.readString(new ByteArrayInputStream("j kl".getBytes())));
 
-		assertEquals("j ", stringFieldAlignR.readString(new ByteArrayInputStream("j kl".getBytes()), decoder));
+		assertEquals("j ", alignR.readString(new ByteArrayInputStream("j kl".getBytes())));
 
-		assertEquals("j ", stringFieldAlignN.readString(new ByteArrayInputStream("j kl".getBytes()), decoder));
+		assertEquals("j ", alignN.readString(new ByteArrayInputStream("j kl".getBytes())));
 	}
 }

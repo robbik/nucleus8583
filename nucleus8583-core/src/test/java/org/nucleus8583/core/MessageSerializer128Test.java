@@ -36,11 +36,6 @@ public class MessageSerializer128Test {
 		unpacked.set(70, "301");
 	}
 
-	@Test(expected = RuntimeException.class)
-	public void testCreateNewInstanceIfEncodingIsUnsupported() {
-		MessageSerializer.create("classpath:META-INF/error8583.xml");
-	}
-
 	@Test
 	public void testCreateNewInstanceIfNoF28Defined() throws Exception {
 		String errorMsg = null;

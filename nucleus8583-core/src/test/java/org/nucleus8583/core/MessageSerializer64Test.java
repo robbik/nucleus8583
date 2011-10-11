@@ -53,11 +53,6 @@ public class MessageSerializer64Test {
         unpacked2.set(64, BitmapHelper.create(64));
 	}
 
-	@Test(expected = RuntimeException.class)
-	public void testCreateNewInstanceIfEncodingIsUnsupported() {
-		MessageSerializer.create("classpath:META-INF/error8583.xml");
-	}
-
 	@Test
 	public void testCreateNewInstanceIfNoF28Defined() throws Exception {
 		String errorMsg = null;

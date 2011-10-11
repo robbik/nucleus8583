@@ -157,7 +157,6 @@ public class MessageDefinitionReader implements ErrorHandler {
         ArrayList<FieldDefinition> fields = new ArrayList<FieldDefinition>();
 
         MessageDefinition bean = new MessageDefinition();
-        bean.setEncoding(getAttributeValue(el, "encoding", "ASCII"));
         bean.setFields(fields);
 
         NodeList nodes = el.getElementsByTagNameNS(NAMESPACE_URI, "iso-field");

@@ -8,18 +8,11 @@ import java.io.EOFException;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.nucleus8583.core.charset.CharsetDecoder;
-import org.nucleus8583.core.charset.CharsetEncoder;
-import org.nucleus8583.core.charset.Charsets;
 import org.nucleus8583.core.field.type.FieldType;
 import org.nucleus8583.core.field.type.FieldTypes;
 import org.nucleus8583.core.xml.FieldDefinition;
 
-public class UnicodeVarHexBinFieldTypeTest {
-
-	private CharsetEncoder encoder;
-
-	private CharsetDecoder decoder;
+public class AsciiPrefixedBase16BinaryTest {
 
 	private FieldType binaryL;
 
@@ -29,9 +22,6 @@ public class UnicodeVarHexBinFieldTypeTest {
 
 	@Before
 	public void before() throws Exception {
-		encoder = Charsets.getProvider("ASCII").getEncoder();
-		decoder = Charsets.getProvider("ASCII").getDecoder();
-
         FieldDefinition def = new FieldDefinition();
         def.setId(120);
         def.setType("b.");
@@ -54,50 +44,50 @@ public class UnicodeVarHexBinFieldTypeTest {
     @Test
 	public void packBinary() throws Exception {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
-		binaryL.write(out, encoder, new byte[] { 0x20 });
+		binaryL.write(out, new byte[] { 0x20 });
 
-        assertEquals("120", out.toString());
-
-        out = new ByteArrayOutputStream();
-        binaryLL.write(out, encoder, new byte[] { 0x20 });
-
-        assertEquals("0120", out.toString());
+        assertEquals("220", out.toString());
 
         out = new ByteArrayOutputStream();
-        binaryLLL.write(out, encoder, new byte[] { 0x20 });
+        binaryLL.write(out, new byte[] { 0x20 });
 
-        assertEquals("00120", out.toString());
+        assertEquals("0220", out.toString());
+
+        out = new ByteArrayOutputStream();
+        binaryLLL.write(out, new byte[] { 0x20 });
+
+        assertEquals("00220", out.toString());
 	}
 
     @Test(expected = UnsupportedOperationException.class)
 	public void packString1() throws Exception {
-		binaryL.write(new ByteArrayOutputStream(), encoder, "");
+		binaryL.write(new ByteArrayOutputStream(), "");
 	}
 
     @Test(expected = UnsupportedOperationException.class)
     public void packString2() throws Exception {
-        binaryLL.write(new ByteArrayOutputStream(), encoder, "");
+        binaryLL.write(new ByteArrayOutputStream(), "");
     }
 
     @Test(expected = UnsupportedOperationException.class)
     public void packString3() throws Exception {
-        binaryLLL.write(new ByteArrayOutputStream(), encoder, "");
+        binaryLLL.write(new ByteArrayOutputStream(), "");
     }
 
 	@Test
 	public void packEmptyBinary() throws Exception {
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
-		binaryL.write(out, encoder, new byte[0]);
+		binaryL.write(out, new byte[0]);
 
 		assertEquals("0", out.toString());
 
         out = new ByteArrayOutputStream();
-        binaryLL.write(out, encoder, new byte[0]);
+        binaryLL.write(out, new byte[0]);
 
         assertEquals("00", out.toString());
 
         out = new ByteArrayOutputStream();
-        binaryLLL.write(out, encoder, new byte[0]);
+        binaryLLL.write(out, new byte[0]);
 
         assertEquals("000", out.toString());
 	}
@@ -106,49 +96,49 @@ public class UnicodeVarHexBinFieldTypeTest {
 	public void packBinaryOverflow() throws Exception {
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 
-		binaryL.write(out, encoder, new byte[] { 0x01, 0x02, 0x03, 0x04, 0x05, 0x06,
+		binaryL.write(out, new byte[] { 0x01, 0x02, 0x03, 0x04, 0x05, 0x06,
 		        0x07, 0x08, 0x09, 0x0A });
 	}
 
 	@Test(expected = UnsupportedOperationException.class)
 	public void unpackString1() throws Exception {
-		binaryL.readString(new ByteArrayInputStream("a".getBytes()), decoder);
+		binaryL.readString(new ByteArrayInputStream("a".getBytes()));
 	}
 
     @Test(expected = UnsupportedOperationException.class)
     public void unpackString2() throws Exception {
-        binaryLL.readString(new ByteArrayInputStream("a".getBytes()), decoder);
+        binaryLL.readString(new ByteArrayInputStream("a".getBytes()));
     }
 
     @Test(expected = UnsupportedOperationException.class)
     public void unpackString3() throws Exception {
-        binaryLLL.readString(new ByteArrayInputStream("a".getBytes()), decoder);
+        binaryLLL.readString(new ByteArrayInputStream("a".getBytes()));
     }
 
 	@Test
 	public void unpackBinary() throws Exception {
-	    byte[] val = binaryL.readBinary(new ByteArrayInputStream("120".getBytes()), decoder);
+	    byte[] val = binaryL.readBinary(new ByteArrayInputStream("120".getBytes()));
 	    assertEquals(1, val.length);
 		assertEquals(0x20, val[0]);
 
-        val = binaryLL.readBinary(new ByteArrayInputStream("0120".getBytes()), decoder);
+        val = binaryLL.readBinary(new ByteArrayInputStream("0120".getBytes()));
         assertEquals(1, val.length);
         assertEquals(0x20, val[0]);
 
-        val = binaryLLL.readBinary(new ByteArrayInputStream("00120".getBytes()), decoder);
+        val = binaryLLL.readBinary(new ByteArrayInputStream("00120".getBytes()));
         assertEquals(1, val.length);
         assertEquals(0x20, val[0]);
 	}
 
 	@Test
 	public void unpackEmptyBinary() throws Exception {
-        assertEquals(0, binaryL.readBinary(new ByteArrayInputStream("0".getBytes()), decoder).length);
-        assertEquals(0, binaryLL.readBinary(new ByteArrayInputStream("00".getBytes()), decoder).length);
-        assertEquals(0, binaryLLL.readBinary(new ByteArrayInputStream("000".getBytes()), decoder).length);
+        assertEquals(0, binaryL.readBinary(new ByteArrayInputStream("0".getBytes())).length);
+        assertEquals(0, binaryLL.readBinary(new ByteArrayInputStream("00".getBytes())).length);
+        assertEquals(0, binaryLLL.readBinary(new ByteArrayInputStream("000".getBytes())).length);
 	}
 
 	@Test(expected = EOFException.class)
 	public void unpackBinaryOverflow() throws Exception {
-		binaryL.readBinary(new ByteArrayInputStream("5ab".getBytes()), decoder);
+		binaryL.readBinary(new ByteArrayInputStream("5ab".getBytes()));
 	}
 }

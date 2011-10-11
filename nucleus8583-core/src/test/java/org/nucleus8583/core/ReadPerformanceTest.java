@@ -7,6 +7,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 public class ReadPerformanceTest {
+	
 	private MessageSerializer serializer;
 
 	private InputStream ipacked;

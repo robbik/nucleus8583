@@ -5,8 +5,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Serializable;
 
-import org.nucleus8583.core.charset.CharsetDecoder;
-import org.nucleus8583.core.charset.CharsetEncoder;
 import org.nucleus8583.core.xml.FieldAlignments;
 import org.nucleus8583.core.xml.FieldDefinition;
 
@@ -24,19 +22,71 @@ public abstract class FieldType implements Serializable {
 		return id;
 	}
 
-	public abstract boolean isBinary();
+	public boolean isBinary() {
+		return false;
+	}
 
-	public abstract void write(OutputStream out, CharsetEncoder enc, String value) throws IOException;
+	/**
+	 * read N bytes of value from input stream and store it to
+	 * <code>value</code> starting from offset <code>off</code>
+	 * 
+	 * @param in
+	 *            input stream
+	 * @param value
+	 *            where read value to be stored
+	 * @param off
+	 *            starting offset
+	 * @param len
+	 *            N bytes
+	 * @throws IOException
+	 *             if an IO error occured
+	 */
+	public void read(InputStream in, byte[] value, int off, int len)
+			throws IOException {
+		throw new UnsupportedOperationException();
+	}
 
-	public abstract void write(OutputStream out, CharsetEncoder enc, byte[] value) throws IOException;
+	public byte[] readBinary(InputStream in) throws IOException {
+		throw new UnsupportedOperationException(" field #" + id + " is not binary field");
+	}
 
-    public abstract void write(OutputStream out, CharsetEncoder enc, byte[] value, int off, int len) throws IOException;
+	public String readString(InputStream in) throws IOException {
+		throw new UnsupportedOperationException(" field #" + id + " is not string field");
+	}
 
-	public abstract void read(InputStream in, CharsetDecoder dec, byte[] value) throws IOException;
+	public void write(OutputStream out, String value) throws IOException {
+		throw new UnsupportedOperationException(" field #" + id + " is not string field");
+	}
 
-    public abstract void read(InputStream in, CharsetDecoder dec, byte[] value, int off, int len) throws IOException;
+	/**
+	 * same as <br/>
+	 * <code>write(out, value, 0, value.length)</code>
+	 * 
+	 * @param out
+	 * @param value
+	 *            value to be written
+	 * @throws IOException
+	 *             if an IO error occured
+	 */
+	public void write(OutputStream out, byte[] value) throws IOException {
+		throw new UnsupportedOperationException(" field #" + id + " is not binary field");
+	}
 
-	public abstract byte[] readBinary(InputStream in, CharsetDecoder dec) throws IOException;
-
-	public abstract String readString(InputStream in, CharsetDecoder dec) throws IOException;
+	/**
+	 * write N bytes of <code>value</code> to output stream starting from offset
+	 * <code>off</code>
+	 * 
+	 * @param out
+	 *            the output stream
+	 * @param value
+	 *            value to be written
+	 * @param off
+	 * @param len
+	 * @throws IOException
+	 *             if an IO error occured
+	 */
+	public void write(OutputStream out, byte[] value, int off, int len)
+			throws IOException {
+		throw new UnsupportedOperationException(" field #" + id + " is not binary field");
+	}
 }
