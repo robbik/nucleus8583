@@ -76,7 +76,6 @@ public abstract class AsciiPrefixedBase16Binary extends FieldType {
 	@Override
 	public void read(InputStream in, byte[] value, int off, int len)
 			throws IOException {
-		// TODO Auto-generated method stub
 		super.read(in, value, off, len);
 	}
 
