@@ -1,16 +1,30 @@
 package org.nucleus8583.core.osgi;
 
+import java.util.logging.Logger;
+
 import org.nucleus8583.core.io.ResourceLoader;
 
 public abstract class OsgiUtils {
 
-    public static boolean inOsgiEnvironment() {
+    private static final Logger log = Logger.getLogger(OsgiUtils.class.getName());
+
+    public static boolean detectOsgiEnvironment() {
+        boolean detected;
+
         try {
-            Class.forName("org.osgi.framework.FrameworkUtil");
-            return true;
+            Class.forName("org.nucleus8583.core.io.OsgiBundleResourceLoader").newInstance();
+            detected = true;
         } catch (Throwable t) {
-            return false;
+            detected = false;
         }
+
+        if (detected) {
+            log.info("OSGi environment detected");
+        } else {
+            log.info("OSGi environment not detected");
+        }
+
+        return detected;
     }
 
     public static ResourceLoader createOsgiBundleResourceLoader() {

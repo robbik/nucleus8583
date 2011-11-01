@@ -41,7 +41,7 @@ public abstract class ResourceUtils {
             return;
         }
 
-        if (OsgiUtils.inOsgiEnvironment()) {
+        if (OsgiUtils.detectOsgiEnvironment()) {
             ResourceLoader osgi = OsgiUtils.createOsgiBundleResourceLoader();
             if (osgi != null) {
                 addResourceLoader(0, osgi);
