@@ -3,7 +3,6 @@ package org.nucleus8583.core.util;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
 
 import java.net.URL;
 
@@ -16,7 +15,7 @@ public class ResourcesUtilsTest {
 		URL[] urls = ResourceUtils.getURLs("classpath:META-INF/test.zz");
 
 		assertNotNull(urls);
-		assertTrue(urls.length == 1);
+		assertEquals(1, urls.length);
 
 		assertEquals('a', urls[0].openStream().read());
 	}
@@ -26,7 +25,7 @@ public class ResourcesUtilsTest {
 		URL[] urls = ResourceUtils.getURLs("classpath:META-INF/test.zz2");
 
 		assertNotNull(urls);
-		assertTrue(urls.length == 0);
+		assertEquals(0, urls.length);
 	}
 
 	@Test
@@ -35,7 +34,7 @@ public class ResourcesUtilsTest {
 				.getURLs("file:src/test/resources/META-INF/test.zz");
 
 		assertNotNull(urls);
-		assertTrue(urls.length == 1);
+		assertEquals(1, urls.length);
 
 		assertEquals('a', urls[0].openStream().read());
 	}
@@ -46,7 +45,7 @@ public class ResourcesUtilsTest {
 				.getURLs("src/test/resources/META-INF/test.zz");
 
 		assertNotNull(urls);
-		assertTrue(urls.length == 1);
+		assertEquals(1, urls.length);
 
 		assertEquals('a', urls[0].openStream().read());
 	}

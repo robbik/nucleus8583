@@ -68,11 +68,9 @@
                 <configuration>
                     <instructions>
                         <Bundle-DocURL>${project.url}</Bundle-DocURL>
-                        <Bundle-Activator>org.nucleus8583.core.osgi.Nucleus8583Activator</Bundle-Activator>
-                        <Import-Package>*</Import-Package>
-                        <DynamicImport-Package>*</DynamicImport-Package>
+                        <Import-Package>org.osgi.*;resolution:=optional,*</Import-Package>
                         <Export-Package>org.nucleus8583.core.*;version=${project.version}</Export-Package>
-                        <Private-Package>org.nucleus8583.core.osgi.*</Private-Package>
+                        <Private-Package>org.nucleus8583.core.osgi</Private-Package>
                     </instructions>
                 </configuration>
             </plugin>
@@ -149,24 +147,6 @@
                     </plugin>
                 </plugins>
             </build>
-            
-            <repositories>
-            	<repository>
-            		<id>jpos</id>
-            		<name>jPOS Central Repository</name>
-            		<url>http://jpos.org/maven</url>
-            		<layout>default</layout>
-            	</repository>
-            </repositories>
-            
-            <dependencies>
-                <dependency>
-                    <groupId>org.jpos</groupId>
-                    <artifactId>jpos</artifactId>
-                    <version>1.8.0</version>
-                    <scope>test</scope>
-                </dependency>
-            </dependencies>
         </profile>
     </profiles>
 

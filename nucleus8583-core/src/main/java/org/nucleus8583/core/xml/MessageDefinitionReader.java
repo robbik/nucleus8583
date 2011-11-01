@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilder;
@@ -38,11 +39,17 @@ public class MessageDefinitionReader implements ErrorHandler {
 
     private static final String NAMESPACE_URI = "http://www.nucleus8583.org/schema/iso-message";
 
-    private static final DocumentBuilderFactory factory;
+    private static final AtomicBoolean initialized = new AtomicBoolean(false);
+
+    private static DocumentBuilderFactory factory;
 
     private static Schema schema;
 
-    static {
+    private static void initialize() {
+        if (!initialized.compareAndSet(false, true)) {
+            return;
+        }
+
         factory = DocumentBuilderFactory.newInstance();
 
         factory.setIgnoringComments(true);
@@ -58,7 +65,7 @@ public class MessageDefinitionReader implements ErrorHandler {
         if (schemaURL != null) {
             try {
                 schema = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI).newSchema(schemaURL);
-            } catch (SAXException e) {
+            } catch (Throwable t) {
                 // do nothing
             }
         }
@@ -83,6 +90,8 @@ public class MessageDefinitionReader implements ErrorHandler {
     private DocumentBuilder docBuilder;
 
     public MessageDefinitionReader() {
+        initialize();
+
         try {
             docBuilder = factory.newDocumentBuilder();
         } catch (RuntimeException ex) {

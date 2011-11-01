@@ -30,7 +30,7 @@ import org.w3c.dom.Node;
  */
 public final class MessageSerializer {
 
-	private static final Comparator<FieldType> sortByFieldId = new Comparator<FieldType>() {
+	private static final Comparator<FieldType> ORDER_BY_ID_ASC = new Comparator<FieldType>() {
 
 		public int compare(FieldType a, FieldType b) {
 			return a.getId() - b.getId();
@@ -151,17 +151,17 @@ public final class MessageSerializer {
 		init(definition);
 	}
 
-    private boolean replace(int id, FieldDefinition newdef, List<FieldDefinition> fields, int count) {
+    private boolean setIfAbsent(int id, FieldDefinition value, List<FieldDefinition> fields, int count) {
         for (int i = 0; i < count; ++i) {
             FieldDefinition def = fields.get(i);
 
             if (def.getId() == id) {
-                fields.set(i, newdef);
-                return true;
+                return false;
             }
         }
 
-        return false;
+        fields.add(value);
+        return true;
     }
 
     private void checkDuplicateId(List<FieldDefinition> list, int count) {
@@ -180,37 +180,40 @@ public final class MessageSerializer {
 
 	private void init(MessageDefinition definition) {
 		List<FieldDefinition> fields = definition.getFields();
-
 		int count = fields.size();
 
-		// automatic override field no 0 (if any)
-        hasMti = replace(0, FieldDefinition.FIELD_0, fields, count);
-        if (!hasMti) {
-		    fields.add(FieldDefinition.FIELD_0);
-		}
+        hasMti = !setIfAbsent(0, FieldDefinition.FIELD_0, fields, count);
+
+        // set field 1 if absent
+        setIfAbsent(1, FieldDefinition.FIELD_1, fields, count);
+
+        // set field 65 if absent
+        setIfAbsent(65, FieldDefinition.FIELD_65, fields, count);
 
 		checkDuplicateId(fields, count);
 
-        this.fieldsCount = fields.size();
-        this.fields = new FieldType[this.fieldsCount];
+        fieldsCount = fields.size();
+        this.fields = new FieldType[fieldsCount];
+
+        FieldTypes.initialize();
 
         for (int i = 0; i < fieldsCount; ++i) {
             this.fields[i] = FieldTypes.getType(fields.get(i));
         }
 
 		// sort fields by it's id
-		Arrays.sort(this.fields, MessageSerializer.sortByFieldId);
+		Arrays.sort(this.fields, ORDER_BY_ID_ASC);
 
 		// check for skipped fields
-		for (int i = 1; i < fieldsCount; ++i) {
+		for (int i = hasMti ? 1 : 0; i < fieldsCount; ++i) {
 			if (this.fields[i].getId() != i) {
 				throw new IllegalArgumentException("field #" + i + " is not defined");
 			}
 		}
 
-		this.binaries = new boolean[fieldsCount];
+		binaries = new boolean[fieldsCount];
 		for (int i = fieldsCount - 1; i >= 0; --i) {
-			this.binaries[i] = this.fields[i].isBinary();
+			binaries[i] = this.fields[i].isBinary();
 		}
 	}
 

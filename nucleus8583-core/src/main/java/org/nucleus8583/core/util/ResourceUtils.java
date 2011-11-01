@@ -1,173 +1,142 @@
 package org.nucleus8583.core.util;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Enumeration;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock.ReadLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock.WriteLock;
+
+import org.nucleus8583.core.io.ClassResourceLoader;
+import org.nucleus8583.core.io.ResourceLoader;
+import org.nucleus8583.core.io.UrlResourceLoader;
+import org.nucleus8583.core.osgi.OsgiUtils;
 
 public abstract class ResourceUtils {
-	private static final String LOCATION_PREFIX_FILE = "file:";
-	private static final String LOCATION_PREFIX_CLASSPATH = "classpath:";
 
-	private static void addResources(List<URL> resolved,
-			Set<String> doubleChecker, ClassLoader cl, String name) {
-		Enumeration<URL> en = null;
+    private static ReadLock slock;
 
-		try {
-			if (cl == null) {
-				en = ClassLoader.getSystemResources(name);
-			} else {
-				en = cl.getResources(name);
-			}
-		} catch (Throwable t) {
-			// do nothing
-		}
+    private static WriteLock xlock;
 
-		if (en != null) {
-			while (en.hasMoreElements()) {
-				URL el = en.nextElement();
-				String strEl = el.toString();
+    private static ResourceLoader[] loaders;
 
-				if (!doubleChecker.contains(strEl)) {
-					resolved.add(el);
-					doubleChecker.add(strEl);
-				}
-			}
-		}
-	}
+    private static final AtomicBoolean initialized;
 
-	public static URL[] getURLs(String location) {
-		List<URL> resolved = new ArrayList<URL>();
-		Set<String> doubleChecker = new HashSet<String>();
+    static {
+        ReentrantReadWriteLock lock = new ReentrantReadWriteLock(true);
 
-		if (location.startsWith(ResourceUtils.LOCATION_PREFIX_CLASSPATH)) {
-			location = location.substring(10);
+        slock = lock.readLock();
+        xlock = lock.writeLock();
 
-			try {
-				addResources(resolved, doubleChecker, Thread.currentThread()
-						.getContextClassLoader(), location);
-			} catch (Throwable t) {
-				// do nothing
-			}
+        loaders = new ResourceLoader[] { new ClassResourceLoader(), new UrlResourceLoader() };
 
-			try {
-				addResources(resolved, doubleChecker,
-						ResourceUtils.class.getClassLoader(), location);
-			} catch (Throwable t) {
-				// do nothing
-			}
+        initialized = new AtomicBoolean(false);
+    }
 
-			try {
-				addResources(resolved, doubleChecker,
-						ClassLoader.getSystemClassLoader(), location);
-			} catch (Throwable t) {
-				// do nothing
-			}
+    private static void initialize() {
+        if (!initialized.compareAndSet(false, true)) {
+            return;
+        }
 
-			try {
-				addResources(resolved, doubleChecker, null, location);
-			} catch (Throwable t) {
-				// do nothing
-			}
-		} else {
-			URL resolved1;
+        if (OsgiUtils.inOsgiEnvironment()) {
+            ResourceLoader osgi = OsgiUtils.createOsgiBundleResourceLoader();
+            if (osgi != null) {
+                addResourceLoader(0, osgi);
+            }
+        }
+    }
 
-			try {
-				resolved1 = new URL(location);
-			} catch (MalformedURLException ex) {
-				if (location.startsWith(ResourceUtils.LOCATION_PREFIX_FILE))
-					location = location.substring(5);
+    public static void addResourceLoader(ResourceLoader loader) {
+        initialize();
 
-				try {
-					resolved1 = new File(location).toURI().toURL();
-				} catch (MalformedURLException ex2) {
-					throw new RuntimeException(new FileNotFoundException(
-							"unable to find " + location));
-				}
-			}
-
-			if (resolved1 != null) {
-				resolved.add(resolved1);
-			}
-		}
-
-		return resolved.toArray(new URL[0]);
-	}
-
-	public static URL getURL(String location) {
-		URL resolved = null;
-
-		if (location.startsWith(ResourceUtils.LOCATION_PREFIX_CLASSPATH)) {
-			location = location.substring(10);
-
-			try {
-				resolved = Thread.currentThread().getContextClassLoader()
-						.getResource(location);
-			} catch (Throwable t) {
-				// do nothing
-			}
-
-			if (resolved == null) {
-				try {
-					resolved = ResourceUtils.class.getResource(location);
-				} catch (Throwable t) {
-					// do nothing
-				}
-			}
-
-			if (resolved == null) {
-				try {
-					resolved = ClassLoader.getSystemClassLoader().getResource(
-							location);
-				} catch (Throwable t) {
-					// do nothing
-				}
-			}
-
-			if (resolved == null) {
-				try {
-					resolved = ClassLoader.getSystemResource(location);
-				} catch (Throwable t) {
-					// do nothing
-				}
-			}
-		} else {
-			try {
-				resolved = new URL(location);
-			} catch (MalformedURLException ex) {
-				if (location.startsWith(ResourceUtils.LOCATION_PREFIX_FILE))
-					location = location.substring(5);
-
-				try {
-					resolved = new File(location).toURI().toURL();
-				} catch (MalformedURLException ex2) {
-					throw new RuntimeException(new FileNotFoundException(
-							"unable to find " + location));
-				}
-			}
-		}
-
-		return resolved;
-	}
-
-	public static ClassLoader getDefaultClassLoader() {
-	    ClassLoader cl = null;
-
+        xlock.lock();
         try {
-            cl = Thread.currentThread().getContextClassLoader();
-        } catch (Throwable t) {
-            // do nothing
+            List<ResourceLoader> list = new ArrayList<ResourceLoader>(Arrays.asList(loaders));
+            list.add(loader);
+
+            loaders = list.toArray(new ResourceLoader[0]);
+        } finally {
+            xlock.unlock();
+        }
+    }
+
+    public static void addResourceLoader(int index, ResourceLoader loader) {
+        initialize();
+
+        xlock.lock();
+        try {
+            List<ResourceLoader> list = new ArrayList<ResourceLoader>(Arrays.asList(loaders));
+            list.add(index, loader);
+
+            loaders = list.toArray(new ResourceLoader[0]);
+        } finally {
+            xlock.unlock();
+        }
+    }
+
+    public static URL[] getURLs(String location) {
+        initialize();
+
+        HashSet<URL> urls = new HashSet<URL>();
+
+        slock.lock();
+        try {
+            for (int i = 0; i < loaders.length; ++i) {
+                urls.addAll(loaders[i].getURLs(location));
+            }
+        } finally {
+            slock.unlock();
         }
 
-        if (cl == null) {
-            cl = ResourceUtils.class.getClassLoader();
+        return urls.toArray(new URL[0]);
+    }
+
+    public static URL getURL(String location) {
+        initialize();
+
+        URL found = null;
+
+        slock.lock();
+        try {
+            for (int i = 0; i < loaders.length; ++i) {
+                found = loaders[i].getURL(location);
+
+                if (found != null) {
+                    break;
+                }
+            }
+        } finally {
+            slock.unlock();
         }
 
-        return cl;
-	}
+        return found;
+    }
+
+    public static Class<?> loadClass(String className) throws ClassNotFoundException {
+        initialize();
+
+        Class<?> found = null;
+
+        slock.lock();
+        try {
+            for (int i = 0; i < loaders.length; ++i) {
+                found = loaders[i].loadClass(className);
+
+                if (found != null) {
+                    break;
+                }
+            }
+        } finally {
+            slock.unlock();
+        }
+
+        if (found == null) {
+            throw new ClassNotFoundException(className);
+        }
+
+        return found;
+    }
 }

@@ -9,6 +9,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock.ReadLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock.WriteLock;
 
 import org.nucleus8583.core.util.ResourceUtils;
 import org.nucleus8583.core.xml.FieldAlignments;
@@ -29,14 +33,20 @@ public abstract class FieldTypes {
 
 	private static final Map<String, Entry> types;
 
+	private static final ReadLock slock;
+
+	private static final WriteLock xlock;
+
+	private static final AtomicBoolean initialized;
+
 	static {
-		types = new HashMap<String, Entry>();
+	    types = new HashMap<String, Entry>();
 
-		URL[] urls = ResourceUtils.getURLs("classpath:META-INF/nucleus8583/nucleus8583.types");
+	    ReentrantReadWriteLock lock = new ReentrantReadWriteLock(true);
+	    slock = lock.readLock();
+	    xlock = lock.writeLock();
 
-		for (int i = 0; i < urls.length; ++i) {
-			load(urls[i]);
-		}
+	    initialized = new AtomicBoolean(false);
 	}
 
 	private static Entry createEntry(List<String> lines) {
@@ -48,7 +58,7 @@ public abstract class FieldTypes {
 		Entry entry = new Entry();
 
 		try {
-			entry.clazz = Class.forName(lines.get(0), true, Thread.currentThread().getContextClassLoader());
+			entry.clazz = ResourceUtils.loadClass(lines.get(0));
 		} catch (Throwable t) {
 			return null;
 		}
@@ -141,8 +151,40 @@ public abstract class FieldTypes {
 		}
 	}
 
+    public static void initialize() {
+        if (initialized.compareAndSet(false, true)) {
+            try {
+                refresh();
+            } catch (RuntimeException ex) {
+                initialized.set(false);
+                throw ex;
+            }
+        }
+    }
+
+    public static void refresh() {
+        URL[] urls = ResourceUtils.getURLs("classpath:META-INF/nucleus8583/nucleus8583.types");
+
+        xlock.lock();
+        try {
+            for (int i = 0; i < urls.length; ++i) {
+                load(urls[i]);
+            }
+        } finally {
+            xlock.unlock();
+        }
+    }
+
 	public static FieldType getType(FieldDefinition def) {
-		Entry entry = types.get(def.getType().toUpperCase());
+	    Entry entry;
+
+	    slock.lock();
+	    try {
+	        entry = types.get(def.getType().toUpperCase());
+	    } finally {
+	        slock.unlock();
+	    }
+
 		if (entry == null) {
 			throw new RuntimeException("an error occured while retrieving type " + def.getType() + ", type not found.");
 		}

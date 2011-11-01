@@ -22,6 +22,7 @@ public class AsciiPrefixedAsciiTextTest {
         def.setId(39);
         def.setType("a .");
 
+        FieldTypes.initialize();
         stringField = FieldTypes.getType(def);
 	}
 

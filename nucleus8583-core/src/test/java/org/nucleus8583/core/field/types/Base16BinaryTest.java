@@ -20,6 +20,8 @@ public class Base16BinaryTest {
 
 	@Before
 	public void before() throws Exception {
+	    FieldTypes.initialize();
+
         FieldDefinition def = new FieldDefinition();
         def.setId(35);
         def.setType("b");

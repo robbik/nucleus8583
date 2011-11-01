@@ -22,6 +22,8 @@ public class AsciiTextTest {
 
 	@Before
 	public void before() throws Exception {
+	    FieldTypes.initialize();
+
         FieldDefinition def = new FieldDefinition();
         def.setId(39);
         def.setType("a");

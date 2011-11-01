@@ -14,8 +14,8 @@ public class FieldDefinition {
         FieldDefinition.FIELD_0.type = "an";
         FieldDefinition.FIELD_0.length = 4;
         FieldDefinition.FIELD_0.align = FieldAlignments.NONE;
-        FieldDefinition.FIELD_0.padWith = " ";
-        FieldDefinition.FIELD_0.emptyValue = "";
+        FieldDefinition.FIELD_0.padWith = null;
+        FieldDefinition.FIELD_0.emptyValue = null;
 
         FIELD_1 = new FieldDefinition();
         FieldDefinition.FIELD_1.id = 1;
