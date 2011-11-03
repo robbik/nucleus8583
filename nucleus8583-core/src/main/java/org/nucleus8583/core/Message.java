@@ -53,13 +53,13 @@ public final class Message implements Serializable {
 
 		this.count = count + 1;
 
-		this.mti = null;
+		mti = null;
 
-		this.stringValues = new String[this.count];
-		this.binaryValues = new byte[this.count][];
+		stringValues = new String[this.count];
+		binaryValues = new byte[this.count][];
 
-		this.bits1To128 = BitmapHelper.create(128);
-		this.bits129To192 = BitmapHelper.create(64);
+		bits1To128 = BitmapHelper.create(128);
+		bits129To192 = BitmapHelper.create(64);
 	}
 
 	/**
@@ -100,7 +100,7 @@ public final class Message implements Serializable {
 	 */
 	public void set(int no, byte[] value) {
 		if ((no <= 1) || (no > 192) || (no == 65) || (no >= count)) {
-			throw new IllegalArgumentException("field no must be in range 2-" + (count - 1) + " and not equals to 65");
+			throw new IllegalArgumentException("field no must be in range 2-" + (count - 1) + " and not equals to 65, actual is " + no);
 		}
 
 		if (value == null) {
@@ -483,21 +483,21 @@ public final class Message implements Serializable {
 		}
 
 		Message another = (Message) object;
-		if (!equals(this.mti, another.mti)) {
+		if (!equals(mti, another.mti)) {
 			return false;
 		}
 
-		if (this.count != another.count) {
+		if (count != another.count) {
 			return false;
 		}
 
-		for (int i = this.count - 1; i >= 2; --i) {
+		for (int i = count - 1; i >= 2; --i) {
 			if (i != 65) {
-				if (!equals(this.binaryValues[i], another.binaryValues[i])) {
+				if (!equals(binaryValues[i], another.binaryValues[i])) {
 					return false;
 				}
 
-				if (!equals(this.stringValues[i], another.stringValues[i])) {
+				if (!equals(stringValues[i], another.stringValues[i])) {
 					return false;
 				}
 			}

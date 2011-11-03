@@ -29,7 +29,7 @@ public class AsciiAmount extends FieldType {
 		length = def.getLength();
 
 		padder = new AsciiPadder();
-		padder.setLength(length);
+		padder.setLength(length - 1);
 
 		if (def.getAlign() == null) {
 			if (defaultAlign == null) {

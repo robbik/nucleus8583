@@ -25,14 +25,14 @@ public class MessageSerializer128Test {
 	public void initialize() throws Exception {
 		serializer = new MessageSerializer("file:src/test/resources/META-INF/codec8583.xml");
 
-		packed = "0200C00000000001000104000000000000000603000000499980000000000000000301";
+		packed = "0200C000000000010001040000000000000006030000004999800000000000000000000000000000000301";
 		bpacked = packed.getBytes();
 
 		unpacked = new Message();
 		unpacked.setMti("0200");
 		unpacked.set(2, "030000");
 		unpacked.set(48, "9998");
-		unpacked.set(64, BitmapHelper.create(64));
+		unpacked.set(64, BitmapHelper.create(128));
 		unpacked.set(70, "301");
 	}
 
@@ -100,6 +100,6 @@ public class MessageSerializer128Test {
 
 		out = new ByteArrayOutputStream();
 		serializer.write(unpacked, out);
-		assertEquals(this.packed, out.toString());
+		assertEquals(packed, out.toString());
 	}
 }

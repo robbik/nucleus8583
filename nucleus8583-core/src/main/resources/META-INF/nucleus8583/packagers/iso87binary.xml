@@ -4,11 +4,11 @@
     <iso-field id="1" length="16" type="literal bitmap" description="BIT MAP"  />
     <iso-field id="2" length="19" type="bcd .. bcd" align="uleft" description="PRIMARY ACCOUNT NUMBER" />
     <iso-field id="3" length="6" type="bcd" align="uright" description="PROCESSING CODE" />
-    <iso-field id="4" length="12" type="bcd" align="right" description="AMOUNT, TRANSACTION" />
-    <iso-field id="5" length="12" type="bcd" align="right" description="AMOUNT, SETTLEMENT" />
-    <iso-field id="6" length="12" type="bcd" align="right" description="AMOUNT, CARDHOLDER BILLING" />
+    <iso-field id="4" length="12" type="bcd" align="uright" description="AMOUNT, TRANSACTION" />
+    <iso-field id="5" length="12" type="bcd" align="uright" description="AMOUNT, SETTLEMENT" />
+    <iso-field id="6" length="12" type="bcd" align="uright" description="AMOUNT, CARDHOLDER BILLING" />
     <iso-field id="7" length="10" type="bcd" align="uright" description="TRANSMISSION DATE AND TIME" />
-    <iso-field id="8" length="8" type="bcd" align="right" description="AMOUNT, CARDHOLDER BILLING FEE" />
+    <iso-field id="8" length="8" type="bcd" align="uright" description="AMOUNT, CARDHOLDER BILLING FEE" />
     <iso-field id="9" length="8" type="bcd" align="uright" description="CONVERSION RATE, SETTLEMENT" />
     <iso-field id="10" length="8" type="bcd" align="uright" description="CONVERSION RATE, CARDHOLDER BILLING" />
     <iso-field id="11" length="6" type="bcd" align="uright" description="SYSTEM TRACE AUDIT NUMBER" />
@@ -28,30 +28,30 @@
     <iso-field id="25" length="2" type="bcd" align="uright" description="POINT OF SERVICE CONDITION CODE" />
     <iso-field id="26" length="2" type="bcd" align="uright" description="POINT OF SERVICE PIN CAPTURE CODE" />
     <iso-field id="27" length="1" type="bcd" align="uright" description="AUTHORIZATION IDENTIFICATION RESP LEN" />
-    <iso-field id="28" length="9" type="bcd amount" align="right" description="AMOUNT, TRANSACTION FEE" />
-    <iso-field id="29" length="9" type="bcd amount" align="right" description="AMOUNT, SETTLEMENT FEE" />
-    <iso-field id="30" length="9" type="bcd amount" align="right" description="AMOUNT, TRANSACTION PROCESSING FEE" />
-    <iso-field id="31" length="9" type="bcd amount" align="right" description="AMOUNT, SETTLEMENT PROCESSING FEE" />
+    <iso-field id="28" length="9" type="bcd amount" align="uright" description="AMOUNT, TRANSACTION FEE" />
+    <iso-field id="29" length="9" type="bcd amount" align="uright" description="AMOUNT, SETTLEMENT FEE" />
+    <iso-field id="30" length="9" type="bcd amount" align="uright" description="AMOUNT, TRANSACTION PROCESSING FEE" />
+    <iso-field id="31" length="9" type="bcd amount" align="uright" description="AMOUNT, SETTLEMENT PROCESSING FEE" />
     <iso-field id="32" length="11" type="bcd .. bcd" align="uleft" description="ACQUIRING INSTITUTION IDENT CODE" />
     <iso-field id="33" length="11" type="bcd .. bcd" align="uleft" description="FORWARDING INSTITUTION IDENT CODE" />
     <iso-field id="34" length="28" type="an .. bcd" description="PAN EXTENDED" />
     <iso-field id="35" length="37" type="bcd .. bcd" align="uleft" description="TRACK 2 DATA" />
     <iso-field id="36" length="104" type="an ... bcd" description="TRACK 3 DATA" />
-    <iso-field id="37" length="12" type="an" description="RETRIEVAL REFERENCE NUMBER" />
-    <iso-field id="38" length="6" type="an" description="AUTHORIZATION IDENTIFICATION RESPONSE" />
-    <iso-field id="39" length="2" type="an" align="uright" description="RESPONSE CODE" />
+    <iso-field id="37" length="12" type="an" align="uleft" description="RETRIEVAL REFERENCE NUMBER" />
+    <iso-field id="38" length="6" type="an" align="uleft" description="AUTHORIZATION IDENTIFICATION RESPONSE" />
+    <iso-field id="39" length="2" type="an" align="uleft" description="RESPONSE CODE" />
     <iso-field id="40" length="3" type="an" align="uleft" description="SERVICE RESTRICTION CODE" />
-    <iso-field id="41" length="8" type="an" align="uright" description="CARD ACCEPTOR TERMINAL IDENTIFICACION" />
-    <iso-field id="42" length="15" type="an" align="uright" description="CARD ACCEPTOR IDENTIFICATION CODE" />
-    <iso-field id="43" length="40" type="an" align="left" description="CARD ACCEPTOR NAME/LOCATION" />
+    <iso-field id="41" length="8" type="an" align="uleft" description="CARD ACCEPTOR TERMINAL IDENTIFICACION" />
+    <iso-field id="42" length="15" type="an" align="uleft" description="CARD ACCEPTOR IDENTIFICATION CODE" />
+    <iso-field id="43" length="40" type="an" align="uleft" description="CARD ACCEPTOR NAME/LOCATION" />
     <iso-field id="44" length="25" type="an .. bcd" description="ADITIONAL RESPONSE DATA" />
     <iso-field id="45" length="76" type="an .. bcd" description="TRACK 1 DATA" />
     <iso-field id="46" length="999" type="an ... bcd" description="ADITIONAL DATA - ISO" />
     <iso-field id="47" length="999" type="an ... bcd" description="ADITIONAL DATA - NATIONAL" />
     <iso-field id="48" length="999" type="an ... bcd" description="ADITIONAL DATA - PRIVATE" />
-    <iso-field id="49" length="3" type="an" align="uright" description="CURRENCY CODE, TRANSACTION" />
-    <iso-field id="50" length="3" type="an" align="uright" description="CURRENCY CODE, SETTLEMENT" />
-    <iso-field id="51" length="3" type="an" align="uright" description="CURRENCY CODE, CARDHOLDER BILLING" />
+    <iso-field id="49" length="3" type="an" align="uleft" description="CURRENCY CODE, TRANSACTION" />
+    <iso-field id="50" length="3" type="an" align="uleft" description="CURRENCY CODE, SETTLEMENT" />
+    <iso-field id="51" length="3" type="an" align="uleft" description="CURRENCY CODE, CARDHOLDER BILLING" />
     <iso-field id="52" length="8" type="literal b" align="none" description="PIN DATA" />
     <iso-field id="53" length="16" type="bcd" align="uright" description="SECURITY RELATED CONTROL INFORMATION" />
     <iso-field id="54" length="120" type="an ... bcd" description="ADDITIONAL AMOUNTS" />
@@ -82,14 +82,14 @@
     <iso-field id="79" length="10" type="bcd" align="uright" description="TRANSFER REVERSAL NUMBER" />
     <iso-field id="80" length="10" type="bcd" align="uright" description="INQUIRIES NUMBER" />
     <iso-field id="81" length="10" type="bcd" align="uright" description="AUTHORIZATION NUMBER" />
-    <iso-field id="82" length="12" type="bcd" align="right" description="CREDITS, PROCESSING FEE AMOUNT" />
-    <iso-field id="83" length="12" type="bcd" align="right" description="CREDITS, TRANSACTION FEE AMOUNT" />
-    <iso-field id="84" length="12" type="bcd" align="right" description="DEBITS, PROCESSING FEE AMOUNT" />
-    <iso-field id="85" length="12" type="bcd" align="right" description="DEBITS, TRANSACTION FEE AMOUNT" />
-    <iso-field id="86" length="16" type="bcd" align="right" description="CREDITS, AMOUNT" />
-    <iso-field id="87" length="16" type="bcd" align="right" description="CREDITS, REVERSAL AMOUNT" />
-    <iso-field id="88" length="16" type="bcd" align="right" description="DEBITS, AMOUNT" />
-    <iso-field id="89" length="16" type="bcd" align="right" description="DEBITS, REVERSAL AMOUNT" />
+    <iso-field id="82" length="12" type="bcd" align="uright" description="CREDITS, PROCESSING FEE AMOUNT" />
+    <iso-field id="83" length="12" type="bcd" align="uright" description="CREDITS, TRANSACTION FEE AMOUNT" />
+    <iso-field id="84" length="12" type="bcd" align="uright" description="DEBITS, PROCESSING FEE AMOUNT" />
+    <iso-field id="85" length="12" type="bcd" align="uright" description="DEBITS, TRANSACTION FEE AMOUNT" />
+    <iso-field id="86" length="16" type="bcd" align="uright" description="CREDITS, AMOUNT" />
+    <iso-field id="87" length="16" type="bcd" align="uright" description="CREDITS, REVERSAL AMOUNT" />
+    <iso-field id="88" length="16" type="bcd" align="uright" description="DEBITS, AMOUNT" />
+    <iso-field id="89" length="16" type="bcd" align="uright" description="DEBITS, REVERSAL AMOUNT" />
     <iso-field id="90" length="42" type="bcd" align="none" description="ORIGINAL DATA ELEMENTS" />
     <iso-field id="91" length="1" type="an" align="none" description="FILE UPDATE CODE" />
     <iso-field id="92" length="2" type="an" align="none" description="FILE SECURITY CODE" />
@@ -99,8 +99,8 @@
     <iso-field id="96" length="16" type="literal b" align="none" description="MESSAGE SECURITY CODE" />
     <iso-field id="97" length="17" type="bcd amount" align="uright" description="AMOUNT, NET SETTLEMENT" />
     <iso-field id="98" length="25" type="an" align="none" description="PAYEE" />
-    <iso-field id="99" length="11" type="bcd .. bcd" align="uright" description="SETTLEMENT INSTITUTION IDENT CODE" />
-    <iso-field id="100" length="11" type="bcd .. bcd" align="uright" description="RECEIVING INSTITUTION IDENT CODE" />
+    <iso-field id="99" length="11" type="bcd .. bcd" align="uleft" description="SETTLEMENT INSTITUTION IDENT CODE" />
+    <iso-field id="100" length="11" type="bcd .. bcd" align="uleft" description="RECEIVING INSTITUTION IDENT CODE" />
     <iso-field id="101" length="17" type="an .. bcd" description="FILE NAME" />
     <iso-field id="102" length="28" type="an .. bcd" description="ACCOUNT IDENTIFICATION 1" />
     <iso-field id="103" length="28" type="an .. bcd" description="ACCOUNT IDENTIFICATION 2" />

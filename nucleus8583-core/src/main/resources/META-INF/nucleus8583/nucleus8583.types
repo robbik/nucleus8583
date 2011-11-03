@@ -105,3 +105,16 @@ an\ ...bcd=org.nucleus8583.core.field.type.BcdLLLAsciiText,align\=none,pad-with\
 an\ ...\ bcd=org.nucleus8583.core.field.type.BcdLLLAsciiText,align\=none,pad-with\=0,empty-value\=
 an...bcd=org.nucleus8583.core.field.type.BcdLLLAsciiText,align\=none,pad-with\=0,empty-value\=
 an...\ bcd=org.nucleus8583.core.field.type.BcdLLLAsciiText,align\=none,pad-with\=0,empty-value\=
+
+literal\ b\ .bcd=org.nucleus8583.core.field.type.BcdLLiteralBinary,align\=none,empty-value\=
+literal\ b\ .\ bcd=org.nucleus8583.core.field.type.BcdLLiteralBinary,align\=none,empty-value\=
+literal\ b.bcd=org.nucleus8583.core.field.type.BcdLLiteralBinary,align\=none,empty-value\=
+literal\ b.\ bcd=org.nucleus8583.core.field.type.BcdLLiteralBinary,align\=none,empty-value\=
+literal\ b\ ..bcd=org.nucleus8583.core.field.type.BcdLLLiteralBinary,align\=none,empty-value\=
+literal\ b\ ..\ bcd=org.nucleus8583.core.field.type.BcdLLLiteralBinary,align\=none,empty-value\=
+literal\ b..bcd=org.nucleus8583.core.field.type.BcdLLLiteralBinary,align\=none,empty-value\=
+literal\ b..\ bcd=org.nucleus8583.core.field.type.BcdLLLiteralBinary,align\=none,empty-value\=
+literal\ b\ ...bcd=org.nucleus8583.core.field.type.BcdLLLLiteralBinary,align\=none,empty-value\=
+literal\ b\ ...\ bcd=org.nucleus8583.core.field.type.BcdLLLLiteralBinary,align\=none,empty-value\=
+literal\ b...bcd=org.nucleus8583.core.field.type.BcdLLLLiteralBinary,align\=none,empty-value\=
+literal\ b...\ bcd=org.nucleus8583.core.field.type.BcdLLLLiteralBinary,align\=none,empty-value\=

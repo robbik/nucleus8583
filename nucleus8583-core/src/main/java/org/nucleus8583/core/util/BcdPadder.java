@@ -13,7 +13,11 @@ public class BcdPadder {
 
     private FieldAlignments align;
 
-    private int length;
+    private int roundupLength;
+
+    private int valueLength;
+
+    private int diffLength;
 
     private String padder;
 
@@ -45,7 +49,10 @@ public class BcdPadder {
     }
 
     public void setLength(int length) {
-        this.length = length << 1;
+        roundupLength = ((length + 1) >> 1) << 1;
+        valueLength = length;
+
+        diffLength = roundupLength - valueLength;
     }
 
     public void setEmptyValue(char[] emptyValue) {
@@ -53,7 +60,7 @@ public class BcdPadder {
     }
 
     public void initialize() {
-        char[] padder = new char[length];
+        char[] padder = new char[roundupLength];
         Arrays.fill(padder, padWith);
 
         this.padder = new String(padder);
@@ -61,29 +68,29 @@ public class BcdPadder {
 
     public void pad(OutputStream out, String value, int vlen) throws IOException {
         if (vlen == 0) {
-            write(out, padder, length);
-        } else if (vlen == length) {
+            write(out, padder, roundupLength);
+        } else if (vlen == roundupLength) {
             write(out, value, vlen);
         } else {
             switch (align) {
             case TRIMMED_LEFT:
             case UNTRIMMED_LEFT:
-                write(out, value + padder.substring(vlen), length);
+                write(out, value + padder.substring(vlen), roundupLength);
                 break;
             case TRIMMED_RIGHT:
             case UNTRIMMED_RIGHT:
-                write(out, padder.substring(0, length - vlen) + value, length);
+                write(out, padder.substring(0, roundupLength - vlen) + value, roundupLength);
                 break;
             default: // NONE
-                write(out, padder.substring(0, length - vlen) + value, length);
+                write(out, padder.substring(0, roundupLength - vlen) + value, roundupLength);
                 break;
             }
         }
     }
 
     public char[] unpad(InputStream in) throws IOException {
-        char[] value = new char[length];
-        read(in, value, length);
+        char[] value = new char[roundupLength];
+        read(in, value, roundupLength);
 
         char[] result;
         int resultLength;
@@ -92,7 +99,7 @@ public class BcdPadder {
         case TRIMMED_LEFT:
             resultLength = 0;
 
-            for (int i = length - 1; i >= 0; --i) {
+            for (int i = roundupLength - 1; i >= 0; --i) {
                 if (value[i] != padWith) {
                     resultLength = i + 1;
                     break;
@@ -101,7 +108,7 @@ public class BcdPadder {
 
             if (resultLength == 0) {
                 result = emptyValue;
-            } else if (resultLength == length) {
+            } else if (resultLength == roundupLength) {
                 result = value;
             } else {
                 result = new char[resultLength];
@@ -110,9 +117,9 @@ public class BcdPadder {
 
             break;
         case TRIMMED_RIGHT:
-            int padLength = length;
+            int padLength = roundupLength;
 
-            for (int i = 0; i < length; ++i) {
+            for (int i = 0; i < roundupLength; ++i) {
                 if (value[i] != padWith) {
                     padLength = i;
                     break;
@@ -121,10 +128,10 @@ public class BcdPadder {
 
             if (padLength == 0) {
                 result = value;
-            } else if (padLength == length) {
+            } else if (padLength == roundupLength) {
                 result = emptyValue;
             } else {
-                resultLength = length - padLength;
+                resultLength = valueLength - padLength;
 
                 result = new char[resultLength];
                 System.arraycopy(value, padLength, result, 0, resultLength);
@@ -134,6 +141,23 @@ public class BcdPadder {
         default: // NONE, UNTRIMMED_LEFT, UNTRIMMED_RIGHT
             result = value;
             break;
+        }
+
+        if (diffLength != 0) {
+            value = result;
+
+            switch (align) {
+            case TRIMMED_LEFT:
+            case UNTRIMMED_LEFT:
+                result = new char[valueLength];
+                System.arraycopy(value, 0, result, 0, valueLength);
+            case TRIMMED_RIGHT:
+            case UNTRIMMED_RIGHT:
+            case NONE:
+                result = new char[valueLength];
+                System.arraycopy(value, diffLength, result, 0, valueLength);
+                break;
+            }
         }
 
         return result;

@@ -338,15 +338,25 @@ public abstract class BcdUtils {
      */
     public static void bcdToStr(byte[] bcd, char[] chars, int length) {
         int bcdLength = bcd.length;
+        boolean k = (length & 1) == 0;
 
         Arrays.fill(chars, '0');
 
-        for (int i = bcdLength - 1, j = length - 1; (i >= 0) && (j >= 0); --i, j -= 2) {
-            chars[j] = (char) ('0' + (bcd[i] & 0x0F));
-
-            if (j > 0) {
-                chars[j - 1] = (char) ('0' + ((bcd[i] >> 4) & 0x0F));
+        for (int i = bcdLength - 1, j = length - 1; j >= 0; --j, k = !k) {
+            if (k) {
+                chars[j] = (char) ('0' + (bcd[i] & 0x0F));
+            } else {
+                chars[j] = (char) ('0' + ((bcd[i] >> 4) & 0x0F));
+                --i;
             }
         }
+
+//        for (int i = bcdLength - 1, j = length - 1; (i >= 0) && (j >= 0); --i, j -= 2) {
+//            chars[j] = (char) ('0' + (bcd[i] & 0x0F));
+//
+//            if (j > 0) {
+//                chars[j - 1] = (char) ('0' + ((bcd[i] >> 4) & 0x0F));
+//            }
+//        }
     }
 }

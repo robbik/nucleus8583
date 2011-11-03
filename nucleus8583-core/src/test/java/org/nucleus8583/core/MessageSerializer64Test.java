@@ -35,8 +35,8 @@ public class MessageSerializer64Test {
 		serializer = new MessageSerializer("file:src/test/resources/META-INF/codec8583.xml");
 		serializer2 = new MessageSerializer("file:src/test/resources/META-INF/codec8583-5.xml");
 
-		packed = "020040000000000100010603000000499980000000000000000";
-        packed2 = "40000000000100010603000000499980000000000000000";
+		packed = "0200400000000001000106030000004999800000000000000000000000000000000";
+        packed2 = "400000000001000106030000004999800000000000000000000000000000000";
 
 		bpacked = packed.getBytes();
         bpacked2 = packed2.getBytes();
@@ -45,12 +45,12 @@ public class MessageSerializer64Test {
 		unpacked.setMti("0200");
 		unpacked.set(2, "030000");
 		unpacked.set(48, "9998");
-		unpacked.set(64, BitmapHelper.create(64));
+		unpacked.set(64, BitmapHelper.create(128));
 
         unpacked2 = new Message();
         unpacked2.set(2, "030000");
         unpacked2.set(48, "9998");
-        unpacked2.set(64, BitmapHelper.create(64));
+        unpacked2.set(64, BitmapHelper.create(128));
 	}
 
 	@Test
@@ -79,7 +79,7 @@ public class MessageSerializer64Test {
         Message unpacked = new Message();
         serializer2.read(bpacked2, unpacked);
 
-        assertEquals(this.unpacked2, unpacked);
+        assertEquals(unpacked2, unpacked);
     }
 
 	@Test
@@ -95,7 +95,7 @@ public class MessageSerializer64Test {
         Message unpacked = new Message();
         serializer2.read(bpacked2, unpacked);
 
-        assertEquals(this.unpacked2, unpacked);
+        assertEquals(unpacked2, unpacked);
     }
 
 	@Test(expected = IOException.class)
@@ -141,6 +141,6 @@ public class MessageSerializer64Test {
 
 		out = new ByteArrayOutputStream();
 		serializer.write(unpacked, out);
-		assertEquals(this.packed, out.toString());
+		assertEquals(packed, out.toString());
 	}
 }

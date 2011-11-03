@@ -120,6 +120,10 @@ public class LiteralBinaryPadder {
 		}
 	}
 
+	public byte[] getEmptyValue() {
+	    return emptyValue;
+	}
+
 	public void initialize() {
 		padder = new byte[length];
 		Arrays.fill(padder, padWith);

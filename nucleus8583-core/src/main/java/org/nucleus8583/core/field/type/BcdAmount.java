@@ -27,7 +27,7 @@ public class BcdAmount extends FieldType {
         length = def.getLength();
 
         padder = new BcdPadder();
-        padder.setLength(length);
+        padder.setLength(length - 1);
 
         if (def.getAlign() == null) {
             if (defaultAlign == null) {

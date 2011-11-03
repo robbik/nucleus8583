@@ -35,44 +35,42 @@ public class Base16BinaryTest {
 		binaryField.write(new NullOutputStream(), "a");
 	}
 
-	@Test
+	@Test(expected = IllegalArgumentException.class)
 	public void packEmptyBinary() throws Exception {
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		binaryField.write(out, new byte[0]);
-
-		assertEquals("00", out.toString());
 	}
 
 	@Test
 	public void packBinary() throws Exception {
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 
-		binaryField.write(out, new byte[0]);
-		assertEquals("00", out.toString());
+//		binaryField.write(out, new byte[0]);
+//		assertEquals("00", out.toString());
 
 		byte[] bs = BitmapHelper.create(8);
 		BitmapHelper.set(bs, 0);
 
 		binaryField.write(out, bs);
-		assertEquals("0080", out.toString());
+		assertEquals("80", out.toString());
 
 		BitmapHelper.clear(bs);
 		BitmapHelper.set(bs, 1);
 
 		binaryField.write(out, bs);
-		assertEquals("008040", out.toString());
+		assertEquals("8040", out.toString());
 
 		BitmapHelper.clear(bs);
 		BitmapHelper.set(bs, 2);
 
 		binaryField.write(out, bs);
-		assertEquals("00804020", out.toString());
+		assertEquals("804020", out.toString());
 
 		BitmapHelper.clear(bs);
 		BitmapHelper.set(bs, 3);
 
 		binaryField.write(out, bs);
-		assertEquals("0080402010", out.toString());
+		assertEquals("80402010", out.toString());
 
 		BitmapHelper.clear(bs);
 		BitmapHelper.set(bs, 0);
@@ -81,7 +79,7 @@ public class Base16BinaryTest {
         BitmapHelper.set(bs, 3);
 
 		binaryField.write(out, bs);
-		assertEquals("0080402010F0", out.toString());
+		assertEquals("80402010F0", out.toString());
 	}
 
 	@Test(expected = EOFException.class)

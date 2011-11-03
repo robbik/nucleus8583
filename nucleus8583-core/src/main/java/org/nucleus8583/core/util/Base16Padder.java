@@ -158,8 +158,8 @@ public class Base16Padder {
 	}
 
 	public byte[] unpad(InputStream in) throws IOException {
-		byte[] value = new byte[length];
-		read(in, value, 0, length);
+		byte[] value = new byte[length << 1];
+		read(in, value, 0, value.length);
 
 		byte[] result;
 		int resultLength;

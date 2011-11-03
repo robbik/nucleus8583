@@ -26,7 +26,7 @@ public class BcdNumeric extends FieldType {
         length = def.getLength();
 
         padder = new BcdPadder();
-        padder.setLength((length + 1) >> 1);
+        padder.setLength(length);
 
         if (def.getAlign() == null) {
             if (defaultAlign == null) {

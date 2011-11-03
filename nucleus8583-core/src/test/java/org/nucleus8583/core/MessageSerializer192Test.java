@@ -19,7 +19,7 @@ public class MessageSerializer192Test {
 	public void initialize() throws Exception {
 		serializer = new MessageSerializer("classpath:META-INF/codec8583L.xml");
 
-		packed = "0200C000000000010000800000000000000006030000004999800000000100000043301002000000000000000000000";
+		packed = "0200C000000000010000800000000000000006030000004999800000000100000043301002000000000000000000000000000000000000000000000";
 
 		unpacked = new Message();
 		unpacked.setMti("0200");
@@ -27,7 +27,7 @@ public class MessageSerializer192Test {
 		unpacked.set(48, "9998");
 		unpacked.set(164, "301");
 
-		byte[] bs = BitmapHelper.create(96);
+		byte[] bs = BitmapHelper.create(192);
 		BitmapHelper.set(bs, 10);
 
 		unpacked.set(190, bs);
