@@ -1,22 +1,23 @@
 package org.nucleus8583.core.field.type;
 
+import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-import org.nucleus8583.core.util.LiteralBinaryPadder;
+import org.nucleus8583.core.util.AsciiPadder;
 import org.nucleus8583.core.util.StringUtils;
 import org.nucleus8583.core.xml.FieldAlignments;
 import org.nucleus8583.core.xml.FieldDefinition;
 
-public class LiteralBinary extends FieldType {
+public class AsciiAmount extends FieldType {
 	private static final long serialVersionUID = -5615324004502124085L;
 
 	private int length;
 
-	private LiteralBinaryPadder padder;
+	private AsciiPadder padder;
 
-	public LiteralBinary(FieldDefinition def, FieldAlignments defaultAlign,
+	public AsciiAmount(FieldDefinition def, FieldAlignments defaultAlign,
 			String defaultPadWith, String defaultEmptyValue) {
 		super(def, defaultAlign, defaultPadWith, defaultEmptyValue);
 
@@ -27,7 +28,7 @@ public class LiteralBinary extends FieldType {
 
 		length = def.getLength();
 
-		padder = new LiteralBinaryPadder();
+		padder = new AsciiPadder();
 		padder.setLength(length);
 
 		if (def.getAlign() == null) {
@@ -41,27 +42,27 @@ public class LiteralBinary extends FieldType {
 		}
 
 		if (padder.getAlign() == FieldAlignments.NONE) {
-			padder.setPadWith((byte) 0);
+			padder.setPadWith(' ');
 		} else {
 			if (StringUtils.isEmpty(def.getPadWith())) {
 				if (StringUtils.isEmpty(defaultPadWith)) {
 					throw new IllegalArgumentException("pad-with required");
 				}
 
-				padder.setPadWith(defaultPadWith);
+				padder.setPadWith(defaultPadWith.charAt(0));
 			} else {
-				padder.setPadWith(def.getPadWith());
+				padder.setPadWith(def.getPadWith().charAt(0));
 			}
 		}
 
 		if (def.getEmptyValue() == null) {
 			if (defaultEmptyValue == null) {
-				padder.setEmptyValue(new byte[0]);
+				padder.setEmptyValue(new char[0]);
 			} else {
-				padder.setEmptyValue(defaultEmptyValue);
+				padder.setEmptyValue(defaultEmptyValue.toCharArray());
 			}
 		} else {
-			padder.setEmptyValue(def.getEmptyValue());
+			padder.setEmptyValue(def.getEmptyValue().toCharArray());
 		}
 
 		padder.initialize();
@@ -69,35 +70,29 @@ public class LiteralBinary extends FieldType {
 
 	@Override
 	public boolean isBinary() {
-		return true;
+		return false;
 	}
 
 	@Override
-	public byte[] readBinary(InputStream in) throws IOException {
-		return padder.unpad(in);
+	public String readString(InputStream in) throws IOException {
+        int first = in.read();
+        if (first < 0) {
+            throw new EOFException();
+        }
+
+        return ((char) first) + new String(padder.unpad(in, length - 1));
 	}
 
 	@Override
-	public void read(InputStream in, byte[] value, int off, int len)
-			throws IOException {
-		padder.unpad(in, value, off, len);
-	}
-
-	@Override
-	public void write(OutputStream out, byte[] value) throws IOException {
-		int vlen = value.length;
+	public void write(OutputStream out, String value) throws IOException {
+		int vlen = value.length();
 		if (vlen > length) {
 			throw new IllegalArgumentException("value of field #" + id
 					+ " is too long, expected " + length + " but actual is "
 					+ vlen);
 		}
 
-		padder.pad(out, value, 0, vlen);
-	}
-
-	@Override
-	public void write(OutputStream out, byte[] value, int off, int len)
-			throws IOException {
-		padder.pad(out, value, off, len);
+        out.write(value.charAt(0) & 0xFF);
+        padder.pad(out, value.substring(1), vlen - 1);
 	}
 }

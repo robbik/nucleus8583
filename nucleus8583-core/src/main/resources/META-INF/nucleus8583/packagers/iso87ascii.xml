@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<iso-message xmlns="http://www.nucleus8583.org/schema/iso-message">
+    <iso-field id="0" length="4" type="n" align="uright" description="MESSAGE TYPE INDICATOR" />
+    <iso-field id="1" length="16" type="bitmap" description="BIT MAP" />
+    <iso-field id="2" length="19" type="n .." description="PAN - PRIMARY ACCOUNT NUMBER" />
+    <iso-field id="3" length="6" type="n" align="uleft" description="PROCESSING CODE" />
+    <iso-field id="4" length="12" type="n" align="right" description="AMOUNT, TRANSACTION" />
+    <iso-field id="5" length="12" type="n" align="right" description="AMOUNT, SETTLEMENT" />
+    <iso-field id="6" length="12" type="n" align="right" description="AMOUNT, CARDHOLDER BILLING" />
+    <iso-field id="7" length="10" type="n" align="uright" description="TRANSMISSION DATE AND TIME" />
+    <iso-field id="8" length="8" type="n" align="right" description="AMOUNT, CARDHOLDER BILLING FEE" />
+    <iso-field id="9" length="8" type="n" align="right" description="CONVERSION RATE, SETTLEMENT" />
+    <iso-field id="10" length="8" type="n" align="right" description="CONVERSION RATE, CARDHOLDER BILLING" />
+    <iso-field id="11" length="6" type="n" align="right" description="SYSTEM TRACE AUDIT NUMBER" />
+    <iso-field id="12" description="TIME, LOCAL TRANSACTION" length="6" type="n" align="uright" />
+    <iso-field id="13" description="DATE, LOCAL TRANSACTION" length="4" type="n" align="uright" />
+    <iso-field id="14" description="DATE, EXPIRATION" length="4" type="n" align="uright" />
+    <iso-field id="15" description="DATE, SETTLEMENT" length="4" type="n" align="uright" />
+    <iso-field id="16" description="DATE, CONVERSION" length="4" type="n" align="uright" />
+    <iso-field id="17" description="DATE, CAPTURE" length="4" type="n" align="uright" />
+    <iso-field id="18" description="MERCHANTS TYPE" length="4" type="n" align="uright" />
+    <iso-field id="19" description="ACQUIRING INSTITUTION COUNTRY CODE" length="3" type="n" align="uright" />
+    <iso-field id="20" description="PAN EXTENDED COUNTRY CODE" length="3" type="n" align="uright" />
+    <iso-field id="21" description="FORWARDING INSTITUTION COUNTRY CODE" length="3" type="n" align="uright" />
+    <iso-field id="22" description="POINT OF SERVICE ENTRY MODE" length="3" type="n" align="uright" />
+    <iso-field id="23" description="CARD SEQUENCE NUMBER" length="3" type="n" align="uright" />
+    <iso-field id="24" description="NETWORK INTERNATIONAL IDENTIFIEER" length="3" type="n" align="uright" />
+    <iso-field id="25" description="POINT OF SERVICE CONDITION CODE" length="2" type="n" align="uright" />
+    <iso-field id="26" description="POINT OF SERVICE PIN CAPTURE CODE" length="2" type="n" align="uright" />
+    <iso-field id="27" description="AUTHORIZATION IDENTIFICATION RESP LEN" length="1" type="n" align="uright" />
+    <iso-field id="28" description="AMOUNT, TRANSACTION FEE" length="9" type="amount" align="right" />
+    <iso-field id="29" description="AMOUNT, SETTLEMENT FEE" length="9" type="amount" align="right" />
+    <iso-field id="30" description="AMOUNT, TRANSACTION PROCESSING FEE" length="9" type="amount" align="right" />
+    <iso-field id="31" description="AMOUNT, SETTLEMENT PROCESSING FEE" length="9" type="amount" align="right" />
+    <iso-field id="32" description="ACQUIRING INSTITUTION IDENT CODE" length="11" type="n .." />
+    <iso-field id="33" description="FORWARDING INSTITUTION IDENT CODE" length="11" type="n .." />
+    <iso-field id="34" description="PAN EXTENDED" length="28" type="ans .." />
+    <iso-field id="35" description="TRACK 2 DATA" length="37" type="n .." />
+    <iso-field id="36" description="TRACK 3 DATA" length="104" type="ans ..." />
+    <iso-field id="37" description="RETRIEVAL REFERENCE NUMBER" length="12" type="ans" />
+    <iso-field id="38" description="AUTHORIZATION IDENTIFICATION RESPONSE" length="6" type="ans" />
+    <iso-field id="39" description="RESPONSE CODE" length="2" type="ans" align="uright" />
+    <iso-field id="40" description="SERVICE RESTRICTION CODE" length="3" type="ans" align="uright" />
+    <iso-field id="41" description="CARD ACCEPTOR TERMINAL IDENTIFICACION" length="8" type="ans" />
+    <iso-field id="42" description="CARD ACCEPTOR IDENTIFICATION CODE" length="15" align="uright" type="ans" />
+    <iso-field description="CARD ACCEPTOR NAME/LOCATION" length="40" type="ans" id="43" />
+    <iso-field description="ADITIONAL RESPONSE DATA" length="25" type="ans .." id="44" />
+    <iso-field description="TRACK 1 DATA" length="76" type="ans .." id="45" />
+    <iso-field description="ADITIONAL DATA - ISO" length="999" type="ans ..." id="46" />
+    <iso-field description="ADITIONAL DATA - NATIONAL" length="999" type="ans ..." id="47" />
+    <iso-field description="ADITIONAL DATA - PRIVATE" length="999" type="ans ..." id="48" />
+    <iso-field description="CURRENCY CODE, TRANSACTION" length="3" type="ans" align="uright" id="49" />
+    <iso-field description="CURRENCY CODE, SETTLEMENT" length="3" type="ans" align="uright" id="50" />
+    <iso-field description="CURRENCY CODE, CARDHOLDER BILLING" length="3" type="ans" align="uright" id="51" />
+    <iso-field description="PIN DATA" length="8" type="b" id="52" />
+    <iso-field description="SECURITY RELATED CONTROL INFORMATION" length="16" type="n" id="53" />
+    <iso-field description="ADDITIONAL AMOUNTS" length="120" type="ans ..." id="54" />
+    <iso-field description="RESERVED ISO" length="999" type="ans ..." id="55" />
+    <iso-field description="RESERVED ISO" length="999" type="ans ..." id="56" />
+    <iso-field description="RESERVED NATIONAL" length="999" type="ans ..." id="57" />
+    <iso-field description="RESERVED NATIONAL" length="999" type="ans ..." id="58" />
+    <iso-field description="RESERVED NATIONAL" length="999" type="ans ..." id="59" />
+    <iso-field description="RESERVED PRIVATE" length="999" type="ans ..." id="60" />
+    <iso-field description="RESERVED PRIVATE" length="999" type="ans ..." id="61" />
+    <iso-field description="RESERVED PRIVATE" length="999" type="ans ..." id="62" />
+    <iso-field description="RESERVED PRIVATE" length="999" type="ans ..." id="63" />
+    <iso-field description="MESSAGE AUTHENTICATION CODE FIELD" length="8" type="b" id="64" />
+    <iso-field description="BITMAP, EXTENDED" length="1" type="bitmap" id="65" />
+    <iso-field description="SETTLEMENT CODE" length="1" type="n" id="66" />
+    <iso-field description="EXTENDED PAYMENT CODE" length="2" type="n" align="uright" id="67" />
+    <iso-field description="RECEIVING INSTITUTION COUNTRY CODE" length="3" type="n" align="uright" id="68" />
+    <iso-field description="SETTLEMENT INSTITUTION COUNTRY CODE" length="3" type="n" align="uright" id="69" />
+    <iso-field description="NETWORK MANAGEMENT INFORMATION CODE" length="3" type="n" align="uright" id="70" />
+    <iso-field description="MESSAGE NUMBER" length="4" type="n" align="uright" id="71" />
+    <iso-field description="MESSAGE NUMBER LAST" length="4" type="n" align="uright" id="72" />
+    <iso-field description="DATE ACTION" length="6" type="n" align="uright" id="73" />
+    <iso-field description="CREDITS NUMBER" length="10" type="n" align="right" id="74" />
+    <iso-field description="CREDITS REVERSAL NUMBER" length="10" type="n" align="right" id="75" />
+    <iso-field description="DEBITS NUMBER" length="10" type="n" align="right" id="76" />
+    <iso-field description="DEBITS REVERSAL NUMBER" length="10" type="n" align="right" id="77" />
+    <iso-field description="TRANSFER NUMBER" length="10" type="n" align="right" id="78" />
+    <iso-field description="TRANSFER REVERSAL NUMBER" length="10" type="n" align="right" id="79" />
+    <iso-field description="INQUIRIES NUMBER" length="10" type="n" align="right" id="80" />
+    <iso-field description="AUTHORIZATION NUMBER" length="10" type="n" align="right" id="81" />
+    <iso-field description="CREDITS, PROCESSING FEE AMOUNT" length="12" type="n" align="right" id="82" />
+    <iso-field description="CREDITS, TRANSACTION FEE AMOUNT" length="12" type="n" align="right" id="83" />
+    <iso-field description="DEBITS, PROCESSING FEE AMOUNT" length="12" type="n" align="right" id="84" />
+    <iso-field description="DEBITS, TRANSACTION FEE AMOUNT" length="12" type="n" align="right" id="85" />
+    <iso-field description="CREDITS, AMOUNT" length="16" type="n" align="right" id="86" />
+    <iso-field description="CREDITS, REVERSAL AMOUNT" length="16" align="right" type="n" id="87" />
+    <iso-field description="DEBITS, AMOUNT" length="16" type="n" align="right" id="88" />
+    <iso-field description="DEBITS, REVERSAL AMOUNT" length="16" type="n" align="right" id="89" />
+    <iso-field description="ORIGINAL DATA ELEMENTS" length="42" type="ans" id="90" />
+    <iso-field description="FILE UPDATE CODE" length="1" type="ans" align="uright" id="91" />
+    <iso-field description="FILE SECURITY CODE" length="2" type="ans" align="uright" id="92" />
+    <iso-field description="RESPONSE INDICATOR" length="6" type="ans" id="93" />
+    <iso-field description="SERVICE INDICATOR" length="7" type="ans" id="94" />
+    <iso-field description="REPLACEMENT AMOUNTS" length="42" type="ans" id="95" />
+    <iso-field description="MESSAGE SECURITY CODE" length="16" type="b" id="96" />
+    <iso-field description="AMOUNT, NET SETTLEMENT" length="17" type="amount" align="right" id="97" />
+    <iso-field description="PAYEE" length="25" type="ans" id="98" />
+    <iso-field description="SETTLEMENT INSTITUTION IDENT CODE" length="11" type="n .." id="99" />
+    <iso-field description="RECEIVING INSTITUTION IDENT CODE" length="11" type="n .." id="100" />
+    <iso-field description="FILE NAME" length="17" type="ans .." id="101" />
+    <iso-field description="ACCOUNT IDENTIFICATION 1" length="28" type="ans .." id="102" />
+    <iso-field description="ACCOUNT IDENTIFICATION 2" length="28" type="ans .." id="103" />
+    <iso-field description="TRANSACTION DESCRIPTION" length="100" type="ans ..." id="104" />
+    <iso-field description="RESERVED ISO USE" length="999" type="ans ..." id="105" />
+    <iso-field description="RESERVED ISO USE" length="999" type="ans ..." id="106" />
+    <iso-field description="RESERVED ISO USE" length="999" type="ans ..." id="107" />
+    <iso-field description="RESERVED ISO USE" length="999" type="ans ..." id="108" />
+    <iso-field description="RESERVED ISO USE" length="999" type="ans ..." id="109" />
+    <iso-field description="RESERVED ISO USE" length="999" type="ans ..." id="110" />
+    <iso-field description="RESERVED ISO USE" length="999" type="ans ..." id="111" />
+    <iso-field description="RESERVED NATIONAL USE" length="999" type="ans ..." id="112" />
+    <iso-field description="RESERVED NATIONAL USE" length="999" type="ans ..." id="113" />
+    <iso-field description="RESERVED NATIONAL USE" length="999" type="ans ..." id="114" />
+    <iso-field description="RESERVED NATIONAL USE" length="999" type="ans ..." id="115" />
+    <iso-field description="RESERVED NATIONAL USE" length="999" type="ans ..." id="116" />
+    <iso-field description="RESERVED NATIONAL USE" length="999" type="ans ..." id="117" />
+    <iso-field description="RESERVED NATIONAL USE" length="999" type="ans ..." id="118" />
+    <iso-field description="RESERVED NATIONAL USE" length="999" type="ans ..." id="119" />
+    <iso-field description="RESERVED PRIVATE USE" length="999" type="ans ..." id="120" />
+    <iso-field description="RESERVED PRIVATE USE" length="999" type="ans ..." id="121" />
+    <iso-field description="RESERVED PRIVATE USE" length="999" type="ans ..." id="122" />
+    <iso-field description="RESERVED PRIVATE USE" length="999" type="ans ..." id="123" />
+    <iso-field description="RESERVED PRIVATE USE" length="999" type="ans ..." id="124" />
+    <iso-field description="RESERVED PRIVATE USE" length="999" type="ans ..." id="125" />
+    <iso-field description="RESERVED PRIVATE USE" length="999" type="ans ..." id="126" />
+    <iso-field description="RESERVED PRIVATE USE" length="999" type="ans ..." id="127" />
+    <iso-field description="MAC 2" length="8" type="b" id="128" />
+</iso-message>

@@ -34,7 +34,7 @@ public class AsciiTextTest {
         def = new FieldDefinition();
         def.setId(39);
         def.setType("custom");
-        def.setAlign(FieldAlignments.RIGHT);
+        def.setAlign(FieldAlignments.TRIMMED_RIGHT);
         def.setPadWith(" ");
         def.setLength(2);
 

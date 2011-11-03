@@ -5,6 +5,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Arrays;
 
+import org.nucleus8583.core.xml.FieldAlignments;
+
 public class Base16Padder {
 
 	private static final char[] HEX = { '0', '1', '2', '3', '4', '5', '6', '7',
@@ -66,7 +68,7 @@ public class Base16Padder {
 
 	private byte padWith;
 
-	private char align;
+	private FieldAlignments align;
 
 	private int length;
 
@@ -90,11 +92,11 @@ public class Base16Padder {
 		this.padWith = padWith;
 	}
 
-	public void setAlign(char align) {
+	public void setAlign(FieldAlignments align) {
 		this.align = align;
 	}
 
-	public char getAlign() {
+	public FieldAlignments getAlign() {
 		return align;
 	}
 
@@ -134,17 +136,19 @@ public class Base16Padder {
 			write(out, value, off, vlen);
 		} else {
 			switch (align) {
-			case 'l':
+			case TRIMMED_LEFT:
+			case UNTRIMMED_LEFT:
 				write(out, value, off, vlen);
 				write(out, padder, 0, length - vlen);
 
 				break;
-			case 'r':
+			case TRIMMED_RIGHT:
+			case UNTRIMMED_RIGHT:
 				write(out, padder, 0, length - vlen);
 				write(out, value, off, vlen);
 
 				break;
-			default: // 'n'
+			default: // NONE
 				write(out, value, off, vlen);
 				write(out, padder, 0, length - vlen);
 
@@ -161,7 +165,7 @@ public class Base16Padder {
 		int resultLength;
 
 		switch (align) {
-		case 'l':
+		case TRIMMED_LEFT:
 			resultLength = 0;
 
 			for (int i = length - 1; i >= 0; --i) {
@@ -181,7 +185,7 @@ public class Base16Padder {
 			}
 
 			break;
-		case 'r':
+		case TRIMMED_RIGHT:
 			int padLength = length;
 
 			for (int i = 0; i < length; ++i) {
@@ -203,7 +207,7 @@ public class Base16Padder {
 			}
 
 			break;
-		default: // 'n'
+		default: // NONE, UNTRIMMED_LEFT, UNTRIMMED_RIGHT
 			result = value;
 			break;
 		}
@@ -218,7 +222,7 @@ public class Base16Padder {
 		int resultLength = length;
 
 		switch (align) {
-		case 'l':
+		case TRIMMED_LEFT:
 			resultLength = 0;
 
 			for (int i = length - 1; i >= 0; --i) {
@@ -237,7 +241,7 @@ public class Base16Padder {
 			}
 
 			break;
-		case 'r':
+		case TRIMMED_RIGHT:
 			int padLength = length;
 
 			for (int i = 0; i < length; ++i) {
@@ -257,7 +261,7 @@ public class Base16Padder {
 			}
 
 			break;
-		default: // 'n'
+		default: // NONE, UNTRIMMED_LEFT, UNTRIMMED_RIGHT
 			System.arraycopy(value, 0, result, off, length);
 			break;
 		}
@@ -268,7 +272,7 @@ public class Base16Padder {
 	/**
 	 * read N*2 bytes from input stream and store it to <code>value</code>
 	 * starting from offset <code>off</code>.
-	 * 
+	 *
 	 * @param in
 	 * @param value
 	 * @param off
@@ -291,7 +295,7 @@ public class Base16Padder {
 	 * write N bytes of value to output stream. As the each byte of value will
 	 * be written in hexadecimal form, so this method will write N*2 bytes in
 	 * the stream.
-	 * 
+	 *
 	 * @param out
 	 * @param value
 	 * @param off

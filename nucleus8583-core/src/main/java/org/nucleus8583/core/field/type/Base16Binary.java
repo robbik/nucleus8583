@@ -35,12 +35,12 @@ public class Base16Binary extends FieldType {
 				throw new IllegalArgumentException("alignment required");
 			}
 
-			padder.setAlign(defaultAlign.symbolicValue());
+			padder.setAlign(defaultAlign);
 		} else {
-			padder.setAlign(def.getAlign().symbolicValue());
+			padder.setAlign(def.getAlign());
 		}
 
-		if (padder.getAlign() == 'n') {
+		if (padder.getAlign() == FieldAlignments.NONE) {
 			padder.setPadWith((byte) 0);
 		} else {
 			if (StringUtils.isEmpty(def.getPadWith())) {

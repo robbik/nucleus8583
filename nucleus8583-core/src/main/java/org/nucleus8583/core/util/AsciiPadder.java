@@ -5,11 +5,13 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Arrays;
 
+import org.nucleus8583.core.xml.FieldAlignments;
+
 public class AsciiPadder {
 
 	private char padWith;
 
-	private char align;
+	private FieldAlignments align;
 
 	private int length;
 
@@ -21,11 +23,11 @@ public class AsciiPadder {
 		this.padWith = padWith;
 	}
 
-	public void setAlign(char align) {
+	public void setAlign(FieldAlignments align) {
 		this.align = align;
 	}
 
-	public char getAlign() {
+	public FieldAlignments getAlign() {
 		return align;
 	}
 
@@ -50,17 +52,19 @@ public class AsciiPadder {
 			write(out, value, 0, valueLength);
 		} else {
 			switch (align) {
-			case 'l':
+			case TRIMMED_LEFT:
+            case UNTRIMMED_LEFT:
 				write(out, value, 0, valueLength);
 				write(out, padder, 0, length - valueLength);
 
 				break;
-			case 'r':
+            case TRIMMED_RIGHT:
+            case UNTRIMMED_RIGHT:
 				write(out, padder, 0, length - valueLength);
 				write(out, value, 0, valueLength);
 
 				break;
-			default: // 'n'
+			default: // NONE
 				write(out, value, 0, valueLength);
 				write(out, padder, 0, length - valueLength);
 
@@ -77,7 +81,7 @@ public class AsciiPadder {
 		int resultLength;
 
 		switch (align) {
-		case 'l':
+		case TRIMMED_LEFT:
 			resultLength = 0;
 
 			for (int i = bytesLength - 1; i >= 0; --i) {
@@ -97,7 +101,7 @@ public class AsciiPadder {
 			}
 
 			break;
-		case 'r':
+		case TRIMMED_RIGHT:
 			int padLength = bytesLength;
 
 			for (int i = 0; i < bytesLength; ++i) {
@@ -119,7 +123,7 @@ public class AsciiPadder {
 			}
 
 			break;
-		default: // 'n'
+		default: // NONE, UNTRIMMED_LEFT, UNTRIMMED_RIGHT
 			result = value;
 			break;
 		}

@@ -1,46 +1,60 @@
 package org.nucleus8583.core.xml;
 
 public enum FieldAlignments {
-    LEFT, RIGHT, NONE;
+    TRIMMED_LEFT, TRIMMED_RIGHT, NONE, UNTRIMMED_LEFT, UNTRIMMED_RIGHT;
 
     public char symbolicValue() {
-        if (this == LEFT) {
+        switch (this) {
+        case TRIMMED_LEFT:
             return 'l';
-        }
-        if (this == RIGHT) {
+        case TRIMMED_RIGHT:
             return 'r';
+        case UNTRIMMED_LEFT:
+            return 'L';
+        case UNTRIMMED_RIGHT:
+            return 'R';
+        default:
+            return 'n';
         }
-        return 'n';
     }
 
     @Override
     public String toString() {
-        if (this == LEFT) {
+        switch (this) {
+        case TRIMMED_LEFT:
             return "left";
-        }
-
-        if (this == RIGHT) {
+        case TRIMMED_RIGHT:
             return "right";
-        }
-
-        if (this == NONE) {
+        case UNTRIMMED_LEFT:
+            return "uleft";
+        case UNTRIMMED_RIGHT:
+            return "uright";
+        case NONE:
             return "none";
+        default:
+            return null;
         }
-
-        return null;
     }
 
     public static FieldAlignments enumValueOf(String str) {
-        if ("left".equalsIgnoreCase(str)) {
-            return LEFT;
+        if ("left".equalsIgnoreCase(str) || "l".equalsIgnoreCase(str)) {
+            return TRIMMED_LEFT;
         }
 
-        if ("right".equalsIgnoreCase(str)) {
-            return RIGHT;
+        if ("right".equalsIgnoreCase(str) || "r".equalsIgnoreCase(str)) {
+            return TRIMMED_RIGHT;
         }
 
-        if ("none".equalsIgnoreCase(str)) {
+        if ("none".equalsIgnoreCase(str) || "n".equalsIgnoreCase(str)) {
             return NONE;
+        }
+
+        if ("uleft".equalsIgnoreCase(str) || "ul".equalsIgnoreCase(str)) {
+            return UNTRIMMED_LEFT;
+        }
+
+        if ("uright".equalsIgnoreCase(str) || "ur".equalsIgnoreCase(str)) {
+            return UNTRIMMED_RIGHT;
         }
 
         return null;

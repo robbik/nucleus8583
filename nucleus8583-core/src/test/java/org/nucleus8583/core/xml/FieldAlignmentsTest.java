@@ -8,18 +8,18 @@ public class FieldAlignmentsTest {
 
 	@Test
 	public void symbolicValueTest() {
-		assertEquals('l', FieldAlignments.LEFT.symbolicValue());
-		assertEquals('r', FieldAlignments.RIGHT.symbolicValue());
+		assertEquals('l', FieldAlignments.TRIMMED_LEFT.symbolicValue());
+		assertEquals('r', FieldAlignments.TRIMMED_RIGHT.symbolicValue());
 		assertEquals('n', FieldAlignments.NONE.symbolicValue());
 	}
 
 	@Test
 	public void enumValueOfTest() {
-		assertEquals(FieldAlignments.LEFT, FieldAlignments.enumValueOf("left"));
-		assertEquals(FieldAlignments.LEFT, FieldAlignments.enumValueOf("lefT"));
+		assertEquals(FieldAlignments.TRIMMED_LEFT, FieldAlignments.enumValueOf("left"));
+		assertEquals(FieldAlignments.TRIMMED_LEFT, FieldAlignments.enumValueOf("lefT"));
 
-		assertEquals(FieldAlignments.RIGHT, FieldAlignments.enumValueOf("right"));
-		assertEquals(FieldAlignments.RIGHT, FieldAlignments.enumValueOf("rIgHt"));
+		assertEquals(FieldAlignments.TRIMMED_RIGHT, FieldAlignments.enumValueOf("right"));
+		assertEquals(FieldAlignments.TRIMMED_RIGHT, FieldAlignments.enumValueOf("rIgHt"));
 
 		assertEquals(FieldAlignments.NONE, FieldAlignments.enumValueOf("none"));
 		assertEquals(FieldAlignments.NONE, FieldAlignments.enumValueOf("nOnE"));

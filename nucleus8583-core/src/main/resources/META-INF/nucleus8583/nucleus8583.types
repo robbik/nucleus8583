@@ -63,6 +63,8 @@ custom..=org.nucleus8583.core.field.type.AsciiLLAsciiText,empty-value\=
 custom...=org.nucleus8583.core.field.type.AsciiLLLAsciiText,empty-value\=
 
 b=org.nucleus8583.core.field.type.Base16Binary,align\=none,pad-with\=00
+literal\ b=org.nucleus8583.core.field.type.LiteralBinary,align\=none,pad-with\=00
+
 b\ .=org.nucleus8583.core.field.type.AsciiLBase16Binary
 b\ ..=org.nucleus8583.core.field.type.AsciiLLBase16Binary
 b\ ...=org.nucleus8583.core.field.type.AsciiLLLBase16Binary
@@ -72,3 +74,34 @@ b...=org.nucleus8583.core.field.type.AsciiLLLBase16Binary
 
 bitmap=org.nucleus8583.core.field.type.Base16Bitmap
 literal\ bitmap=org.nucleus8583.core.field.type.LiteralBitmap
+
+amount=org.nucleus8583.core.field.type.AsciiAmount,align\=right,pad-with\=0,empty-value\=0
+
+bcd=org.nucleus8583.core.field.type.BcdNumeric,align\=uleft,pad-with\=0,empty-value\=0
+bcd\ amount=org.nucleus8583.core.field.type.BcdAmount,align\=uright,pad-with\=0,empty-value\=0
+
+bcd\ .bcd=org.nucleus8583.core.field.type.BcdLBcdNumeric,align\=uleft,pad-with\=0,empty-value\=0
+bcd\ .\ bcd=org.nucleus8583.core.field.type.BcdLBcdNumeric,align\=uleft,pad-with\=0,empty-value\=0
+bcd.bcd=org.nucleus8583.core.field.type.BcdLBcdNumeric,align\=uleft,pad-with\=0,empty-value\=0
+bcd.\ bcd=org.nucleus8583.core.field.type.BcdLBcdNumeric,align\=uleft,pad-with\=0,empty-value\=0
+bcd\ ..bcd=org.nucleus8583.core.field.type.BcdLLBcdNumeric,align\=uleft,pad-with\=0,empty-value\=0
+bcd\ ..\ bcd=org.nucleus8583.core.field.type.BcdLLBcdNumeric,align\=uleft,pad-with\=0,empty-value\=0
+bcd..bcd=org.nucleus8583.core.field.type.BcdLLBcdNumeric,align\=uleft,pad-with\=0,empty-value\=0
+bcd..\ bcd=org.nucleus8583.core.field.type.BcdLLBcdNumeric,align\=uleft,pad-with\=0,empty-value\=0
+bcd\ ...bcd=org.nucleus8583.core.field.type.BcdLLLBcdNumeric,align\=uleft,pad-with\=0,empty-value\=0
+bcd\ ...\ bcd=org.nucleus8583.core.field.type.BcdLLLBcdNumeric,align\=uleft,pad-with\=0,empty-value\=0
+bcd...bcd=org.nucleus8583.core.field.type.BcdLLLBcdNumeric,align\=uleft,pad-with\=0,empty-value\=0
+bcd...\ bcd=org.nucleus8583.core.field.type.BcdLLLBcdNumeric,align\=uleft,pad-with\=0,empty-value\=0
+
+an\ .bcd=org.nucleus8583.core.field.type.BcdLAsciiText,align\=none,pad-with\=0,empty-value\=
+an\ .\ bcd=org.nucleus8583.core.field.type.BcdLAsciiText,align\=none,pad-with\=0,empty-value\=
+an.bcd=org.nucleus8583.core.field.type.BcdLAsciiText,align\=none,pad-with\=0,empty-value\=
+an.\ bcd=org.nucleus8583.core.field.type.BcdLAsciiText,align\=none,pad-with\=0,empty-value\=
+an\ ..bcd=org.nucleus8583.core.field.type.BcdLLAsciiText,align\=none,pad-with\=0,empty-value\=
+an\ ..\ bcd=org.nucleus8583.core.field.type.BcdLLAsciiText,align\=none,pad-with\=0,empty-value\=
+an..bcd=org.nucleus8583.core.field.type.BcdLLAsciiText,align\=none,pad-with\=0,empty-value\=
+an..\ bcd=org.nucleus8583.core.field.type.BcdLLAsciiText,align\=none,pad-with\=0,empty-value\=
+an\ ...bcd=org.nucleus8583.core.field.type.BcdLLLAsciiText,align\=none,pad-with\=0,empty-value\=
+an\ ...\ bcd=org.nucleus8583.core.field.type.BcdLLLAsciiText,align\=none,pad-with\=0,empty-value\=
+an...bcd=org.nucleus8583.core.field.type.BcdLLLAsciiText,align\=none,pad-with\=0,empty-value\=
+an...\ bcd=org.nucleus8583.core.field.type.BcdLLLAsciiText,align\=none,pad-with\=0,empty-value\=

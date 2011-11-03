@@ -15,6 +15,12 @@
 
 			<xsd:enumeration value="none" />
 			<xsd:enumeration value="n" />
+
+            <xsd:enumeration value="uleft" />
+            <xsd:enumeration value="ul" />
+
+            <xsd:enumeration value="uright" />
+            <xsd:enumeration value="ur" />
 		</xsd:restriction>
 	</xsd:simpleType>
 
