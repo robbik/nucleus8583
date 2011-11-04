@@ -69,8 +69,16 @@
                     <instructions>
                         <Bundle-DocURL>${project.url}</Bundle-DocURL>
                         <Import-Package>org.osgi.*;resolution:=optional,*</Import-Package>
-                        <Export-Package>org.nucleus8583.core.*;version=${project.version}</Export-Package>
-                        <Private-Package>org.nucleus8583.core.osgi</Private-Package>
+                        <Export-Package>
+                            org.nucleus8583.core;version=${project.version},
+                            org.nucleus8583.core.field.type;version=${project.version}
+                        </Export-Package>
+                        <Private-Package>
+                            org.nucleus8583.core.io,
+                            org.nucleus8583.core.osgi,
+                            org.nucleus8583.core.util,
+                            org.nucleus8583.core.xml
+                        </Private-Package>
                     </instructions>
                 </configuration>
             </plugin>

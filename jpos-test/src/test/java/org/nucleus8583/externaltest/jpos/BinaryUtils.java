@@ -1,4 +1,4 @@
-package nucleus8583.jpos;
+package org.nucleus8583.externaltest.jpos;
 
 public abstract class BinaryUtils {
 

@@ -1,4 +1,4 @@
-package nucleus8583.jpos;
+package org.nucleus8583.externaltest.jpos;
 
 import static org.junit.Assert.assertEquals;
 
@@ -10,13 +10,14 @@ import java.util.Map;
 import java.util.Set;
 
 import org.jpos.iso.ISOMsg;
-import org.jpos.iso.packager.ISO87APackager;
+import org.jpos.iso.ISOPackager;
+import org.jpos.iso.packager.ISO87BPackager;
 import org.junit.Before;
 import org.junit.Test;
 import org.nucleus8583.core.Message;
 import org.nucleus8583.core.MessageSerializer;
 
-public class Iso87AsciiTest {
+public class Iso87BinaryTest {
 
     private static int[] MAX_LENGTHS = { 4, 16, 19, 6, 12, 12, 12, 10, 8, 8, 8, 6, 6, 4, 4, 4, 4, 4, 4, 3, 3, 3, 3, 3,
             3, 2, 2, 1, 9, 9, 9, 9, 11, 11, 28, 37, 104, 12, 6, 2, 3, 8, 15, 40, 25, 76, 999, 999, 999, 3, 3, 3, 8, 16,
@@ -99,12 +100,13 @@ public class Iso87AsciiTest {
                 fill(jposMsg, case1);
 
                 MessageSerializer nucSerializer = MessageSerializer
-                        .create("classpath:META-INF/nucleus8583/packagers/iso87ascii.xml");
+                        .create("classpath:META-INF/nucleus8583/packagers/iso87binary.xml");
 
-                jposMsg.setPackager(new ISO87APackager());
+                ISOPackager jposPackager = new ISO87BPackager();
+                jposMsg.setPackager(jposPackager);
 
-                String jposr = new String(jposMsg.pack());
-                String nucr = new String(nucSerializer.write(nucMsg));
+                String jposr = BinaryUtils.toHex(jposMsg.pack());
+                String nucr = BinaryUtils.toHex(nucSerializer.write(nucMsg));
 
                 assertEquals("Field #" + fldno + ", value = " + case1.get(fldno) + ".", jposr, nucr);
             }
@@ -125,18 +127,18 @@ public class Iso87AsciiTest {
                 ISOMsg jposMsg = new ISOMsg();
                 fill(jposMsg, case1);
 
-                jposMsg.setPackager(new ISO87APackager());
+                jposMsg.setPackager(new ISO87BPackager());
 
                 byte[] packed = jposMsg.pack();
 
                 MessageSerializer nucSerializer = MessageSerializer
-                        .create("classpath:META-INF/nucleus8583/packagers/iso87ascii.xml");
+                        .create("classpath:META-INF/nucleus8583/packagers/iso87binary.xml");
 
                 Message nucMsg = new Message();
                 nucSerializer.read(packed, nucMsg);
 
                 jposMsg = new ISOMsg();
-                jposMsg.setPackager(new ISO87APackager());
+                jposMsg.setPackager(new ISO87BPackager());
                 jposMsg.unpack(packed);
 
                 if (BINARIES.contains(fldno)) {
@@ -165,7 +167,7 @@ public class Iso87AsciiTest {
                 fill(nucMsg, case1);
 
                 MessageSerializer nucSerializer = MessageSerializer
-                        .create("classpath:META-INF/nucleus8583/packagers/iso87ascii.xml");
+                .create("classpath:META-INF/nucleus8583/packagers/iso87binary.xml");
 
                 byte[] packed = nucSerializer.write(nucMsg);
 
@@ -173,7 +175,7 @@ public class Iso87AsciiTest {
                 nucSerializer.read(packed, nucMsg);
 
                 ISOMsg jposMsg = new ISOMsg();
-                jposMsg.setPackager(new ISO87APackager());
+                jposMsg.setPackager(new ISO87BPackager());
                 jposMsg.unpack(packed);
 
                 if (BINARIES.contains(fldno)) {

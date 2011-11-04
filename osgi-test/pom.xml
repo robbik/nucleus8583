@@ -7,11 +7,11 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.nucleus8583</groupId>
-    <artifactId>nucleus8583-jpos</artifactId>
+    <artifactId>osgi-test</artifactId>
 
-    <packaging>jar</packaging>
+    <packaging>bundle</packaging>
 
-    <name>nucleus8583 JPos Comparator</name>
+    <name>nucleus8583 OSGi Framework Testing</name>
     <version>3.0.0</version>
 
     <properties>
@@ -32,14 +32,22 @@
             </plugin>
 
             <plugin>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-bundle-plugin</artifactId>
+                <extensions>true</extensions>
+                <version>2.1.0</version>
+                <configuration>
+                    <instructions>
+                        <Bundle-Activator>org.nucleus8583.externaltest.osgi.Activator</Bundle-Activator>
+                        <Import-Package>*</Import-Package>
+                    </instructions>
+                </configuration>
+            </plugin>
+
+            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>${maven-surefire-plugin-version}</version>
-                <configuration>
-                    <excludes>
-                        <exclude>**/*PerformanceTest.java</exclude>
-                    </excludes>
-                </configuration>
             </plugin>
         </plugins>
     </build>
@@ -48,13 +56,7 @@
         <dependency>
             <groupId>org.nucleus8583</groupId>
             <artifactId>nucleus8583-core</artifactId>
-            <version>3.0.0</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.jpos</groupId>
-            <artifactId>jpos</artifactId>
-            <version>1.7.0</version>
+            <version>${project.version}</version>
         </dependency>
 
         <dependency>
