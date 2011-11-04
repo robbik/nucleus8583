@@ -1,6 +1,5 @@
 package org.nucleus8583.core.util;
 
-import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -43,30 +42,27 @@ public class AsciiPrefixer {
 
 	public void writeUint(OutputStream out, int value) throws IOException {
 		int rem = value;
-		
+
 		byte[] buf = new byte[prefixLength];
 
 		for (int i = prefixLength - 1; i >= 0; --i) {
 			buf[i] = intToDigits[rem % 10];
 			rem = rem / 10;
 		}
-		
+
 		out.write(buf);
 	}
 
 	public int readUint(InputStream in) throws IOException {
 		int value = 0;
-		int b;
 
-		for (int i = prefixLength - 1; i >= 0; --i) {
-			b = in.read();
-			if (b < 0) {
-				throw new EOFException();
-			}
+		byte[] bbuf = new byte[prefixLength];
+		IOUtils.readFully(in, bbuf, prefixLength);
 
-			int digitInt = digitsToInt[b][i];
+		for (int i = prefixLength - 1, j = 0; i >= 0; --i, ++j) {
+			int digitInt = digitsToInt[bbuf[j]][i];
 			if (digitInt < 0) {
-				throw new NumberFormatException((char) b + " is not a number.");
+				throw new NumberFormatException((char) bbuf[i] + " is not a number.");
 			}
 
 			value += digitInt;

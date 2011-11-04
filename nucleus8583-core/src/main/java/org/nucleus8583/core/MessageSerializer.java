@@ -248,8 +248,6 @@ public final class MessageSerializer {
      *             thrown if an IO error occurred while serializing.
      */
     public void read(InputStream in, Message out) throws IOException {
-        out.clear();
-
         byte[] bits1To128 = out.directBits1To128();
         byte[] bits129To192 = out.directBits129To192();
 

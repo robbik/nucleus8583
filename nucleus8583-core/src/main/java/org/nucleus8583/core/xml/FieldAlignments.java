@@ -59,4 +59,19 @@ public enum FieldAlignments {
 
         return null;
     }
+
+    public static FieldAlignments enumValueOf(char symbolicValue) {
+        switch (symbolicValue) {
+        case 'l':
+            return TRIMMED_LEFT;
+        case 'r':
+            return TRIMMED_RIGHT;
+        case 'L':
+            return UNTRIMMED_LEFT;
+        case 'R':
+            return UNTRIMMED_RIGHT;
+        default:
+            return NONE;
+        }
+    }
 }

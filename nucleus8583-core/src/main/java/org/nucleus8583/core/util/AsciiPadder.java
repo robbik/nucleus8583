@@ -11,7 +11,7 @@ public class AsciiPadder {
 
 	private char padWith;
 
-	private FieldAlignments align;
+	private char align;
 
 	private int length;
 
@@ -24,11 +24,11 @@ public class AsciiPadder {
 	}
 
 	public void setAlign(FieldAlignments align) {
-		this.align = align;
+		this.align = align.symbolicValue();
 	}
 
 	public FieldAlignments getAlign() {
-		return align;
+		return FieldAlignments.enumValueOf(align);
 	}
 
 	public void setLength(int length) {
@@ -52,14 +52,14 @@ public class AsciiPadder {
 			write(out, value, 0, valueLength);
 		} else {
 			switch (align) {
-			case TRIMMED_LEFT:
-            case UNTRIMMED_LEFT:
+			case 'l':
+            case 'L':
 				write(out, value, 0, valueLength);
 				write(out, padder, 0, length - valueLength);
 
 				break;
-            case TRIMMED_RIGHT:
-            case UNTRIMMED_RIGHT:
+            case 'r':
+            case 'R':
 				write(out, padder, 0, length - valueLength);
 				write(out, value, 0, valueLength);
 
@@ -81,7 +81,7 @@ public class AsciiPadder {
 		int resultLength;
 
 		switch (align) {
-		case TRIMMED_LEFT:
+		case 'l':
 			resultLength = 0;
 
 			for (int i = bytesLength - 1; i >= 0; --i) {
@@ -101,7 +101,7 @@ public class AsciiPadder {
 			}
 
 			break;
-		case TRIMMED_RIGHT:
+		case 'r':
 			int padLength = bytesLength;
 
 			for (int i = 0; i < bytesLength; ++i) {
@@ -137,7 +137,7 @@ public class AsciiPadder {
 		IOUtils.readFully(in, bbuf, len);
 
 		for (int i = 0, j = off; i < len; ++i, ++j) {
-			cbuf[j] = (char) (bbuf[i] & 0x7F);
+			cbuf[j] = /*(char) bbuf[i];*/ (char) (bbuf[i] & 0x7F);
 		}
 	}
 

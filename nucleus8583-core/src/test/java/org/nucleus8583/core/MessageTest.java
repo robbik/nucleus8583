@@ -33,29 +33,34 @@ public class MessageTest {
 		new Message(193);
 	}
 
-    @Test(expected = IllegalArgumentException.class)
+	@Test
     public void testSetMtiIfNull() {
         msg1.setMti(null);
+        assertEquals("", msg1.getMti());
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testSetMtiIf1Character() {
         msg1.setMti("1");
+        assertEquals("1", msg1.getMti());
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testSetMtiIf2Characters() {
         msg1.setMti("11");
+        assertEquals("11", msg1.getMti());
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testSetMtiIf3Characters() {
         msg1.setMti("111");
+        assertEquals("111", msg1.getMti());
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testSetMtiIf5Characters() {
         msg1.setMti("12345");
+        assertEquals("12345", msg1.getMti());
     }
 
 	@Test

@@ -6,8 +6,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Arrays;
 
-import org.nucleus8583.core.xml.FieldAlignments;
-
 public abstract class BcdUtils {
 
     private static final int[] iTENS;
@@ -270,17 +268,17 @@ public abstract class BcdUtils {
      * @param length
      * @param bcd
      */
-    public static void strToBcd(String str, int length, byte[] bcd, char padWith, FieldAlignments align) {
+    public static void strToBcd(String str, int length, byte[] bcd, char padWith, char align) {
         int i = bcd.length - 1;
 
         if ((length & 1) != 0) {
             switch (align) {
-            case TRIMMED_LEFT:
-            case UNTRIMMED_LEFT:
+            case 'l':
+            case 'L':
                 str = str + padWith;
                 break;
-            case TRIMMED_RIGHT:
-            case UNTRIMMED_RIGHT:
+            case 'r':
+            case 'R':
                 str = padWith + str;
                 break;
             default: // NONE

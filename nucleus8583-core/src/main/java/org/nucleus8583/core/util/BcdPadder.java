@@ -11,7 +11,7 @@ public class BcdPadder {
 
     private char padWith;
 
-    private FieldAlignments align;
+    private char align;
 
     private int roundupLength;
 
@@ -41,11 +41,11 @@ public class BcdPadder {
     }
 
     public void setAlign(FieldAlignments align) {
-        this.align = align;
+        this.align = align.symbolicValue();
     }
 
     public FieldAlignments getAlign() {
-        return align;
+        return FieldAlignments.enumValueOf(align);
     }
 
     public void setLength(int length) {
@@ -73,12 +73,12 @@ public class BcdPadder {
             write(out, value, vlen);
         } else {
             switch (align) {
-            case TRIMMED_LEFT:
-            case UNTRIMMED_LEFT:
+            case 'l':
+            case 'L':
                 write(out, value + padder.substring(vlen), roundupLength);
                 break;
-            case TRIMMED_RIGHT:
-            case UNTRIMMED_RIGHT:
+            case 'r':
+            case 'R':
                 write(out, padder.substring(0, roundupLength - vlen) + value, roundupLength);
                 break;
             default: // NONE
@@ -96,7 +96,7 @@ public class BcdPadder {
         int resultLength;
 
         switch (align) {
-        case TRIMMED_LEFT:
+        case 'l':
             resultLength = 0;
 
             for (int i = roundupLength - 1; i >= 0; --i) {
@@ -116,7 +116,7 @@ public class BcdPadder {
             }
 
             break;
-        case TRIMMED_RIGHT:
+        case 'r':
             int padLength = roundupLength;
 
             for (int i = 0; i < roundupLength; ++i) {
@@ -147,13 +147,11 @@ public class BcdPadder {
             value = result;
 
             switch (align) {
-            case TRIMMED_LEFT:
-            case UNTRIMMED_LEFT:
+            case 'l':
+            case 'L':
                 result = new char[valueLength];
                 System.arraycopy(value, 0, result, 0, valueLength);
-            case TRIMMED_RIGHT:
-            case UNTRIMMED_RIGHT:
-            case NONE:
+            default:
                 result = new char[valueLength];
                 System.arraycopy(value, diffLength, result, 0, valueLength);
                 break;

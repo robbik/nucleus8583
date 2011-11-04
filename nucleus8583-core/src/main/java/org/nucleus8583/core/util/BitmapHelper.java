@@ -4,24 +4,24 @@ import java.util.Arrays;
 
 public abstract class BitmapHelper {
 
-    private static int bytesIndex(int bitIndex) {
-        return bitIndex >> 3;
-    }
+//    private static int bytesIndex(int bitIndex) {
+//        return bitIndex >> 3;
+//    }
 
     public static byte[] create(int nbits) {
-        return new byte[bytesIndex(nbits - 1) + 1];
+        return new byte[((nbits - 1) >> 3) + 1];
     }
 
     public static void set(byte[] bytes, int bitIndex) {
-        bytes[bytesIndex(bitIndex)] |= (128 >> (bitIndex & 0x07));
+        bytes[bitIndex >> 3] |= (128 >> (bitIndex & 0x07));
     }
 
     public static boolean get(byte[] bytes, int bitIndex) {
-        return (bytes[bytesIndex(bitIndex)] & (128 >> (bitIndex & 0x07))) != 0;
+        return (bytes[bitIndex >> 3] & (128 >> (bitIndex & 0x07))) != 0;
     }
 
     public static void clear(byte[] bytes, int bitIndex) {
-        bytes[bytesIndex(bitIndex)] &= ~(128 >> (bitIndex & 0x07));
+        bytes[bitIndex >> 3] &= ~(128 >> (bitIndex & 0x07));
     }
 
     public static void clear(byte[] bytes) {

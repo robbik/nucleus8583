@@ -69,11 +69,11 @@ public final class Message implements Serializable {
 	 *            new MTI field value
 	 */
 	public void setMti(String mti) {
-        if ((mti == null) || (mti.length() != 4)) {
-            throw new IllegalArgumentException("mti is not valid, must be 4 characters length");
+        if (mti == null) {
+            this.mti = "";
+        } else {
+            this.mti = mti;
         }
-
-		this.mti = mti;
 	}
 
 	/**
@@ -167,7 +167,7 @@ public final class Message implements Serializable {
 	 *            new binary value
 	 */
 	public void unsafeSet(int no, String value) {
-		binaryValues[no] = null;
+		// binaryValues[no] = null;
 		stringValues[no] = value;
 
 		if (no > 128) {
@@ -191,7 +191,7 @@ public final class Message implements Serializable {
 	 */
 	public void unsafeSet(int no, byte[] value) {
 		binaryValues[no] = value;
-		stringValues[no] = null;
+		// stringValues[no] = null;
 
 		if (no > 128) {
 		    BitmapHelper.set(bits129To192, no - 129);

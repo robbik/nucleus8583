@@ -13,57 +13,19 @@ public class Base16Padder {
 			'8', '9', 'A', 'B', 'C', 'D', 'E', 'F' };
 
 	public static int hex2int(char ichar) {
-		switch (ichar) {
-		case '0':
-			break;
-		case '1':
-			// 0001
-			return 1;
-		case '2':
-			// 0010
-			return 2;
-		case '3':
-			// 0011
-			return 3;
-		case '4':
-			// 0100
-			return 4;
-		case '5':
-			// 0101
-			return 5;
-		case '6':
-			// 0110
-			return 6;
-		case '7':
-			// 0111
-			return 7;
-		case '8':
-			// 1000
-			return 8;
-		case '9':
-			// 1001
-			return 9;
-		case 'A':
-			// 1010
-			return 10;
-		case 'B':
-			// 1011
-			return 11;
-		case 'C':
-			// 1100
-			return 12;
-		case 'D':
-			// 1101
-			return 13;
-		case 'E':
-			// 1110
-			return 14;
-		case 'F':
-			// 1111
-			return 15;
-		}
+        if ((ichar >= '0') && (ichar <= '9')) {
+            return ichar - '0';
+        }
 
-		return 0;
+        if ((ichar >= 'A') && (ichar <= 'F')) {
+            return ichar - 'A' + 10;
+        }
+
+	    if ((ichar >= 'a') && (ichar <= 'f')) {
+	        return ichar - 'a' + 10;
+	    }
+
+        return 0;
 	}
 
 	private byte padWith;
