@@ -35,7 +35,15 @@ public final class Message implements Serializable {
 	 * same as <code>Message(192)</code>.
 	 */
 	public Message() {
-		this(192);
+        count = 193;
+
+        mti = null;
+
+        stringValues = new String[193];
+        binaryValues = new byte[193][];
+
+        bits1To128 = BitmapHelper.create(128);
+        bits129To192 = BitmapHelper.create(64);
 	}
 
 	/**

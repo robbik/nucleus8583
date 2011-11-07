@@ -33,8 +33,8 @@ public class OsgiBundleResourceLoader implements ResourceLoader {
     public OsgiBundleResourceLoader(Bundle bundle) {
         this.bundle = bundle;
 
-        if (bundle.getBundleContext() == null) {
-            throw new IllegalArgumentException("OSGi environment not detected");
+        if (bundle == null) {
+            throw new NullPointerException("bundle");
         }
     }
 

@@ -12,8 +12,10 @@ public abstract class OsgiUtils {
         boolean detected;
 
         try {
-            Class.forName("org.nucleus8583.core.io.OsgiBundleResourceLoader").newInstance();
-            detected = true;
+            Class<?> cla = Class.forName("org.nucleus8583.core.io.OsgiBundleResourceLoader");
+
+            detected = (Class.forName("org.osgi.framework.FrameworkUtil").getMethod("getBundle", Class.class)
+                    .invoke(null, cla) != null);
         } catch (Throwable t) {
             detected = false;
         }

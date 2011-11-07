@@ -1,6 +1,7 @@
 package org.nucleus8583.externaltest.jpos;
 
 import java.io.OutputStream;
+import java.text.DecimalFormat;
 
 import org.jpos.iso.ISOMsg;
 import org.jpos.iso.ISOPackager;
@@ -79,31 +80,65 @@ public class WritePerformanceTest {
     }
 
     public static void main(String[] args) throws Exception {
+        boolean nucleus8583 = false;
+        int recount = 10;
+
         if (args.length > 0) {
             LOOPS = Integer.parseInt(args[0]);
+
+            if (args.length > 1) {
+                nucleus8583 = args[1].equals("nuc");
+
+                if (args.length > 2) {
+                    recount = Integer.parseInt(args[2]);
+                }
+            }
         }
 
-        WritePerformanceTest tester = new WritePerformanceTest();
+        DecimalFormat fmt = new DecimalFormat("#,##0.00");
 
+        long jposElapsed = 0;
+        long nucleus8583Elapsed = 0;
+
+        WritePerformanceTest tester = new WritePerformanceTest();
         tester.initialize();
 
-        long nucleus8583Elapsed = tester.doJobForNucleus8583();
-        long jposElapsed = tester.doJobForJPos();
+        for (int i = 0; i < recount; ++i) {
+            if (nucleus8583) {
+                nucleus8583Elapsed = tester.doJobForNucleus8583();
+            } else {
+                jposElapsed = tester.doJobForJPos();
+            }
 
-        System.out.println();
+            if (nucleus8583Elapsed > 0) {
+                if (i == 0) {
+                    System.out.println("NUCLEUS8583 3.0.0 DETAILS");
+                    System.out.println("===========================");
+                    System.out.println("[x] Number of Data Samples  = " + fmt.format(LOOPS));
+                    System.out.println();
 
-        System.out.println("NUCLEUS8583 3.0.0 SUMMARY");
-        System.out.println("===========================");
-        System.out.println("[x] Number of Data Samples  = " + LOOPS);
-        System.out.println("[x] Times Elapsed           = " + (nucleus8583Elapsed / 1000.0f) + " sec");
-        System.out.println("[x] Throughput              = " + (LOOPS * 1000.0f / nucleus8583Elapsed) + " tps");
-        System.out.println();
+                    System.out.println(String.format("%1$10s %2$20s", "Times (sec)", "Throughput (tps)"));
+                }
 
-        System.out.println("JPOS 1.8.2 SUMMARY");
-        System.out.println("===========================");
-        System.out.println("[x] Number of Data Samples  = " + LOOPS);
-        System.out.println("[x] Times Elapsed           = " + (jposElapsed / 1000.0f) + " sec");
-        System.out.println("[x] Throughput              = " + (LOOPS * 1000.0f / jposElapsed) + " tps");
+                System.out.println(String.format("%1$10s %2$20s", fmt.format(nucleus8583Elapsed / 1000.0f), fmt.format(LOOPS * 1000.0f / nucleus8583Elapsed)));
+            }
+
+            if (jposElapsed > 0) {
+                if (i == 0) {
+                    System.out.println("JPOS 1.8.2 DETAILS");
+                    System.out.println("===========================");
+                    System.out.println("[x] Number of Data Samples  = " + fmt.format(LOOPS));
+                    System.out.println();
+
+                    System.out.println(String.format("%1$10s %2$20s", "Times (sec)", "Throughput (tps)"));
+                }
+
+                System.out.println(String.format("%1$10s %2$20s", fmt.format(jposElapsed / 1000.0f), fmt.format(LOOPS * 1000.0f / jposElapsed)));
+            }
+
+            Thread.yield();
+        }
+
         System.out.println();
     }
 }
