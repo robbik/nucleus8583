@@ -9,6 +9,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock.ReadLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock.WriteLock;
+import java.util.logging.Logger;
 
 import org.nucleus8583.core.io.ClassResourceLoader;
 import org.nucleus8583.core.io.ResourceLoader;
@@ -16,6 +17,8 @@ import org.nucleus8583.core.io.UrlResourceLoader;
 import org.nucleus8583.core.osgi.OsgiUtils;
 
 public abstract class ResourceUtils {
+
+    private static final Logger log = Logger.getLogger(ResourceUtils.class.getName());
 
     private static ReadLock slock;
 
@@ -42,10 +45,14 @@ public abstract class ResourceUtils {
         }
 
         if (OsgiUtils.detectOsgiEnvironment()) {
+            log.info("OSGi environment detected");
+
             ResourceLoader osgi = OsgiUtils.createOsgiBundleResourceLoader();
             if (osgi != null) {
                 addResourceLoader(0, osgi);
             }
+        } else {
+            log.info("OSGi environment not detected");
         }
     }
 

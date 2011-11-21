@@ -118,3 +118,6 @@ literal\ b\ ...bcd=org.nucleus8583.core.field.type.BcdLLLLiteralBinary,align\=no
 literal\ b\ ...\ bcd=org.nucleus8583.core.field.type.BcdLLLLiteralBinary,align\=none,empty-value\=
 literal\ b...bcd=org.nucleus8583.core.field.type.BcdLLLLiteralBinary,align\=none,empty-value\=
 literal\ b...\ bcd=org.nucleus8583.core.field.type.BcdLLLLiteralBinary,align\=none,empty-value\=
+
+ebcdic=org.nucleus8583.core.field.type.EbcdicText,align\=left,pad-with\= ,empty-value\=
+ebcdic\ amount=org.nucleus8583.core.field.type.EbcdicAmount,align\=right,pad-with\=0,empty-value\=0

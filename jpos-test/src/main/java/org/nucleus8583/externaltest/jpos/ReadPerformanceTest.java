@@ -12,9 +12,7 @@ import org.nucleus8583.core.Message;
 import org.nucleus8583.core.MessageSerializer;
 
 public class ReadPerformanceTest {
-    private static final int DEFAULT_LOOPS = 1;
-
-    private static int LOOPS = DEFAULT_LOOPS;
+    private static int LOOPS = 1000;
 
     private MessageSerializer serializer;
 
@@ -120,7 +118,7 @@ public class ReadPerformanceTest {
     }
 
     public static void main(String[] args) throws Exception {
-        boolean nucleus8583 = false;
+        boolean nucleus8583 = true;
         int recount = 10;
 
         if (args.length > 0) {

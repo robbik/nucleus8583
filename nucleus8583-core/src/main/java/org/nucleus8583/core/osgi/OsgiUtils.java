@@ -1,12 +1,8 @@
 package org.nucleus8583.core.osgi;
 
-import java.util.logging.Logger;
-
 import org.nucleus8583.core.io.ResourceLoader;
 
 public abstract class OsgiUtils {
-
-    private static final Logger log = Logger.getLogger(OsgiUtils.class.getName());
 
     public static boolean detectOsgiEnvironment() {
         boolean detected;
@@ -18,12 +14,6 @@ public abstract class OsgiUtils {
                     .invoke(null, cla) != null);
         } catch (Throwable t) {
             detected = false;
-        }
-
-        if (detected) {
-            log.info("OSGi environment detected");
-        } else {
-            log.info("OSGi environment not detected");
         }
 
         return detected;

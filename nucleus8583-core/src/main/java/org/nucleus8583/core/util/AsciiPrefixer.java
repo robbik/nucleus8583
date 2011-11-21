@@ -12,25 +12,18 @@ public class AsciiPrefixer {
 	private static final int MAX_DIGIT = 10;
 
 	static {
-		digitsToInt = new int[Character.MAX_VALUE][MAX_DIGIT];
+        digitsToInt = new int[10][MAX_DIGIT];
 
-		for (int i = 0; i < digitsToInt.length; ++i) {
-			if ((i >= '0') && (i <= '9')) {
-				int tens = 1;
-				int digit = i - '0';
+        for (int i = 0, len = digitsToInt.length; i < len; ++i) {
+            int tens = 1;
 
-				for (int j = 0; j < MAX_DIGIT; ++j) {
-					digitsToInt[i][j] = digit * tens;
-					tens *= 10;
-				}
-			} else {
-				for (int j = 0; j < MAX_DIGIT; ++j) {
-					digitsToInt[i][j] = -1;
-				}
-			}
-		}
+            for (int j = 0; j < MAX_DIGIT; ++j) {
+                digitsToInt[i][j] = i * tens;
+                tens *= 10;
+            }
+        }
 
-		intToDigits = new byte[] { '0', '1', '2', '3', '4', '5', '6', '7', '8',
+        intToDigits = new byte[] { '0', '1', '2', '3', '4', '5', '6', '7', '8',
 				'9' };
 	}
 
@@ -60,12 +53,12 @@ public class AsciiPrefixer {
 		IOUtils.readFully(in, bbuf, prefixLength);
 
 		for (int i = prefixLength - 1, j = 0; i >= 0; --i, ++j) {
-			int digitInt = digitsToInt[bbuf[j]][i];
-			if (digitInt < 0) {
-				throw new NumberFormatException((char) bbuf[i] + " is not a number.");
-			}
+            int digitInt = bbuf[j];
+            if ((digitInt < '0') || (digitInt > '9')) {
+                throw new NumberFormatException((char) bbuf[i] + " is not a number.");
+            }
 
-			value += digitInt;
+            value += digitsToInt[digitInt - '0'][i];
 		}
 
 		return value;

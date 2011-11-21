@@ -10,9 +10,7 @@ import org.nucleus8583.core.Message;
 import org.nucleus8583.core.MessageSerializer;
 
 public class WritePerformanceTest {
-    private static final int DEFAULT_LOOPS = 1;
-
-    private static int LOOPS = DEFAULT_LOOPS;
+    private static int LOOPS = 1;
 
     private MessageSerializer serializer;
 
