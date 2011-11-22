@@ -297,7 +297,7 @@ public final class MessageSerializer {
                 }
             }
         } catch (IOException ex) {
-            throw new IOException("unable to read field #" + i, ex);
+            throw (IOException) new IOException("unable to read field #" + i).initCause(ex);
         } catch (RuntimeException ex) {
             throw new RuntimeException("unable to read field #" + i, ex);
         }

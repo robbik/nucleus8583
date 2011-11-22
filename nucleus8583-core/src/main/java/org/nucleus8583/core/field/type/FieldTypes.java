@@ -13,16 +13,16 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock.ReadLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock.WriteLock;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
+import org.nucleus8583.core.logging.Logger;
+import org.nucleus8583.core.logging.LoggerFactory;
 import org.nucleus8583.core.util.ResourceUtils;
 import org.nucleus8583.core.xml.FieldAlignments;
 import org.nucleus8583.core.xml.FieldDefinition;
 
 public abstract class FieldTypes {
 
-    private static final Logger log = Logger.getLogger(FieldTypes.class.getName());
+    private static final Logger log = LoggerFactory.getLogger(FieldTypes.class.getName());
 
 	private static final class Entry {
 
@@ -67,7 +67,7 @@ public abstract class FieldTypes {
 		    log.warning("class " + lines.get(0) + " cannot be found.");
 		    return null;
 		} catch (Throwable t) {
-		    log.log(Level.WARNING, "unable to load class " + lines.get(0) + ".", t);
+		    log.warning("unable to load class " + lines.get(0) + ".", t);
 			return null;
 		}
 

@@ -6,144 +6,158 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock.ReadLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock.WriteLock;
-import java.util.logging.Logger;
 
 import org.nucleus8583.core.io.ClassResourceLoader;
 import org.nucleus8583.core.io.ResourceLoader;
 import org.nucleus8583.core.io.UrlResourceLoader;
+import org.nucleus8583.core.logging.Logger;
+import org.nucleus8583.core.logging.LoggerFactory;
 import org.nucleus8583.core.osgi.OsgiUtils;
 
 public abstract class ResourceUtils {
 
-    private static final Logger log = Logger.getLogger(ResourceUtils.class.getName());
+	private static final Logger log = LoggerFactory
+			.getLogger(ResourceUtils.class);
 
-    private static ReadLock slock;
+	private static ReadLock slock;
 
-    private static WriteLock xlock;
+	private static WriteLock xlock;
 
-    private static ResourceLoader[] loaders;
+	private static ResourceLoader[] loaders;
 
-    private static final AtomicBoolean initialized;
+	private static final AtomicBoolean initialized;
 
-    static {
-        ReentrantReadWriteLock lock = new ReentrantReadWriteLock(true);
+	private static final Lock initializing;
 
-        slock = lock.readLock();
-        xlock = lock.writeLock();
+	static {
+		ReentrantReadWriteLock lock = new ReentrantReadWriteLock(true);
 
-        loaders = new ResourceLoader[] { new ClassResourceLoader(), new UrlResourceLoader() };
+		slock = lock.readLock();
+		xlock = lock.writeLock();
 
-        initialized = new AtomicBoolean(false);
-    }
+		loaders = new ResourceLoader[] { new ClassResourceLoader(),
+				new UrlResourceLoader() };
 
-    private static void initialize() {
-        if (!initialized.compareAndSet(false, true)) {
-            return;
-        }
+		initializing = new ReentrantLock(true);
+		initialized = new AtomicBoolean(false);
+	}
 
-        if (OsgiUtils.detectOsgiEnvironment()) {
-            log.info("OSGi environment detected");
+	private static void initialize() {
+		initializing.lock();
 
-            ResourceLoader osgi = OsgiUtils.createOsgiBundleResourceLoader();
-            if (osgi != null) {
-                addResourceLoader(0, osgi);
-            }
-        } else {
-            log.info("OSGi environment not detected");
-        }
-    }
+		if (initialized.compareAndSet(false, true)) {
+			if (OsgiUtils.detectOsgiEnvironment()) {
+				ResourceLoader osgi = OsgiUtils
+						.createOsgiBundleResourceLoader();
+				if (osgi != null) {
+					addResourceLoader(0, osgi);
+				}
 
-    public static void addResourceLoader(ResourceLoader loader) {
-        initialize();
+				log.info("OSGi environment detected");
+			} else {
+				log.info("OSGi environment not detected");
+			}
+		}
 
-        xlock.lock();
-        try {
-            List<ResourceLoader> list = new ArrayList<ResourceLoader>(Arrays.asList(loaders));
-            list.add(loader);
+		initializing.unlock();
+	}
 
-            loaders = list.toArray(new ResourceLoader[0]);
-        } finally {
-            xlock.unlock();
-        }
-    }
+	public static void addResourceLoader(ResourceLoader loader) {
+		initialize();
 
-    public static void addResourceLoader(int index, ResourceLoader loader) {
-        initialize();
+		xlock.lock();
+		try {
+			List<ResourceLoader> list = new ArrayList<ResourceLoader>(
+					Arrays.asList(loaders));
+			list.add(loader);
 
-        xlock.lock();
-        try {
-            List<ResourceLoader> list = new ArrayList<ResourceLoader>(Arrays.asList(loaders));
-            list.add(index, loader);
+			loaders = list.toArray(new ResourceLoader[0]);
+		} finally {
+			xlock.unlock();
+		}
+	}
 
-            loaders = list.toArray(new ResourceLoader[0]);
-        } finally {
-            xlock.unlock();
-        }
-    }
+	public static void addResourceLoader(int index, ResourceLoader loader) {
+		initialize();
 
-    public static URL[] getURLs(String location) {
-        initialize();
+		xlock.lock();
+		try {
+			List<ResourceLoader> list = new ArrayList<ResourceLoader>(
+					Arrays.asList(loaders));
+			list.add(index, loader);
 
-        HashSet<URL> urls = new HashSet<URL>();
+			loaders = list.toArray(new ResourceLoader[0]);
+		} finally {
+			xlock.unlock();
+		}
+	}
 
-        slock.lock();
-        try {
-            for (int i = 0; i < loaders.length; ++i) {
-                urls.addAll(loaders[i].getURLs(location));
-            }
-        } finally {
-            slock.unlock();
-        }
+	public static URL[] getURLs(String location) {
+		initialize();
 
-        return urls.toArray(new URL[0]);
-    }
+		HashSet<URL> urls = new HashSet<URL>();
 
-    public static URL getURL(String location) {
-        initialize();
+		slock.lock();
+		try {
+			for (int i = 0; i < loaders.length; ++i) {
+				urls.addAll(loaders[i].getURLs(location));
+			}
+		} finally {
+			slock.unlock();
+		}
 
-        URL found = null;
+		return urls.toArray(new URL[0]);
+	}
 
-        slock.lock();
-        try {
-            for (int i = 0; i < loaders.length; ++i) {
-                found = loaders[i].getURL(location);
+	public static URL getURL(String location) {
+		initialize();
 
-                if (found != null) {
-                    break;
-                }
-            }
-        } finally {
-            slock.unlock();
-        }
+		URL found = null;
 
-        return found;
-    }
+		slock.lock();
+		try {
+			for (int i = 0; i < loaders.length; ++i) {
+				found = loaders[i].getURL(location);
 
-    public static Class<?> loadClass(String className) throws ClassNotFoundException {
-        initialize();
+				if (found != null) {
+					break;
+				}
+			}
+		} finally {
+			slock.unlock();
+		}
 
-        Class<?> found = null;
+		return found;
+	}
 
-        slock.lock();
-        try {
-            for (int i = 0; i < loaders.length; ++i) {
-                found = loaders[i].loadClass(className);
+	public static Class<?> loadClass(String className)
+			throws ClassNotFoundException {
+		initialize();
 
-                if (found != null) {
-                    break;
-                }
-            }
-        } finally {
-            slock.unlock();
-        }
+		Class<?> found = null;
 
-        if (found == null) {
-            throw new ClassNotFoundException(className);
-        }
+		slock.lock();
+		try {
+			for (int i = 0; i < loaders.length; ++i) {
+				found = loaders[i].loadClass(className);
 
-        return found;
-    }
+				if (found != null) {
+					break;
+				}
+			}
+		} finally {
+			slock.unlock();
+		}
+
+		if (found == null) {
+			throw new ClassNotFoundException(className);
+		}
+
+		return found;
+	}
 }
