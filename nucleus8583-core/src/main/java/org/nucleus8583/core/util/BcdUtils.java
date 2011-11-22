@@ -91,7 +91,7 @@ public abstract class BcdUtils {
      * convert packed BCD to integer
      *
      * @param bcd
-     * @return
+     * @return integer value
      */
     public static int bcdToInt(byte[] bcd) {
         if (bcd.length > 4) {
@@ -112,7 +112,7 @@ public abstract class BcdUtils {
      * convert packed BCD to long
      *
      * @param bcd
-     * @return
+     * @return long value
      */
     public static long bcdToLong(byte[] bcd) {
         long result = 0;
@@ -239,7 +239,7 @@ public abstract class BcdUtils {
      * convert string to packed bcd
      *
      * @param str
-     * @return
+     * @return packed bcd
      */
     public static byte[] strToBcd(String str) {
         int length = str.length();
@@ -303,7 +303,7 @@ public abstract class BcdUtils {
      * convert packed bcd to string
      *
      * @param bcd
-     * @return
+     * @return string representation of bcd number
      */
     public static String bcdToStr(byte[] bcd) {
         int length = bcd.length << 1;
@@ -318,7 +318,7 @@ public abstract class BcdUtils {
      *
      * @param bcd
      * @param length
-     * @return
+     * @return string representation of bcd number
      */
     public static String bcdToStr(byte[] bcd, int length) {
         char[] chars = new char[length];
