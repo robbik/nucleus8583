@@ -20,6 +20,7 @@ import org.nucleus8583.core.xml.FieldDefinition;
 import org.nucleus8583.core.xml.MessageDefinition;
 import org.nucleus8583.core.xml.MessageDefinitionReader;
 import org.w3c.dom.Node;
+import org.xml.sax.SAXParseException;
 
 /**
  * Serialize/deserialize {@link Message} object. Creating this class requires
@@ -106,6 +107,8 @@ public final class MessageSerializer {
 
         try {
             definition = new MessageDefinitionReader().unmarshal(found);
+        } catch (SAXParseException e) {
+        	throw new IllegalArgumentException("invalid file format (line #" + e.getLineNumber() + ": " + e.getMessage() + ")");
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -125,6 +128,8 @@ public final class MessageSerializer {
 
         try {
             definition = new MessageDefinitionReader().unmarshal(in);
+        } catch (SAXParseException e) {
+        	throw new IllegalArgumentException("invalid file format (line #" + e.getLineNumber() + ": " + e.getMessage() + ")");
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -144,6 +149,8 @@ public final class MessageSerializer {
 
         try {
             definition = new MessageDefinitionReader().unmarshal(node);
+        } catch (SAXParseException e) {
+        	throw new IllegalArgumentException("invalid file format (line #" + e.getLineNumber() + ": " + e.getMessage() + ")");
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

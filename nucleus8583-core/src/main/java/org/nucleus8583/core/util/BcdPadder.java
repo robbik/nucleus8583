@@ -75,14 +75,19 @@ public class BcdPadder {
             switch (align) {
             case 'l':
             case 'L':
-                write(out, value + padder.substring(vlen), roundupLength);
+                write(out, value.concat(padder.substring(vlen)), roundupLength);
                 break;
             case 'r':
             case 'R':
-                write(out, padder.substring(0, roundupLength - vlen) + value, roundupLength);
-                break;
+            	write(out, padder.substring(0, roundupLength - vlen).concat(value), roundupLength);
+            	break;
             default: // NONE
-                write(out, padder.substring(0, roundupLength - vlen) + value, roundupLength);
+            	if (diffLength == 0) {
+            		write(out, padder.substring(0, roundupLength - vlen).concat(value), roundupLength);
+            	} else {
+            		write(out, padder.substring(0, valueLength - vlen).concat(value).concat(
+            				padder.substring(0, diffLength)), roundupLength);
+            	}
                 break;
             }
         }
@@ -146,14 +151,18 @@ public class BcdPadder {
         if (diffLength != 0) {
             value = result;
 
+            result = new char[valueLength];
+            System.arraycopy(value, 0, result, 0, valueLength);
+
             switch (align) {
-            case 'l':
-            case 'L':
-                result = new char[valueLength];
-                System.arraycopy(value, 0, result, 0, valueLength);
-            default:
+            case 'r':
+            case 'R':
                 result = new char[valueLength];
                 System.arraycopy(value, diffLength, result, 0, valueLength);
+            	break;
+        	default:
+                result = new char[valueLength];
+                System.arraycopy(value, 0, result, 0, valueLength);
                 break;
             }
         }

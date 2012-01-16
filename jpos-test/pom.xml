@@ -63,7 +63,7 @@
     <repositories>
         <repository>
             <id>jpos</id>
-            <url> http://jpos.org/maven</url>
+            <url>http://jpos.org/maven</url>
             <layout>default</layout>
         </repository>
     </repositories>
