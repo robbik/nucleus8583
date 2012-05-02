@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns="http://www.nucleus8583.org/schema/nucleus8583"
+            xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            targetNamespace="http://www.nucleus8583.org/schema/nucleus8583"
+            elementFormDefault="qualified"
+            attributeFormDefault="unqualified">
+
+    <xsd:simpleType name="alignment">
+        <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="left" />
+            <xsd:enumeration value="l" />
+
+            <xsd:enumeration value="right" />
+            <xsd:enumeration value="r" />
+
+            <xsd:enumeration value="none" />
+            <xsd:enumeration value="n" />
+
+            <xsd:enumeration value="uleft" />
+            <xsd:enumeration value="ul" />
+
+            <xsd:enumeration value="uright" />
+            <xsd:enumeration value="ur" />
+        </xsd:restriction>
+    </xsd:simpleType>
+
+    <xsd:simpleType name="field-no">
+        <xsd:restriction base="xsd:unsignedInt">
+            <xsd:minInclusive value="0" />
+            <xsd:maxInclusive value="192" />
+        </xsd:restriction>
+    </xsd:simpleType>
+
+    <xsd:complexType name="field">
+        <xsd:attribute name="no" type="field-no" use="required" />
+        <xsd:attribute name="type" type="xsd:string" use="required" />
+
+        <xsd:attribute name="description" type="xsd:string" use="optional" default="" />
+
+        <xsd:attribute name="length" type="length" use="optional" />
+
+        <xsd:attribute name="alignment" type="alignment" use="optional" />
+        <xsd:attribute name="padWith" type="xsd:string" use="optional" />
+
+        <xsd:attribute name="emptyValue" type="xsd:string" use="optional" />
+
+        <xsd:attribute name="maxLength" type="length" use="optional" />
+    </xsd:complexType>
+
+    <xsd:complexType name="type">
+        <xsd:attribute name="name" type="xsd:string" use="required" />
+        <xsd:attribute name="class" type="xsd:string" use="required" />
+
+        <xsd:attribute name="description" type="xsd:string" use="optional" default="" />
+
+        <xsd:attribute name="alignment" type="alignment" use="optional" />
+        <xsd:attribute name="padWith" type="xsd:string" use="optional" />
+
+        <xsd:attribute name="emptyValue" type="xsd:string" use="optional" />
+
+        <xsd:attribute name="prefixLength" type="prefixLength" use="optional" />
+        <xsd:attribute name="maxLength" type="length" use="optional" />
+    </xsd:complexType>
+
+    <xsd:complexType name="message">
+        <xsd:sequence>
+            <xsd:element name="field" type="field" minOccurs="1" maxOccurs="unbounded" />
+        </xsd:sequence>
+
+        <xsd:attribute name="name" use="optional" type="xsd:string" />
+        <xsd:attribute name="description" use="optional" type="xsd:string" default="" />
+    </xsd:complexType>
+
+    <xsd:complexType name="import">
+        <xsd:attribute name="url" type="xsd:string" use="required" />
+    </xsd:complexType>
+
+    <xsd:element name="nucleus8583">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:choice minOccurs="0" maxOccurs="unbounded">
+                    <xsd:element name="type" type="type" />
+                    <xsd:element name="message" type="message" />
+                    <xsd:element name="import" type="import" />
+                </xsd:choice>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+    
+    <xsd:simpleType name="length">
+        <xsd:restriction base="xsd:int">
+            <xsd:minInclusive value="1" />
+            <xsd:maxExclusive value="1000000000" />
+        </xsd:restriction>
+    </xsd:simpleType>
+
+    <xsd:simpleType name="prefixLength">
+        <xsd:restriction base="xsd:int">
+            <xsd:minInclusive value="1" />
+            <xsd:maxExclusive value="9" />
+        </xsd:restriction>
+    </xsd:simpleType>
+</xsd:schema>

@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+import rk.commons.util.IOUtils;
+
 public class EbcdicPrefixer {
     private static final int[][] digitsToInt;
 
@@ -31,10 +33,18 @@ public class EbcdicPrefixer {
     }
 
     private int prefixLength;
-
-    public EbcdicPrefixer(int prefixLength) {
-        this.prefixLength = prefixLength;
+    
+    public EbcdicPrefixer() {
+    	// do nothing
     }
+    
+    public EbcdicPrefixer(EbcdicPrefixer o) {
+    	prefixLength = o.prefixLength;
+    }
+
+	public void setPrefixLength(int prefixLength) {
+        this.prefixLength = prefixLength;
+	}
 
     public void writeUint(OutputStream out, int value) throws IOException {
         int rem = value;

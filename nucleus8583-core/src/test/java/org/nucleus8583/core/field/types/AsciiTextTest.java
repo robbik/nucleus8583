@@ -7,50 +7,39 @@ import java.io.ByteArrayOutputStream;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.nucleus8583.core.field.type.FieldType;
-import org.nucleus8583.core.field.type.FieldTypes;
-import org.nucleus8583.core.xml.FieldAlignments;
-import org.nucleus8583.core.xml.FieldDefinition;
+import org.nucleus8583.core.field.Type;
+import org.nucleus8583.core.field.spi.AsciiText;
+import org.nucleus8583.core.xml.Alignment;
 
 public class AsciiTextTest {
 
-	private FieldType alignL;
+	private Type alignL;
 
-	private FieldType alignR;
+	private Type alignR;
 
-	private FieldType alignN;
+	private Type alignN;
 
 	@Before
 	public void before() throws Exception {
-	    FieldTypes.initialize();
+        alignL = new AsciiText();
+        ((AsciiText) alignL).setAlignment(Alignment.TRIMMED_LEFT);
+        ((AsciiText) alignL).setLength(2);
 
-        FieldDefinition def = new FieldDefinition();
-        def.setId(39);
-        def.setType("a");
-        def.setLength(2);
+        alignR = new AsciiText();
+        ((AsciiText) alignR).setAlignment(Alignment.TRIMMED_RIGHT);
+        ((AsciiText) alignR).setPadWith(" ");
+        ((AsciiText) alignR).setLength(2);
 
-        alignL = FieldTypes.getType(def);
-
-        def = new FieldDefinition();
-        def.setId(39);
-        def.setType("custom");
-        def.setAlign(FieldAlignments.TRIMMED_RIGHT);
-        def.setPadWith(" ");
-        def.setLength(2);
-
-        alignR = FieldTypes.getType(def);
-
-        def = new FieldDefinition();
-        def.setId(39);
-        def.setType("custom");
-        def.setAlign(FieldAlignments.NONE);
-        def.setPadWith("");
-        def.setLength(2);
-
-		alignN = FieldTypes.getType(def);
+        alignN = new AsciiText();
+        ((AsciiText) alignN).setAlignment(Alignment.NONE);
+        ((AsciiText) alignN).setLength(2);
+        
+        ((AsciiText) alignL).initialize();
+        ((AsciiText) alignR).initialize();
+        ((AsciiText) alignN).initialize();
 	}
 
-	@Test(expected = UnsupportedOperationException.class)
+	@Test(expected = ClassCastException.class)
 	public void packBinary() throws Exception {
 		alignL.write(new ByteArrayOutputStream(), new byte[0]);
 	}
@@ -66,7 +55,7 @@ public class AsciiTextTest {
 			errorMsg = ex.getMessage();
 		}
 
-		assertEquals("value of field #39 is too long, expected 2 but actual is 15", errorMsg);
+		assertEquals("value too long, expected 2 but actual is 15", errorMsg);
 	}
 
 	@Test
@@ -122,49 +111,39 @@ public class AsciiTextTest {
 		alignL.write(new ByteArrayOutputStream(), "300");
 	}
 
-	@Test(expected = UnsupportedOperationException.class)
-	public void unpackBinary1() throws Exception {
-		alignL.read(new ByteArrayInputStream("a".getBytes()), new byte[0], 0, 0);
-	}
-
-	@Test(expected = UnsupportedOperationException.class)
-	public void unpackBinary2() throws Exception {
-		alignL.readBinary(new ByteArrayInputStream("a".getBytes()));
-	}
-
 	@Test
 	public void unpackStringNoUnpad() throws Exception {
-		assertEquals("20", alignL.readString(new ByteArrayInputStream("20".getBytes())));
+		assertEquals("20", alignL.read(new ByteArrayInputStream("20".getBytes())));
 
-		assertEquals("20", alignR.readString(new ByteArrayInputStream("20".getBytes())));
+		assertEquals("20", alignR.read(new ByteArrayInputStream("20".getBytes())));
 
-		assertEquals("20", alignN.readString(new ByteArrayInputStream("20".getBytes())));
+		assertEquals("20", alignN.read(new ByteArrayInputStream("20".getBytes())));
 	}
 
 	@Test
 	public void unpackEmptyString() throws Exception {
-		assertEquals("", alignL.readString(new ByteArrayInputStream("  ".getBytes())));
+		assertEquals("", alignL.read(new ByteArrayInputStream("  ".getBytes())));
 
-		assertEquals("", alignR.readString(new ByteArrayInputStream("  ".getBytes())));
+		assertEquals("", alignR.read(new ByteArrayInputStream("  ".getBytes())));
 
-		assertEquals("  ", alignN.readString(new ByteArrayInputStream("  ".getBytes())));
+		assertEquals("  ", alignN.read(new ByteArrayInputStream("  ".getBytes())));
 	}
 
 	@Test
 	public void unpackStringUnpad() throws Exception {
-		assertEquals("j", alignL.readString(new ByteArrayInputStream("j ".getBytes())));
+		assertEquals("j", alignL.read(new ByteArrayInputStream("j ".getBytes())));
 
-		assertEquals("j", alignR.readString(new ByteArrayInputStream(" j".getBytes())));
+		assertEquals("j", alignR.read(new ByteArrayInputStream(" j".getBytes())));
 
-		assertEquals("j ", alignN.readString(new ByteArrayInputStream("j ".getBytes())));
+		assertEquals("j ", alignN.read(new ByteArrayInputStream("j ".getBytes())));
 	}
 
 	@Test
 	public void unpackStringUnpadOverflow() throws Exception {
-		assertEquals("j", alignL.readString(new ByteArrayInputStream("j kl".getBytes())));
+		assertEquals("j", alignL.read(new ByteArrayInputStream("j kl".getBytes())));
 
-		assertEquals("j ", alignR.readString(new ByteArrayInputStream("j kl".getBytes())));
+		assertEquals("j ", alignR.read(new ByteArrayInputStream("j kl".getBytes())));
 
-		assertEquals("j ", alignN.readString(new ByteArrayInputStream("j kl".getBytes())));
+		assertEquals("j ", alignN.read(new ByteArrayInputStream("j kl".getBytes())));
 	}
 }

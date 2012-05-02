@@ -4,52 +4,47 @@ import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Map;
 
-import org.nucleus8583.core.util.BinaryUtils;
 import org.nucleus8583.core.util.BitmapHelper;
+
+import rk.commons.util.BinaryUtils;
+import rk.commons.util.ObjectUtils;
 
 /**
  * This class represents an ISO-8583 message. You can read, manipulate, and
  * write ISO-8583 message using this class.
- *
+ * 
  * @author Robbi Kurniawan
- *
+ * 
  */
 public final class Message implements Serializable {
 	private static final long serialVersionUID = -1503040549193848604L;
 
-	private final int count;
+	final int count;
 
-	private String mti;
+	final byte[] bits1To128;
 
-	private final String[] stringValues;
+	final byte[] bits129To192;
 
-	private final byte[][] binaryValues;
-
-	private final byte[] bits1To128;
-
-	private final byte[] bits129To192;
+	final Object[] values;
 
 	/**
 	 * create a new instance of this class with 192 number of fields defined.
-	 *
+	 * 
 	 * same as <code>Message(192)</code>.
 	 */
 	public Message() {
-        count = 193;
+		count = 193;
 
-        mti = null;
+		bits1To128 = BitmapHelper.create(128);
+		bits129To192 = BitmapHelper.create(64);
 
-        stringValues = new String[193];
-        binaryValues = new byte[193][];
-
-        bits1To128 = BitmapHelper.create(128);
-        bits129To192 = BitmapHelper.create(64);
+		values = new Object[193];
 	}
 
 	/**
 	 * create a new instance of this class by specifying number of fields
 	 * defined.
-	 *
+	 * 
 	 * @param count
 	 *            the number of fields.
 	 */
@@ -61,163 +56,106 @@ public final class Message implements Serializable {
 
 		this.count = count + 1;
 
-		mti = null;
-
-		stringValues = new String[this.count];
-		binaryValues = new byte[this.count][];
-
 		bits1To128 = BitmapHelper.create(128);
 		bits129To192 = BitmapHelper.create(64);
+
+		values = new Object[this.count];
 	}
 
 	/**
-	 * set MTI field value, field number 0 in standard ISO-8583 message, must be 4 characters length
-	 *
+	 * set MTI field value, field number 0 in standard ISO-8583 message, must be
+	 * 4 characters length
+	 * 
 	 * @param mti
 	 *            new MTI field value
 	 */
-	public void setMti(String mti) {
-        if (mti == null) {
-            this.mti = "";
-        } else {
-            this.mti = mti;
-        }
+	public void setMti(Object mti) {
+		if (mti == null) {
+			values[0] = "";
+		} else {
+			values[0] = mti;
+		}
 	}
 
 	/**
 	 * retrieve MTI field value, field number 0 in standard ISO-8583 message
-	 *
+	 * 
 	 * @return MTI field value
 	 */
-	public String getMti() {
-		return mti;
+	@SuppressWarnings("unchecked")
+	public <T> T getMti() {
+		return (T) values[0];
 	}
 
 	/**
-	 * set binary (<code>b</code> data element) field value.
-	 *
+	 * set field value.
+	 * 
 	 * @param no
 	 *            number of field to be set, should in range <code>2-192</code>,
 	 *            exclude <code>65<code>.
 	 * @param value
-	 *            new binary value
+	 *            new field value
 	 * @throws IllegalArgumentException
 	 *             if <code>no</code> less than <code>2</code> or more than
-	 *             <code>192</code> or equals to <code>65</code>
-	 *             or the field is a string field. otherwise <code>true</code>
+	 *             <code>192</code> or equals to <code>65</code>. otherwise
+	 *             <code>true</code>
 	 */
-	public void set(int no, byte[] value) {
-		if ((no <= 1) || (no > 192) || (no == 65) || (no >= count)) {
-			throw new IllegalArgumentException("field no must be in range 2-" + (count - 1) + " and not equals to 65, actual is " + no);
-		}
-
-		if (value == null) {
-			unsafeUnset(no);
-		} else {
-			binaryValues[no] = value;
-			stringValues[no] = null;
-
-			if (no > 128) {
-				BitmapHelper.set(bits129To192, no - 129);
-			} else {
-			    BitmapHelper.set(bits1To128, no - 1);
-			}
-		}
-	}
-
-	/**
-	 * set string-based (non <code>b</code> data element) field value.
-	 *
-	 * @param no
-	 *            number of field to be set, should in range <code>2-192</code>,
-	 *            exclude <code>65<code>.
-	 * @param value
-	 *            new value
-	 * @throws IllegalArgumentException
-	 *             if <code>no</code> less than <code>2</code> or more than
-	 *             <code>192</code> or equals to <code>65</code>, otherwise <code>true</code>
-	 */
-	public void set(int no, String value) {
+	public void set(int no, Object value) {
 		if (no == 0) {
 			setMti(value);
 			return;
 		}
 
 		if ((no <= 1) || (no > 192) || (no == 65) || (no >= count)) {
-			throw new IllegalArgumentException("field no must be in range 2-"
-					+ (count - 1) + " and not equals to 65");
+				throw new IllegalArgumentException("field no must be in range 0, 2-"
+						+ (count - 1) + " and not equals to 65, actual is " + no);
 		}
 
 		if (value == null) {
 			unsafeUnset(no);
 		} else {
-			binaryValues[no] = null;
-			stringValues[no] = value;
+			values[no] = value;
 
 			if (no > 128) {
-			    BitmapHelper.set(bits129To192, no - 129);
+				BitmapHelper.set(bits129To192, no - 129);
 			} else {
-			    BitmapHelper.set(bits1To128, no - 1);
+				BitmapHelper.set(bits1To128, no - 1);
 			}
 		}
 	}
 
 	/**
-	 * set binary (<code>b</code> data element) field value.
-	 *
+	 * set field value.
+	 * 
 	 * this is unsafe method since no range checking performed so <b>PLEASE USE
 	 * THIS METHOD WITH CARE</b>.
-	 *
+	 * 
 	 * @param no
 	 *            number of field to be set, should in range <code>2-192</code>,
 	 *            exclude <code>65<code>.
 	 * @param value
-	 *            new binary value
+	 *            new field value
 	 */
-	public void unsafeSet(int no, String value) {
-		// binaryValues[no] = null;
-		stringValues[no] = value;
+	public void unsafeSet(int no, Object value) {
+		values[no] = value;
 
 		if (no > 128) {
-		    BitmapHelper.set(bits129To192, no - 129);
+			BitmapHelper.set(bits129To192, no - 129);
 		} else {
-		    BitmapHelper.set(bits1To128, no - 1);
-		}
-	}
-
-	/**
-	 * set string-based (non <code>b</code> data element) field value.
-	 *
-	 * this is unsafe method since no range checking performed so <b>PLEASE USE
-	 * THIS METHOD WITH CARE</b>.
-	 *
-	 * @param no
-	 *            number of field to be set, should in range <code>2-192</code>,
-	 *            exclude <code>65<code>.
-	 * @param value
-	 *            new value
-	 */
-	public void unsafeSet(int no, byte[] value) {
-		binaryValues[no] = value;
-		// stringValues[no] = null;
-
-		if (no > 128) {
-		    BitmapHelper.set(bits129To192, no - 129);
-		} else {
-		    BitmapHelper.set(bits1To128, no - 1);
+			BitmapHelper.set(bits1To128, no - 1);
 		}
 	}
 
 	/**
 	 * clear field value
-	 *
+	 * 
 	 * @param no
 	 *            number of field to be cleared, should in range
 	 *            <code>2-192</code>, exclude <code>65<code>.
 	 * @throws IllegalArgumentException
 	 *             if <code>no</code> less than <code>2</code> or more than
-	 *             <code>192</code> or equals to <code>65</code>,
-	 *             otherwise <code>true</code>
+	 *             <code>192</code> or equals to <code>65</code>, otherwise
+	 *             <code>true</code>
 	 */
 	public void unset(int no) {
 		if ((no <= 1) || (no > 192) || (no == 65) || (no >= count)) {
@@ -226,51 +164,48 @@ public final class Message implements Serializable {
 		}
 
 		if (no > 128) {
-		    BitmapHelper.clear(bits129To192, no - 129);
+			BitmapHelper.clear(bits129To192, no - 129);
 		} else {
-		    BitmapHelper.clear(bits1To128, no - 1);
+			BitmapHelper.clear(bits1To128, no - 1);
 		}
 
-		// let gc do it's work
-		binaryValues[no] = null;
-		stringValues[no] = null;
+		values[no] = null;
 	}
 
 	/**
 	 * clear field value.
-	 *
+	 * 
 	 * this is unsafe method since no range checking performed so <b>PLEASE USE
 	 * THIS METHOD WITH CARE</b>.
-	 *
+	 * 
 	 * @param no
 	 *            number of field to be cleared, should in range
 	 *            <code>2-192</code>, exclude <code>65<code>.
 	 */
 	public void unsafeUnset(int no) {
 		if (no > 128) {
-		    BitmapHelper.clear(bits129To192, no - 129);
+			BitmapHelper.clear(bits129To192, no - 129);
 		} else {
-		    BitmapHelper.clear(bits1To128, no - 1);
+			BitmapHelper.clear(bits1To128, no - 1);
 		}
 
-		// let gc do it's work
-		binaryValues[no] = null;
-		stringValues[no] = null;
+		values[no] = null;
 	}
 
 	/**
 	 * retrieve field value
-	 *
+	 * 
 	 * @param no
 	 *            number of field to be get, should in range <code>2-192</code>,
 	 *            exclude <code>65<code>.
 	 * @return field value or null if the bit has not been set yet.
 	 * @throws IllegalArgumentException
 	 *             if <code>no</code> less than <code>2</code> or more than
-	 *             <code>192</code> or equals to <code>65</code>,
-	 *             otherwise the field value.
+	 *             <code>192</code> or equals to <code>65</code>, otherwise the
+	 *             field value.
 	 */
-	public Object get(int no) {
+	@SuppressWarnings("unchecked")
+	public <T> T get(int no) {
 		if (no == 0) {
 			return getMti();
 		}
@@ -280,100 +215,31 @@ public final class Message implements Serializable {
 					+ (count - 1) + " and not equals to 65");
 		}
 
-		Object value = binaryValues[no];
-		if (value != null) {
-			return value;
-		}
-
-		return stringValues[no];
+		return (T) values[no];
 	}
 
 	/**
-	 * retrieve non <code>b</code> data element field value.
-	 *
-	 * @param no
-	 *            number of field to be get, should in range <code>2-192</code>,
-	 *            exclude <code>65<code>.
-	 * @return field value or null if the bit has not been set yet.
-	 * @throws IllegalArgumentException
-	 *             if <code>no</code> less than <code>2</code> or more than
-	 *             <code>192</code> or equals to <code>65</code>
-	 *             or the field has binary (<code>b</code> data element) type.
-	 *             otherwise the field value or the field is a binary field.
-	 */
-	public String getString(int no) {
-		if (no == 0) {
-			return getMti();
-		}
-
-		if ((no <= 1) || (no > 192) || (no == 65) || (no >= count)) {
-			throw new IllegalArgumentException("field no must be in range 2-"
-					+ (count - 1) + " and not equals to 65");
-		}
-
-		return stringValues[no];
-	}
-
-	/**
-	 * retrieve <code>b</code> data element field value.
-	 *
-	 * @param no
-	 *            number of field to be get, should in range <code>2-192</code>,
-	 *            exclude <code>65<code>.
-	 * @return <code>null<code> if <code>no</code> less than <code>2</code> or
-	 *         more than <code>192</code> or equals to <code>65</code> or
-	 *         the field type is not binary (non <code>b</code> data element).
-	 *         otherwise the field value.
-	 */
-	public byte[] getBinary(int no) {
-		if ((no <= 1) || (no > 192) || (no == 65) || (no >= count)) {
-			throw new IllegalArgumentException("field no must be in range 2-"
-					+ (count - 1) + " and not equals to 65");
-		}
-
-		return binaryValues[no];
-	}
-
-	/**
-	 * retrieve non <code>b</code> data element field value.
-	 *
+	 * retrieve data element field value.
+	 * 
 	 * this is unsafe method since no range checking performed so <b>PLEASE USE
 	 * THIS METHOD WITH CARE</b>.
-	 *
+	 * 
 	 * @param no
 	 *            number of field to be get, should in range <code>2-192</code>,
 	 *            exclude <code>65<code>.
-	 * @return <code>null<code> if the field has binary (<code>b</code> data
-	 *         element) type. otherwise the field value.
+	 * @return <code>null<code> if the field has not been set. otherwise the
+	 *         field value.
 	 */
-	public String unsafeGetString(int no) {
-		return stringValues[no];
-	}
-
-	/**
-	 * retrieve <code>b</code> data element field value.
-	 *
-	 * this is unsafe method since no range checking performed so <b>PLEASE USE
-	 * THIS METHOD WITH CARE</b>.
-	 *
-	 * @param no
-	 *            number of field to be get, should in range <code>2-192</code>,
-	 *            exclude <code>65<code>.
-	 * @return <code>null<code> if the field type is not binary (non <code>b
-	 *         </code> data element). otherwise the field value.
-	 */
-	public byte[] unsafeGetBinary(int no) {
-		return binaryValues[no];
+	@SuppressWarnings("unchecked")
+	public <T> T unsafeGet(int no) {
+		return (T) values[no];
 	}
 
 	/**
 	 * clear all fields value
 	 */
 	public void clear() {
-		mti = null;
-
-		Arrays.fill(binaryValues, null);
-		Arrays.fill(stringValues, null);
+		Arrays.fill(values, null);
 
 		BitmapHelper.clear(bits1To128);
 		BitmapHelper.clear(bits129To192);
@@ -383,12 +249,14 @@ public final class Message implements Serializable {
 	 * dump active fields value to a map. The map key is the field number and
 	 * the map value is the field value. This method <b>WILL NOT</b> clear the
 	 * map first.
-	 *
+	 * 
 	 * @param map
 	 *            the map
 	 */
 	public void dump(Map<Integer, Object> map) {
-	    if (mti != null) {
+		Object mti = values[0];
+
+		if (mti != null) {
 			map.put(Integer.valueOf(0), mti);
 		}
 
@@ -397,23 +265,11 @@ public final class Message implements Serializable {
 				// do nothing
 			} else if (i < 129) {
 				if (BitmapHelper.get(bits1To128, iMin1)) {
-					Object value = binaryValues[i];
-
-					if (value == null) {
-						map.put(Integer.valueOf(i), stringValues[i]);
-					} else {
-						map.put(Integer.valueOf(i), binaryValues[i]);
-					}
+					map.put(Integer.valueOf(i), values[i]);
 				}
 			} else {
 				if (BitmapHelper.get(bits129To192, iMin129)) {
-					Object value = binaryValues[i];
-
-					if (value == null) {
-						map.put(Integer.valueOf(i), stringValues[i]);
-					} else {
-						map.put(Integer.valueOf(i), binaryValues[i]);
-					}
+					map.put(Integer.valueOf(i), values[i]);
 				}
 			}
 		}
@@ -423,61 +279,40 @@ public final class Message implements Serializable {
 	 * set MTI to become a response one if and only-if the MTI is a request MTI
 	 */
 	public void setResponseMti() {
-        char[] chars = getMti().toCharArray();
+		char[] chars = ((String) getMti()).toCharArray();
 
-        int num = Character.getNumericValue(chars[2]);
-        if ((num & 0x01) == 0x00) {
-            chars[2] = (char) (num + '1');
-            setMti(new String(chars));
-        }
+		int num = Character.getNumericValue(chars[2]);
+		if ((num & 0x01) == 0x00) {
+			chars[2] = (char) (num + '1');
+			setMti(new String(chars));
+		}
 	}
 
 	/**
 	 * check whether the MTI is a request MTI.
-	 *
-	 * @return <code>true</code> if the MTI is a request MTI, otherwise <code>false</code>
+	 * 
+	 * @return <code>true</code> if the MTI is a request MTI, otherwise
+	 *         <code>false</code>
 	 */
 	public boolean isRequest() {
-        char[] chars = getMti().toCharArray();
+		char[] chars = ((String) getMti()).toCharArray();
 
-        return (Character.getNumericValue(chars[2]) & 0x01) == 0x00;
+		return (Character.getNumericValue(chars[2]) & 0x01) == 0x00;
 	}
 
-    /**
-     * check whether the MTI is a response MTI.
-     *
-     * @return <code>true</code> if the MTI is a response MTI, otherwise <code>false</code>
-     */
-    public boolean isResponse() {
-        return !isRequest();
-    }
-
-    private boolean equals(byte[] a, byte[] b) {
-        if (a == b) {
-            return true;
-        }
-
-        if ((a == null) || (b == null)) {
-            return false;
-        }
-
-        return Arrays.equals(a, b);
-    }
-
-	private boolean equals(Object a, Object b) {
-		if (a == b) {
-			return true;
-		}
-
-		if ((a == null) || (b == null)) {
-			return false;
-		}
-
-		return a.equals(b);
+	/**
+	 * check whether the MTI is a response MTI.
+	 * 
+	 * @return <code>true</code> if the MTI is a response MTI, otherwise
+	 *         <code>false</code>
+	 */
+	public boolean isResponse() {
+		return !isRequest();
 	}
 
 	/*
 	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	@Override
@@ -491,7 +326,7 @@ public final class Message implements Serializable {
 		}
 
 		Message another = (Message) object;
-		if (!equals(mti, another.mti)) {
+		if (!ObjectUtils.equals(values[0], another.values[0])) {
 			return false;
 		}
 
@@ -501,11 +336,16 @@ public final class Message implements Serializable {
 
 		for (int i = count - 1; i >= 2; --i) {
 			if (i != 65) {
-				if (!equals(binaryValues[i], another.binaryValues[i])) {
-					return false;
+				Object myValue = values[i];
+				Object anotherValue = another.values[i];
+
+				if ((myValue instanceof byte[])
+						&& (anotherValue instanceof byte[])) {
+					return ObjectUtils.equals((byte[]) myValue,
+							(byte[]) anotherValue);
 				}
 
-				if (!equals(stringValues[i], another.stringValues[i])) {
+				if (!ObjectUtils.equals(values[i], another.values[i])) {
 					return false;
 				}
 			}
@@ -516,6 +356,7 @@ public final class Message implements Serializable {
 
 	/*
 	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#hashCode()
 	 */
 	@Override
@@ -525,7 +366,7 @@ public final class Message implements Serializable {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
@@ -534,9 +375,9 @@ public final class Message implements Serializable {
 
 		sbuf.append("<iso-message>\n");
 
-		if (mti != null) {
+		if (values[0] != null) {
 			sbuf.append("    <iso-field id=\"0\" value=\"");
-			sbuf.append(mti);
+			sbuf.append(values[0]);
 			sbuf.append("\" />\n");
 		}
 
@@ -549,12 +390,12 @@ public final class Message implements Serializable {
 					sbuf.append(i);
 					sbuf.append("\" value=\"");
 
-					Object val = binaryValues[i];
+					Object val = values[i];
 
-					if (val == null) {
-						sbuf.append(stringValues[i]);
-					} else {
+					if (val instanceof byte[]) {
 						sbuf.append(BinaryUtils.toHex((byte[]) val));
+					} else {
+						sbuf.append(values[i]);
 					}
 
 					sbuf.append("\" />\n");
@@ -565,12 +406,12 @@ public final class Message implements Serializable {
 					sbuf.append(i);
 					sbuf.append("\" value=\"");
 
-					Object val = binaryValues[i];
+					Object val = values[i];
 
-					if (val == null) {
-						sbuf.append(stringValues[i]);
+					if (val instanceof byte[]) {
+						sbuf.append(BinaryUtils.toHex((byte[]) val));
 					} else {
-					    sbuf.append(BinaryUtils.toHex((byte[]) val));
+						sbuf.append(values[i]);
 					}
 
 					sbuf.append("\" />\n");
@@ -581,40 +422,5 @@ public final class Message implements Serializable {
 		sbuf.append("</iso-message>\n");
 
 		return sbuf.toString();
-	}
-
-	/**
-	 * DO NOT use this method directly
-	 */
-	int size() {
-		return count;
-	}
-
-	/**
-	 * DO NOT use this method directly
-	 */
-	byte[] directBits1To128() {
-		return bits1To128;
-	}
-
-	/**
-	 * DO NOT use this method directly
-	 */
-	byte[] directBits129To192() {
-		return bits129To192;
-	}
-
-	/**
-	 * DO NOT use this method directly
-	 */
-	byte[][] directBinaryValues() {
-		return binaryValues;
-	}
-
-	/**
-	 * DO NOT use this method directly
-	 */
-	String[] directStringValues() {
-		return stringValues;
 	}
 }

@@ -17,7 +17,7 @@ public class MessageSerializer192Test {
 
 	@Before
 	public void initialize() throws Exception {
-		serializer = new MessageSerializer("classpath:META-INF/codec8583L.xml");
+		serializer = new XmlContext("classpath:META-INF/codec8583L.xml").getMessageSerializer();
 
 		packed = "0200C000000000010000800000000000000006030000004999800000000100000043301002000000000000000000000000000000000000000000000";
 

@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.jpos.iso.ISOMsg;
+import org.jpos.iso.ISOPackager;
 import org.jpos.iso.packager.ISO93APackager;
 import org.junit.Before;
 import org.junit.Test;
@@ -53,11 +54,7 @@ public class Iso93AsciiTest {
 
 		for (int i = minFieldNo; i <= maxFieldNo; ++i) {
 			if (i != 65) {
-				case1.put(
-						Integer.valueOf(i),
-						generateFieldValue(
-								BINARIES.contains(i) ? MAX_LENGTHS[i] : 1,
-								MAX_LENGTHS[i]));
+				case1.put(Integer.valueOf(i), generateFieldValue(BINARIES.contains(i) ? MAX_LENGTHS[i] : 1, MAX_LENGTHS[i]));
 			}
 		}
 
@@ -91,6 +88,11 @@ public class Iso93AsciiTest {
 
 	@Test
 	public void writeShouldResultTheSameThing() throws Exception {
+		ISOPackager jposPackager = new ISO93APackager();
+
+		MessageSerializer nucSerializer = MessageSerializer.create(
+				"classpath:META-INF/nucleus8583/packagers/iso93ascii.xml");
+
 		for (int retry = 0; retry < 20; ++retry) {
 			for (int fldno = 2; fldno <= 128; ++fldno) {
 				if (fldno == 65) {
@@ -106,24 +108,23 @@ public class Iso93AsciiTest {
 				fill(nucMsg, case1);
 				fill(jposMsg, case1);
 
-				MessageSerializer nucSerializer = MessageSerializer
-						.create("classpath:META-INF/nucleus8583/packagers/iso93ascii.xml");
-
-				jposMsg.setPackager(new ISO93APackager());
+				jposMsg.setPackager(jposPackager);
 
 				String jposr = new String(jposMsg.pack());
 				String nucr = new String(nucSerializer.write(nucMsg));
 
-				assertEquals(
-						"Field #" + fldno + ", value = " + case1.get(fldno)
-								+ ".", jposr, nucr);
+				assertEquals("Field #" + fldno + ", value = " + case1.get(fldno) + ".", jposr, nucr);
 			}
 		}
 	}
 
 	@Test
-	public void jposResultCanBeReadByNucleusAndShouldResultTheSame()
-			throws Exception {
+	public void jposResultCanBeReadByNucleusAndShouldResultTheSame() throws Exception {
+		ISOPackager jposPackager = new ISO93APackager();
+		
+		MessageSerializer nucSerializer = MessageSerializer.create(
+				"classpath:META-INF/nucleus8583/packagers/iso93ascii.xml");
+
 		for (int retry = 0; retry < 20; ++retry) {
 			for (int fldno = 2; fldno <= 128; ++fldno) {
 				if (fldno == 65) {
@@ -140,35 +141,33 @@ public class Iso93AsciiTest {
 
 				byte[] packed = jposMsg.pack();
 
-				MessageSerializer nucSerializer = MessageSerializer
-						.create("classpath:META-INF/nucleus8583/packagers/iso93ascii.xml");
-
 				Message nucMsg = new Message();
 				nucSerializer.read(packed, nucMsg);
 
 				jposMsg = new ISOMsg();
-				jposMsg.setPackager(new ISO93APackager());
+				jposMsg.setPackager(jposPackager);
 				jposMsg.unpack(packed);
 
 				if (BINARIES.contains(fldno)) {
-					assertEquals(
-							"Field #" + fldno + ", value = " + case1.get(fldno)
-									+ ".",
+					assertEquals("Field #" + fldno + ", value = " + case1.get(fldno) + ".",
 							BinaryUtils.toHex(jposMsg.getBytes(fldno)),
-							BinaryUtils.toHex(nucMsg.getBinary(fldno)));
+							BinaryUtils.toHex((byte[]) nucMsg.get(fldno)));
 				} else {
-					assertEquals(
-							"Field #" + fldno + ", value = " + case1.get(fldno)
-									+ ".", jposMsg.getValue(fldno),
-							nucMsg.getString(fldno));
+					assertEquals("Field #" + fldno + ", value = " + case1.get(fldno) + ".",
+							jposMsg.getValue(fldno),
+							nucMsg.get(fldno));
 				}
 			}
 		}
 	}
 
 	@Test
-	public void nucleusResultCanBeReadByJposAndShouldResultTheSame()
-			throws Exception {
+	public void nucleusResultCanBeReadByJposAndShouldResultTheSame() throws Exception {
+		ISOPackager jposPackager = new ISO93APackager();
+
+		MessageSerializer nucSerializer = MessageSerializer.create(
+				"classpath:META-INF/nucleus8583/packagers/iso93ascii.xml");
+		
 		for (int retry = 0; retry < 20; ++retry) {
 			for (int fldno = 2; fldno <= 128; ++fldno) {
 				if (fldno == 65) {
@@ -181,29 +180,23 @@ public class Iso93AsciiTest {
 				Message nucMsg = new Message();
 				fill(nucMsg, case1);
 
-				MessageSerializer nucSerializer = MessageSerializer
-						.create("classpath:META-INF/nucleus8583/packagers/iso93ascii.xml");
-
 				byte[] packed = nucSerializer.write(nucMsg);
 
 				nucMsg = new Message();
 				nucSerializer.read(packed, nucMsg);
 
 				ISOMsg jposMsg = new ISOMsg();
-				jposMsg.setPackager(new ISO93APackager());
+				jposMsg.setPackager(jposPackager);
 				jposMsg.unpack(packed);
 
 				if (BINARIES.contains(fldno)) {
-					assertEquals(
-							"Field #" + fldno + ", value = " + case1.get(fldno)
-									+ ".",
+					assertEquals("Field #" + fldno + ", value = " + case1.get(fldno) + ".",
 							BinaryUtils.toHex(jposMsg.getBytes(fldno)),
-							BinaryUtils.toHex(nucMsg.getBinary(fldno)));
+							BinaryUtils.toHex((byte[]) nucMsg.get(fldno)));
 				} else {
-					assertEquals(
-							"Field #" + fldno + ", value = " + case1.get(fldno)
-									+ ".", jposMsg.getValue(fldno),
-							nucMsg.getString(fldno));
+					assertEquals("Field #" + fldno + ", value = " + case1.get(fldno) + ".",
+							jposMsg.getValue(fldno),
+							nucMsg.get(fldno));
 				}
 			}
 		}

@@ -20,11 +20,14 @@ public class BcdPrefixerTest {
             ByteArrayOutputStream out = new ByteArrayOutputStream();
 
             int z = rnd.nextInt(Integer.MAX_VALUE - 100);
+            
+            BcdPrefixer p = new BcdPrefixer();
+            p.setPrefixLength(10);
 
-            new BcdPrefixer(10).writeUint(out, z);
+            p.writeUint(out, z);
             out.flush();
 
-            int z2 = new BcdPrefixer(10).readUint(new ByteArrayInputStream(out.toByteArray()));
+            int z2 = p.readUint(new ByteArrayInputStream(out.toByteArray()));
 
             assertEquals(z, z2);
         }
@@ -39,7 +42,10 @@ public class BcdPrefixerTest {
 
             int z = rnd.nextInt(Integer.MAX_VALUE - 100);
 
-            new BcdPrefixer(10).writeUint(out, z);
+            BcdPrefixer p = new BcdPrefixer();
+            p.setPrefixLength(10);
+
+            p.writeUint(out, z);
             out.flush();
 
             assertEquals(z, BcdUtils.bcdToLong(out.toByteArray()));
@@ -56,12 +62,18 @@ public class BcdPrefixerTest {
 
             BcdUtils.intToBcd(z, bcd);
 
-            assertEquals(z, new BcdPrefixer(10).readUint(new ByteArrayInputStream(bcd)));
+            BcdPrefixer p = new BcdPrefixer();
+            p.setPrefixLength(10);
+
+            assertEquals(z, p.readUint(new ByteArrayInputStream(bcd)));
         }
     }
 
     @Test(expected = EOFException.class)
     public void readUintShouldThrowEOFException() throws IOException {
-        new BcdPrefixer(3).readUint(new ByteArrayInputStream(new byte[] { 1 }));
+        BcdPrefixer p = new BcdPrefixer();
+        p.setPrefixLength(3);
+
+        p.readUint(new ByteArrayInputStream(new byte[] { 1 }));
     }
 }

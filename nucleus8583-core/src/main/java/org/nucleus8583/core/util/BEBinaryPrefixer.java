@@ -4,17 +4,28 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+import rk.commons.util.IOUtils;
+
 /**
  * Binary prefixer (Big-Endian)
  */
 public class BEBinaryPrefixer {
-	private final int nbytes;
+	
+	private int nbytes;
 
-	public BEBinaryPrefixer(int prefixLength) {
+	public BEBinaryPrefixer() {
+		// do nothing
+	}
+	
+	public BEBinaryPrefixer(BEBinaryPrefixer o) {
+		nbytes = o.nbytes;
+	}
+	
+	public void setPrefixLength(int prefixLength) {
         int nbytes = 1;
 
         while (prefixLength > 0xFF) {
-            prefixlength >>= 8;
+            prefixLength >>= 8;
             ++nbytes;
         }
 

@@ -21,7 +21,10 @@ public class AsciiPrefixerTest {
 
 			int z = rnd.nextInt(Integer.MAX_VALUE - 100);
 
-			new AsciiPrefixer(10).writeUint(out, z);
+			AsciiPrefixer p = new AsciiPrefixer();
+			p.setPrefixLength(10);
+
+			p.writeUint(out, z);
 			out.flush();
 
 			String sz = out.toString("ASCII");
@@ -36,21 +39,27 @@ public class AsciiPrefixerTest {
 		for (int i = 1; i < 1000; ++i) {
 			int z = rnd.nextInt(Integer.MAX_VALUE - 100);
 			String sz = String.valueOf(z);
+			
+			AsciiPrefixer p = new AsciiPrefixer();
+			p.setPrefixLength(sz.length());
 
-			assertEquals(sz, z,
-					new AsciiPrefixer(sz.length())
-							.readUint(new ByteArrayInputStream(sz
-									.getBytes("ASCII"))));
+			assertEquals(sz, z, p.readUint(new ByteArrayInputStream(sz.getBytes("ASCII"))));
 		}
 	}
 
 	@Test(expected = NumberFormatException.class)
 	public void readUintShouldThrowNumberFormatException() throws IOException {
-		new AsciiPrefixer(1).readUint(new ByteArrayInputStream("a".getBytes()));
+		AsciiPrefixer p = new AsciiPrefixer();
+		p.setPrefixLength(1);
+
+		p.readUint(new ByteArrayInputStream("a".getBytes()));
 	}
 
 	@Test(expected = EOFException.class)
 	public void readUintShouldThrowEOFException() throws IOException {
-		new AsciiPrefixer(2).readUint(new ByteArrayInputStream("1".getBytes()));
+		AsciiPrefixer p = new AsciiPrefixer();
+		p.setPrefixLength(2);
+
+		p.readUint(new ByteArrayInputStream("1".getBytes()));
 	}
 }

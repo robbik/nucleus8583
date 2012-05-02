@@ -5,7 +5,9 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Arrays;
 
-import org.nucleus8583.core.xml.FieldAlignments;
+import org.nucleus8583.core.xml.Alignment;
+
+import rk.commons.util.IOUtils;
 
 public class BcdPadder {
 
@@ -22,14 +24,21 @@ public class BcdPadder {
     private String padder;
 
     private char[] emptyValue;
-
-    public void setPadWith(String padWith) {
-        int len = padWith.length();
-        if (len == 0) {
-            padWith = "0";
-        }
-
-        setPadWith(padWith.charAt(0));
+    
+    public BcdPadder() {
+    	// do nothing
+    }
+    
+    public BcdPadder(BcdPadder o) {
+    	padWith = o.padWith;
+    	align = o.align;
+    	
+    	roundupLength = o.roundupLength;
+    	valueLength = o.valueLength;
+    	diffLength = o.diffLength;
+    	
+    	padder = o.padder;
+    	emptyValue = o.emptyValue;
     }
 
     public void setPadWith(char padWith) {
@@ -40,12 +49,12 @@ public class BcdPadder {
         this.padWith = padWith;
     }
 
-    public void setAlign(FieldAlignments align) {
+    public void setAlign(Alignment align) {
         this.align = align.symbolicValue();
     }
 
-    public FieldAlignments getAlign() {
-        return FieldAlignments.enumValueOf(align);
+    public Alignment getAlign() {
+        return Alignment.enumValueOf(align);
     }
 
     public void setLength(int length) {

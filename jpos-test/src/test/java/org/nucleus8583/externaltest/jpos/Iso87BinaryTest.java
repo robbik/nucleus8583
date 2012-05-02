@@ -84,6 +84,11 @@ public class Iso87BinaryTest {
 
     @Test
     public void writeShouldResultTheSameThing() throws Exception {
+        ISOPackager jposPackager = new ISO87BPackager();
+
+        MessageSerializer nucSerializer = MessageSerializer.create(
+        		"classpath:META-INF/nucleus8583/packagers/iso87binary.xml");
+
         for (int retry = 0; retry < 20; ++retry) {
             for (int fldno = 2; fldno <= 128; ++fldno) {
                 if (fldno == 65) {
@@ -99,10 +104,6 @@ public class Iso87BinaryTest {
                 fill(nucMsg, case1);
                 fill(jposMsg, case1);
 
-                MessageSerializer nucSerializer = MessageSerializer
-                        .create("classpath:META-INF/nucleus8583/packagers/iso87binary.xml");
-
-                ISOPackager jposPackager = new ISO87BPackager();
                 jposMsg.setPackager(jposPackager);
 
                 String jposr = BinaryUtils.toHex(jposMsg.pack());
@@ -115,6 +116,11 @@ public class Iso87BinaryTest {
 
     @Test
     public void jposResultCanBeReadByNucleusAndShouldResultTheSame() throws Exception {
+        ISOPackager jposPackager = new ISO87BPackager();
+
+        MessageSerializer nucSerializer = MessageSerializer.create(
+        		"classpath:META-INF/nucleus8583/packagers/iso87binary.xml");
+
         for (int retry = 0; retry < 20; ++retry) {
             for (int fldno = 2; fldno <= 128; ++fldno) {
                 if (fldno == 65) {
@@ -131,22 +137,19 @@ public class Iso87BinaryTest {
 
                 byte[] packed = jposMsg.pack();
 
-                MessageSerializer nucSerializer = MessageSerializer
-                        .create("classpath:META-INF/nucleus8583/packagers/iso87binary.xml");
-
                 Message nucMsg = new Message();
                 nucSerializer.read(packed, nucMsg);
 
                 jposMsg = new ISOMsg();
-                jposMsg.setPackager(new ISO87BPackager());
+                jposMsg.setPackager(jposPackager);
                 jposMsg.unpack(packed);
 
                 if (BINARIES.contains(fldno)) {
                     assertEquals("Field #" + fldno + ", value = " + case1.get(fldno) + ".",
-                            BinaryUtils.toHex(jposMsg.getBytes(fldno)), BinaryUtils.toHex(nucMsg.getBinary(fldno)));
+                            BinaryUtils.toHex(jposMsg.getBytes(fldno)), BinaryUtils.toHex((byte[]) nucMsg.get(fldno)));
                 } else {
                     assertEquals("Field #" + fldno + ", value = " + case1.get(fldno) + ".", jposMsg.getValue(fldno),
-                            nucMsg.getString(fldno));
+                            nucMsg.get(fldno));
                 }
             }
         }
@@ -154,6 +157,11 @@ public class Iso87BinaryTest {
 
     @Test
     public void nucleusResultCanBeReadByJposAndShouldResultTheSame() throws Exception {
+        ISOPackager jposPackager = new ISO87BPackager();
+
+        MessageSerializer nucSerializer = MessageSerializer.create(
+        		"classpath:META-INF/nucleus8583/packagers/iso87binary.xml");
+
         for (int retry = 0; retry < 20; ++retry) {
             for (int fldno = 2; fldno <= 128; ++fldno) {
                 if (fldno == 65) {
@@ -166,24 +174,21 @@ public class Iso87BinaryTest {
                 Message nucMsg = new Message();
                 fill(nucMsg, case1);
 
-                MessageSerializer nucSerializer = MessageSerializer
-                .create("classpath:META-INF/nucleus8583/packagers/iso87binary.xml");
-
                 byte[] packed = nucSerializer.write(nucMsg);
 
                 nucMsg = new Message();
                 nucSerializer.read(packed, nucMsg);
 
                 ISOMsg jposMsg = new ISOMsg();
-                jposMsg.setPackager(new ISO87BPackager());
+                jposMsg.setPackager(jposPackager);
                 jposMsg.unpack(packed);
 
                 if (BINARIES.contains(fldno)) {
                     assertEquals("Field #" + fldno + ", value = " + case1.get(fldno) + ".",
-                            BinaryUtils.toHex(jposMsg.getBytes(fldno)), BinaryUtils.toHex(nucMsg.getBinary(fldno)));
+                            BinaryUtils.toHex(jposMsg.getBytes(fldno)), BinaryUtils.toHex((byte[]) nucMsg.get(fldno)));
                 } else {
                     assertEquals("Field #" + fldno + ", value = " + case1.get(fldno) + ".", jposMsg.getValue(fldno),
-                            nucMsg.getString(fldno));
+                            nucMsg.get(fldno));
                 }
             }
         }

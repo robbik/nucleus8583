@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+import rk.commons.util.IOUtils;
+
 public class AsciiPrefixer {
 	private static final int[][] digitsToInt;
 
@@ -28,8 +30,16 @@ public class AsciiPrefixer {
 	}
 
 	private int prefixLength;
+	
+	public AsciiPrefixer() {
+		// do nothing
+	}
+	
+	public AsciiPrefixer(AsciiPrefixer o) {
+		prefixLength = o.prefixLength;
+	}
 
-	public AsciiPrefixer(int prefixLength) {
+	public void setPrefixLength(int prefixLength) {
 		this.prefixLength = prefixLength;
 	}
 

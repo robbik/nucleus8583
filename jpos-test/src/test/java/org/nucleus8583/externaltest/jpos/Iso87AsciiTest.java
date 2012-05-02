@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.jpos.iso.ISOMsg;
+import org.jpos.iso.ISOPackager;
 import org.jpos.iso.packager.ISO87APackager;
 import org.junit.Before;
 import org.junit.Test;
@@ -18,172 +19,202 @@ import org.nucleus8583.core.MessageSerializer;
 
 public class Iso87AsciiTest {
 
-    private static int[] MAX_LENGTHS = { 4, 16, 19, 6, 12, 12, 12, 10, 8, 8, 8, 6, 6, 4, 4, 4, 4, 4, 4, 3, 3, 3, 3, 3,
-            3, 2, 2, 1, 9, 9, 9, 9, 11, 11, 28, 37, 104, 12, 6, 2, 3, 8, 15, 40, 25, 76, 999, 999, 999, 3, 3, 3, 8, 16,
-            120, 999, 999, 999, 999, 999, 999, 999, 999, 999, 8, 1, 1, 2, 3, 3, 3, 4, 4, 6, 10, 10, 10, 10, 10, 10, 10,
-            10, 12, 12, 12, 12, 16, 16, 16, 16, 42, 1, 2, 6, 7, 42, 16, 17, 25, 11, 11, 17, 28, 28, 100, 999, 999, 999,
-            999, 999, 999, 999, 999, 999, 999, 999, 999, 999, 999, 999, 999, 999, 999, 999, 999, 999, 999, 999, 8 };
+	private static int[] MAX_LENGTHS = { 4, 16, 19, 6, 12, 12, 12, 10, 8, 8, 8,
+			6, 6, 4, 4, 4, 4, 4, 4, 3, 3, 3, 3, 3, 3, 2, 2, 1, 9, 9, 9, 9, 11,
+			11, 28, 37, 104, 12, 6, 2, 3, 8, 15, 40, 25, 76, 999, 999, 999, 3,
+			3, 3, 8, 16, 120, 999, 999, 999, 999, 999, 999, 999, 999, 999, 8,
+			1, 1, 2, 3, 3, 3, 4, 4, 6, 10, 10, 10, 10, 10, 10, 10, 10, 12, 12,
+			12, 12, 16, 16, 16, 16, 42, 1, 2, 6, 7, 42, 16, 17, 25, 11, 11, 17,
+			28, 28, 100, 999, 999, 999, 999, 999, 999, 999, 999, 999, 999, 999,
+			999, 999, 999, 999, 999, 999, 999, 999, 999, 999, 999, 999, 8 };
 
-    private static Set<Integer> BINARIES = new HashSet<Integer>(Arrays.asList(1, 52, 64, 65, 96, 128));
+	private static Set<Integer> BINARIES = new HashSet<Integer>(Arrays.asList(
+			1, 52, 64, 65, 96, 128));
 
-    private SecureRandom srnd;
+	private SecureRandom srnd;
 
-    @Before
-    public void before() {
-        srnd = new SecureRandom();
-    }
+	@Before
+	public void before() {
+		srnd = new SecureRandom();
+	}
 
-    private String generateFieldValue(int minLength, int maxLength) {
-        StringBuilder sb = new StringBuilder();
+	private String generateFieldValue(int minLength, int maxLength) {
+		StringBuilder sb = new StringBuilder();
 
-        int len = minLength + srnd.nextInt(maxLength - minLength + 1);
-        for (int i = 0; i < len; ++i) {
-            sb.append(1 + srnd.nextInt(9));
-        }
+		int len = minLength + srnd.nextInt(maxLength - minLength + 1);
+		for (int i = 0; i < len; ++i) {
+			sb.append(1 + srnd.nextInt(9));
+		}
 
-        return sb.toString();
-    }
+		return sb.toString();
+	}
 
-    private Map<Integer, String> generateCase(int minFieldNo, int maxFieldNo) {
-        Map<Integer, String> case1 = new HashMap<Integer, String>();
+	private Map<Integer, String> generateCase(int minFieldNo, int maxFieldNo) {
+		Map<Integer, String> case1 = new HashMap<Integer, String>();
 
-        for (int i = minFieldNo; i <= maxFieldNo; ++i) {
-            if (i != 65) {
-                case1.put(Integer.valueOf(i),
-                        generateFieldValue(BINARIES.contains(i) ? MAX_LENGTHS[i] : 1, MAX_LENGTHS[i]));
-            }
-        }
+		for (int i = minFieldNo; i <= maxFieldNo; ++i) {
+			if (i != 65) {
+				case1.put(
+						Integer.valueOf(i),
+						generateFieldValue(
+								BINARIES.contains(i) ? MAX_LENGTHS[i] : 1,
+								MAX_LENGTHS[i]));
+			}
+		}
 
-        return case1;
-    }
+		return case1;
+	}
 
-    private void fill(Message nucMsg, Map<Integer, String> case1) {
-        for (Map.Entry<Integer, String> e : case1.entrySet()) {
-            int fldno = e.getKey().intValue();
+	private void fill(Message nucMsg, Map<Integer, String> case1) {
+		for (Map.Entry<Integer, String> e : case1.entrySet()) {
+			int fldno = e.getKey().intValue();
 
-            if (BINARIES.contains(fldno)) {
-                nucMsg.set(fldno, e.getValue().getBytes());
-            } else {
-                nucMsg.set(fldno, e.getValue());
-            }
-        }
-    }
+			if (BINARIES.contains(fldno)) {
+				nucMsg.set(fldno, e.getValue().getBytes());
+			} else {
+				nucMsg.set(fldno, e.getValue());
+			}
+		}
+	}
 
-    private void fill(ISOMsg jposMsg, Map<Integer, String> case1) throws Exception {
-        for (Map.Entry<Integer, String> e : case1.entrySet()) {
-            int fldno = e.getKey().intValue();
+	private void fill(ISOMsg jposMsg, Map<Integer, String> case1)
+			throws Exception {
+		for (Map.Entry<Integer, String> e : case1.entrySet()) {
+			int fldno = e.getKey().intValue();
 
-            if (BINARIES.contains(fldno)) {
-                jposMsg.set(fldno, e.getValue().getBytes());
-            } else {
-                jposMsg.set(fldno, e.getValue());
-            }
-        }
-    }
+			if (BINARIES.contains(fldno)) {
+				jposMsg.set(fldno, e.getValue().getBytes());
+			} else {
+				jposMsg.set(fldno, e.getValue());
+			}
+		}
+	}
 
-    @Test
-    public void writeShouldResultTheSameThing() throws Exception {
-        for (int retry = 0; retry < 20; ++retry) {
-            for (int fldno = 2; fldno <= 128; ++fldno) {
-                if (fldno == 65) {
-                    continue;
-                }
+	@Test
+	public void writeShouldResultTheSameThing() throws Exception {
+		ISOPackager jposPackager = new ISO87APackager();
+		
+		MessageSerializer nucSerializer = MessageSerializer.create(
+				"classpath:META-INF/nucleus8583/packagers/iso87ascii.xml");
 
-                Map<Integer, String> case1 = generateCase(fldno, fldno);
-                case1.put(0, "0780");
+		for (int retry = 0; retry < 20; ++retry) {
+			for (int fldno = 2; fldno <= 128; ++fldno) {
+				if (fldno == 65) {
+					continue;
+				}
 
-                Message nucMsg = new Message();
-                ISOMsg jposMsg = new ISOMsg();
+				Map<Integer, String> case1 = generateCase(fldno, fldno);
+				case1.put(0, "0780");
 
-                fill(nucMsg, case1);
-                fill(jposMsg, case1);
+				Message nucMsg = new Message();
+				ISOMsg jposMsg = new ISOMsg();
 
-                MessageSerializer nucSerializer = MessageSerializer
-                        .create("classpath:META-INF/nucleus8583/packagers/iso87ascii.xml");
+				fill(nucMsg, case1);
+				fill(jposMsg, case1);
 
-                jposMsg.setPackager(new ISO87APackager());
+				jposMsg.setPackager(jposPackager);
 
-                String jposr = new String(jposMsg.pack());
-                String nucr = new String(nucSerializer.write(nucMsg));
+				String jposr = new String(jposMsg.pack());
+				String nucr = new String(nucSerializer.write(nucMsg));
 
-                assertEquals("Field #" + fldno + ", value = " + case1.get(fldno) + ".", jposr, nucr);
-            }
-        }
-    }
+				assertEquals(
+						"Field #" + fldno + ", value = " + case1.get(fldno)
+								+ ".", jposr, nucr);
+			}
+		}
+	}
 
-    @Test
-    public void jposResultCanBeReadByNucleusAndShouldResultTheSame() throws Exception {
-        for (int retry = 0; retry < 20; ++retry) {
-            for (int fldno = 2; fldno <= 128; ++fldno) {
-                if (fldno == 65) {
-                    continue;
-                }
+	@Test
+	public void jposResultCanBeReadByNucleusAndShouldResultTheSame()
+			throws Exception {
+		
+		ISOPackager jposPackager = new ISO87APackager();
+		
+		MessageSerializer nucSerializer = MessageSerializer.create(
+				"classpath:META-INF/nucleus8583/packagers/iso87ascii.xml");
 
-                Map<Integer, String> case1 = generateCase(fldno, fldno);
-                case1.put(0, "0780");
+		for (int retry = 0; retry < 20; ++retry) {
+			for (int fldno = 2; fldno <= 128; ++fldno) {
+				if (fldno == 65) {
+					continue;
+				}
 
-                ISOMsg jposMsg = new ISOMsg();
-                fill(jposMsg, case1);
+				Map<Integer, String> case1 = generateCase(fldno, fldno);
+				case1.put(0, "0780");
 
-                jposMsg.setPackager(new ISO87APackager());
+				ISOMsg jposMsg = new ISOMsg();
+				fill(jposMsg, case1);
 
-                byte[] packed = jposMsg.pack();
+				jposMsg.setPackager(jposPackager);
 
-                MessageSerializer nucSerializer = MessageSerializer
-                        .create("classpath:META-INF/nucleus8583/packagers/iso87ascii.xml");
+				byte[] packed = jposMsg.pack();
 
-                Message nucMsg = new Message();
-                nucSerializer.read(packed, nucMsg);
+				Message nucMsg = new Message();
+				nucSerializer.read(packed, nucMsg);
 
-                jposMsg = new ISOMsg();
-                jposMsg.setPackager(new ISO87APackager());
-                jposMsg.unpack(packed);
+				jposMsg = new ISOMsg();
+				jposMsg.setPackager(jposPackager);
+				jposMsg.unpack(packed);
 
-                if (BINARIES.contains(fldno)) {
-                    assertEquals("Field #" + fldno + ", value = " + case1.get(fldno) + ".",
-                            BinaryUtils.toHex(jposMsg.getBytes(fldno)), BinaryUtils.toHex(nucMsg.getBinary(fldno)));
-                } else {
-                    assertEquals("Field #" + fldno + ", value = " + case1.get(fldno) + ".", jposMsg.getValue(fldno),
-                            nucMsg.getString(fldno));
-                }
-            }
-        }
-    }
+				if (BINARIES.contains(fldno)) {
+					assertEquals(
+							"Field #" + fldno + ", value = " + case1.get(fldno)
+									+ ".",
+							BinaryUtils.toHex(jposMsg.getBytes(fldno)),
+							BinaryUtils.toHex((byte[]) nucMsg.get(fldno)));
+				} else {
+					assertEquals(
+							"Field #" + fldno + ", value = " + case1.get(fldno)
+									+ ".", jposMsg.getValue(fldno),
+							nucMsg.get(fldno));
+				}
+			}
+		}
+	}
 
-    @Test
-    public void nucleusResultCanBeReadByJposAndShouldResultTheSame() throws Exception {
-        for (int retry = 0; retry < 20; ++retry) {
-            for (int fldno = 2; fldno <= 128; ++fldno) {
-                if (fldno == 65) {
-                    continue;
-                }
+	@Test
+	public void nucleusResultCanBeReadByJposAndShouldResultTheSame()
+			throws Exception {
+		
+		ISOPackager jposPackager = new ISO87APackager();
 
-                Map<Integer, String> case1 = generateCase(fldno, fldno);
-                case1.put(0, "0780");
+		MessageSerializer nucSerializer = MessageSerializer.create(
+				"classpath:META-INF/nucleus8583/packagers/iso87ascii.xml");
 
-                Message nucMsg = new Message();
-                fill(nucMsg, case1);
+		for (int retry = 0; retry < 20; ++retry) {
+			for (int fldno = 2; fldno <= 128; ++fldno) {
+				if (fldno == 65) {
+					continue;
+				}
 
-                MessageSerializer nucSerializer = MessageSerializer
-                        .create("classpath:META-INF/nucleus8583/packagers/iso87ascii.xml");
+				Map<Integer, String> case1 = generateCase(fldno, fldno);
+				case1.put(0, "0780");
 
-                byte[] packed = nucSerializer.write(nucMsg);
+				Message nucMsg = new Message();
+				fill(nucMsg, case1);
 
-                nucMsg = new Message();
-                nucSerializer.read(packed, nucMsg);
+				byte[] packed = nucSerializer.write(nucMsg);
 
-                ISOMsg jposMsg = new ISOMsg();
-                jposMsg.setPackager(new ISO87APackager());
-                jposMsg.unpack(packed);
+				nucMsg = new Message();
+				nucSerializer.read(packed, nucMsg);
 
-                if (BINARIES.contains(fldno)) {
-                    assertEquals("Field #" + fldno + ", value = " + case1.get(fldno) + ".",
-                            BinaryUtils.toHex(jposMsg.getBytes(fldno)), BinaryUtils.toHex(nucMsg.getBinary(fldno)));
-                } else {
-                    assertEquals("Field #" + fldno + ", value = " + case1.get(fldno) + ".", jposMsg.getValue(fldno),
-                            nucMsg.getString(fldno));
-                }
-            }
-        }
-    }
+				ISOMsg jposMsg = new ISOMsg();
+				jposMsg.setPackager(jposPackager);
+				jposMsg.unpack(packed);
+
+				if (BINARIES.contains(fldno)) {
+					assertEquals(
+							"Field #" + fldno + ", value = " + case1.get(fldno)
+									+ ".",
+							BinaryUtils.toHex(jposMsg.getBytes(fldno)),
+							BinaryUtils.toHex((byte[]) nucMsg.get(fldno)));
+				} else {
+					assertEquals(
+							"Field #" + fldno + ", value = " + case1.get(fldno)
+									+ ".", jposMsg.getValue(fldno),
+							nucMsg.get(fldno));
+				}
+			}
+		}
+	}
 }

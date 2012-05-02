@@ -71,28 +71,11 @@ public class MessageTest {
 		msg1.set(0, "0300");
 		assertEquals("0300", msg1.getMti());
 		assertEquals("0300", msg1.get(0));
-		assertEquals("0300", msg1.getString(0));
 	}
 
 	@Test
 	public void testManipulateOutOfRangeFields() {
 		boolean error;
-
-		error = false;
-		try {
-			msg1.set(0, new byte[0]);
-		} catch (IllegalArgumentException ex) {
-			error = true;
-		}
-		assertTrue(error);
-
-		error = false;
-		try {
-			msg1.getBinary(0);
-		} catch (IllegalArgumentException ex) {
-			error = true;
-		}
-		assertTrue(error);
 
 		error = false;
 		try {
@@ -166,28 +149,21 @@ public class MessageTest {
 		msg1.set(2, "9000");
 		assertTrue(msg1.get(2) instanceof String);
 
-		assertNull(msg1.getBinary(2));
-		assertEquals("9000", msg1.getString(2));
-
 		msg1.unset(2);
-		assertNull(msg1.getBinary(2));
-		assertNull(msg1.getString(2));
+		assertNull(msg1.get(2));
 
 		msg1.set(2, "0200");
 		msg1.set(2, (String) null);
 
-		assertNull(msg1.getBinary(2));
-		assertNull(msg1.getString(2));
+		assertNull(msg1.get(2));
 
 		msg1.unsafeSet(2, "9000");
 		assertTrue(msg1.get(2) instanceof String);
 
-		assertNull(msg1.unsafeGetBinary(2));
-		assertEquals("9000", msg1.unsafeGetString(2));
+		assertEquals("9000", msg1.unsafeGet(2));
 
 		msg1.unsafeUnset(2);
-		assertNull(msg1.getBinary(2));
-		assertNull(msg1.getString(2));
+		assertNull(msg1.get(2));
 	}
 
 	@Test
@@ -198,24 +174,20 @@ public class MessageTest {
 		msg1.set(64, ori);
 		assertTrue(msg1.get(64) instanceof byte[]);
 
-		assertNull(msg1.getString(64));
-		assertEquals(ori, msg1.getBinary(64));
+		assertEquals(ori, msg1.get(64));
 
 		msg1.clear();
-		assertNull(msg1.getBinary(64));
-		assertNull(msg1.getString(64));
+		assertNull(msg1.get(64));
 
 		msg1.set(64, ori);
 		msg1.set(64, (byte[]) null);
 
-		assertNull(msg1.getBinary(64));
-		assertNull(msg1.getString(64));
+		assertNull(msg1.get(64));
 
 		msg1.unsafeSet(64, ori);
 		assertTrue(msg1.get(64) instanceof byte[]);
 
-		assertNull(msg1.getString(64));
-		assertEquals(ori, msg1.getBinary(64));
+		assertEquals(ori, msg1.get(64));
 	}
 
 	@Test

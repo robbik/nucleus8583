@@ -69,22 +69,17 @@
                     <instructions>
                         <Bundle-DocURL>${project.url}</Bundle-DocURL>
                         <Import-Package>
-                            org.osgi.framework;resolution:=optional,
-                            org.slf4j;resolution:=optional,
-                            org.apache.commons.logging;resolution:=optional,
-                            java.util.logging;resolution:=optional,
                             *
                         </Import-Package>
                         <Export-Package>
                             org.nucleus8583.core;version=${project.version},
-                            org.nucleus8583.core.field.type;version=${project.version}
+                            org.nucleus8583.core.field;version=${project.version},
+                            org.nucleus8583.core.field.spi;version=${project.version}
                         </Export-Package>
                         <Private-Package>
-                            org.nucleus8583.core.io,
-                            org.nucleus8583.core.osgi,
                             org.nucleus8583.core.util,
                             org.nucleus8583.core.xml,
-                            org.nucleus8583.core.logging
+                            rk.commons.*
                         </Private-Package>
                     </instructions>
                 </configuration>
@@ -143,23 +138,9 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.osgi</groupId>
-            <artifactId>org.osgi.core</artifactId>
-            <version>4.2.0</version>
-            <optional>true</optional>
-        </dependency>
-
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-            <version>1.6.1</version>
-            <optional>true</optional>
-        </dependency>
-        <dependency>
-            <groupId>commons-logging</groupId>
-            <artifactId>commons-logging</artifactId>
-            <version>1.1.1</version>
-            <optional>true</optional>
+            <groupId>rk</groupId>
+            <artifactId>rk-commons</artifactId>
+            <version>1.0.0</version>
         </dependency>
 
         <dependency>

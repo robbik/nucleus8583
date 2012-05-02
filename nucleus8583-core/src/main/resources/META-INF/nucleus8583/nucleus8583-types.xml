@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<nucleus8583 xmlns="http://www.nucleus8583.org/schema/nucleus8583"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="http://www.nucleus8583.org/schema/nucleus8583 
+                                 http://www.nucleus8583.org/schema/nucleus8583.xsd">
+    
+    <type name="bitmap" class="org.nucleus8583.core.field.spi.Base16Bitmap" />
+    <type name="lbitmap" class="org.nucleus8583.core.field.spi.LiteralBitmap" />
+    
+    <type name="a" class="org.nucleus8583.core.field.spi.AsciiText" />
+    <type name="n" class="org.nucleus8583.core.field.spi.AsciiText" alignment="right" padWith="0" emptyValue="0" />
+    <type name="s" class="org.nucleus8583.core.field.spi.AsciiText" />
+    <type name="an" class="org.nucleus8583.core.field.spi.AsciiText" />
+    <type name="ns" class="org.nucleus8583.core.field.spi.AsciiText" />
+    <type name="ans" class="org.nucleus8583.core.field.spi.AsciiText" />
+    
+    <type name="amount" class="org.nucleus8583.core.field.spi.AsciiAmount" />
+    
+    <type name="b" class="org.nucleus8583.core.field.spi.Base16Binary" />
+    <type name="lb" class="org.nucleus8583.core.field.spi.LiteralBinary" />
+    
+    <type name="bcd" class="org.nucleus8583.core.field.spi.BcdNumeric" />
+    <type name="bcd amount" class="org.nucleus8583.core.field.spi.BcdAmount" />
+    
+    <type name="ebcdic" class="org.nucleus8583.core.field.spi.EbcdicText" />
+    <type name="ebcdic amount" class="org.nucleus8583.core.field.spi.EbcdicAmount" />
+    
+    <type name="a ." class="org.nucleus8583.core.field.spi.AsciiPrefixedAsciiText" prefixLength="1" maxLength="9" />
+    <type name="a .." class="org.nucleus8583.core.field.spi.AsciiPrefixedAsciiText" prefixLength="2" maxLength="99" />
+    <type name="a ..." class="org.nucleus8583.core.field.spi.AsciiPrefixedAsciiText" prefixLength="3" maxLength="999" />
+    <type name="a ...." class="org.nucleus8583.core.field.spi.AsciiPrefixedAsciiText" prefixLength="4" maxLength="9999" />
+    <type name="a ....." class="org.nucleus8583.core.field.spi.AsciiPrefixedAsciiText" prefixLength="5" maxLength="99999" />
+    
+    <type name="n ." class="org.nucleus8583.core.field.spi.AsciiPrefixedAsciiText" prefixLength="1" maxLength="9" />
+    <type name="n .." class="org.nucleus8583.core.field.spi.AsciiPrefixedAsciiText" prefixLength="2" maxLength="99" />
+    <type name="n ..." class="org.nucleus8583.core.field.spi.AsciiPrefixedAsciiText" prefixLength="3" maxLength="999" />
+    <type name="n ...." class="org.nucleus8583.core.field.spi.AsciiPrefixedAsciiText" prefixLength="4" maxLength="9999" />
+    <type name="n ....." class="org.nucleus8583.core.field.spi.AsciiPrefixedAsciiText" prefixLength="5" maxLength="99999" />
+    
+    <type name="s ." class="org.nucleus8583.core.field.spi.AsciiPrefixedAsciiText" prefixLength="1" maxLength="9" />
+    <type name="s .." class="org.nucleus8583.core.field.spi.AsciiPrefixedAsciiText" prefixLength="2" maxLength="99" />
+    <type name="s ..." class="org.nucleus8583.core.field.spi.AsciiPrefixedAsciiText" prefixLength="3" maxLength="999" />
+    <type name="s ...." class="org.nucleus8583.core.field.spi.AsciiPrefixedAsciiText" prefixLength="4" maxLength="9999" />
+    <type name="s ....." class="org.nucleus8583.core.field.spi.AsciiPrefixedAsciiText" prefixLength="5" maxLength="99999" />
+    
+    <type name="an ." class="org.nucleus8583.core.field.spi.AsciiPrefixedAsciiText" prefixLength="1" maxLength="9" />
+    <type name="an .." class="org.nucleus8583.core.field.spi.AsciiPrefixedAsciiText" prefixLength="2" maxLength="99" />
+    <type name="an ..." class="org.nucleus8583.core.field.spi.AsciiPrefixedAsciiText" prefixLength="3" maxLength="999" />
+    <type name="an ...." class="org.nucleus8583.core.field.spi.AsciiPrefixedAsciiText" prefixLength="4" maxLength="9999" />
+    <type name="an ....." class="org.nucleus8583.core.field.spi.AsciiPrefixedAsciiText" prefixLength="5" maxLength="99999" />
+    
+    <type name="ns ." class="org.nucleus8583.core.field.spi.AsciiPrefixedAsciiText" prefixLength="1" maxLength="9" />
+    <type name="ns .." class="org.nucleus8583.core.field.spi.AsciiPrefixedAsciiText" prefixLength="2" maxLength="99" />
+    <type name="ns ..." class="org.nucleus8583.core.field.spi.AsciiPrefixedAsciiText" prefixLength="3" maxLength="999" />
+    <type name="ns ...." class="org.nucleus8583.core.field.spi.AsciiPrefixedAsciiText" prefixLength="4" maxLength="9999" />
+    <type name="ns ....." class="org.nucleus8583.core.field.spi.AsciiPrefixedAsciiText" prefixLength="5" maxLength="99999" />
+    
+    <type name="ans ." class="org.nucleus8583.core.field.spi.AsciiPrefixedAsciiText" prefixLength="1" maxLength="9" />
+    <type name="ans .." class="org.nucleus8583.core.field.spi.AsciiPrefixedAsciiText" prefixLength="2" maxLength="99" />
+    <type name="ans ..." class="org.nucleus8583.core.field.spi.AsciiPrefixedAsciiText" prefixLength="3" maxLength="999" />
+    <type name="ans ...." class="org.nucleus8583.core.field.spi.AsciiPrefixedAsciiText" prefixLength="4" maxLength="9999" />
+    <type name="ans ....." class="org.nucleus8583.core.field.spi.AsciiPrefixedAsciiText" prefixLength="5" maxLength="99999" />
+    
+    <type name="b ." class="org.nucleus8583.core.field.spi.AsciiPrefixedBase16Binary" prefixLength="1" maxLength="9" />
+    <type name="b .." class="org.nucleus8583.core.field.spi.AsciiPrefixedBase16Binary" prefixLength="2" maxLength="99" />
+    <type name="b ..." class="org.nucleus8583.core.field.spi.AsciiPrefixedBase16Binary" prefixLength="3" maxLength="999" />
+    <type name="b ...." class="org.nucleus8583.core.field.spi.AsciiPrefixedBase16Binary" prefixLength="4" maxLength="9999" />
+    <type name="b ....." class="org.nucleus8583.core.field.spi.AsciiPrefixedBase16Binary" prefixLength="5" maxLength="99999" />
+    
+    <type name="lb ." class="org.nucleus8583.core.field.spi.AsciiPrefixedLiteralBinary" prefixLength="1" maxLength="9" />
+    <type name="lb .." class="org.nucleus8583.core.field.spi.AsciiPrefixedLiteralBinary" prefixLength="2" maxLength="99" />
+    <type name="lb ..." class="org.nucleus8583.core.field.spi.AsciiPrefixedLiteralBinary" prefixLength="3" maxLength="999" />
+    <type name="lb ...." class="org.nucleus8583.core.field.spi.AsciiPrefixedLiteralBinary" prefixLength="4" maxLength="9999" />
+    <type name="lb ....." class="org.nucleus8583.core.field.spi.AsciiPrefixedLiteralBinary" prefixLength="5" maxLength="99999" />
+    
+    <type name="a . bcd" class="org.nucleus8583.core.field.spi.BcdPrefixedAsciiText" prefixLength="1" maxLength="9" />
+    <type name="a .. bcd" class="org.nucleus8583.core.field.spi.BcdPrefixedAsciiText" prefixLength="2" maxLength="99" />
+    <type name="a ... bcd" class="org.nucleus8583.core.field.spi.BcdPrefixedAsciiText" prefixLength="3" maxLength="999" />
+    <type name="a .... bcd" class="org.nucleus8583.core.field.spi.BcdPrefixedAsciiText" prefixLength="4" maxLength="9999" />
+    <type name="a ..... bcd" class="org.nucleus8583.core.field.spi.BcdPrefixedAsciiText" prefixLength="5" maxLength="99999" />
+    
+    <type name="n . bcd" class="org.nucleus8583.core.field.spi.BcdPrefixedAsciiText" prefixLength="1" maxLength="9" />
+    <type name="n .. bcd" class="org.nucleus8583.core.field.spi.BcdPrefixedAsciiText" prefixLength="2" maxLength="99" />
+    <type name="n ... bcd" class="org.nucleus8583.core.field.spi.BcdPrefixedAsciiText" prefixLength="3" maxLength="999" />
+    <type name="n .... bcd" class="org.nucleus8583.core.field.spi.BcdPrefixedAsciiText" prefixLength="4" maxLength="9999" />
+    <type name="n ..... bcd" class="org.nucleus8583.core.field.spi.BcdPrefixedAsciiText" prefixLength="5" maxLength="99999" />
+    
+    <type name="s . bcd" class="org.nucleus8583.core.field.spi.BcdPrefixedAsciiText" prefixLength="1" maxLength="9" />
+    <type name="s .. bcd" class="org.nucleus8583.core.field.spi.BcdPrefixedAsciiText" prefixLength="2" maxLength="99" />
+    <type name="s ... bcd" class="org.nucleus8583.core.field.spi.BcdPrefixedAsciiText" prefixLength="3" maxLength="999" />
+    <type name="s .... bcd" class="org.nucleus8583.core.field.spi.BcdPrefixedAsciiText" prefixLength="4" maxLength="9999" />
+    <type name="s ..... bcd" class="org.nucleus8583.core.field.spi.BcdPrefixedAsciiText" prefixLength="5" maxLength="99999" />
+    
+    <type name="an . bcd" class="org.nucleus8583.core.field.spi.BcdPrefixedAsciiText" prefixLength="1" maxLength="9" />
+    <type name="an .. bcd" class="org.nucleus8583.core.field.spi.BcdPrefixedAsciiText" prefixLength="2" maxLength="99" />
+    <type name="an ... bcd" class="org.nucleus8583.core.field.spi.BcdPrefixedAsciiText" prefixLength="3" maxLength="999" />
+    <type name="an .... bcd" class="org.nucleus8583.core.field.spi.BcdPrefixedAsciiText" prefixLength="4" maxLength="9999" />
+    <type name="an ..... bcd" class="org.nucleus8583.core.field.spi.BcdPrefixedAsciiText" prefixLength="5" maxLength="99999" />
+    
+    <type name="as . bcd" class="org.nucleus8583.core.field.spi.BcdPrefixedAsciiText" prefixLength="1" maxLength="9" />
+    <type name="as .. bcd" class="org.nucleus8583.core.field.spi.BcdPrefixedAsciiText" prefixLength="2" maxLength="99" />
+    <type name="as ... bcd" class="org.nucleus8583.core.field.spi.BcdPrefixedAsciiText" prefixLength="3" maxLength="999" />
+    <type name="as .... bcd" class="org.nucleus8583.core.field.spi.BcdPrefixedAsciiText" prefixLength="4" maxLength="9999" />
+    <type name="as ..... bcd" class="org.nucleus8583.core.field.spi.BcdPrefixedAsciiText" prefixLength="5" maxLength="99999" />
+    
+    <type name="ns . bcd" class="org.nucleus8583.core.field.spi.BcdPrefixedAsciiText" prefixLength="1" maxLength="9" />
+    <type name="ns .. bcd" class="org.nucleus8583.core.field.spi.BcdPrefixedAsciiText" prefixLength="2" maxLength="99" />
+    <type name="ns ... bcd" class="org.nucleus8583.core.field.spi.BcdPrefixedAsciiText" prefixLength="3" maxLength="999" />
+    <type name="ns .... bcd" class="org.nucleus8583.core.field.spi.BcdPrefixedAsciiText" prefixLength="4" maxLength="9999" />
+    <type name="ns ..... bcd" class="org.nucleus8583.core.field.spi.BcdPrefixedAsciiText" prefixLength="5" maxLength="99999" />
+    
+    <type name="ans . bcd" class="org.nucleus8583.core.field.spi.BcdPrefixedAsciiText" prefixLength="1" maxLength="9" />
+    <type name="ans .. bcd" class="org.nucleus8583.core.field.spi.BcdPrefixedAsciiText" prefixLength="2" maxLength="99" />
+    <type name="ans ... bcd" class="org.nucleus8583.core.field.spi.BcdPrefixedAsciiText" prefixLength="3" maxLength="999" />
+    <type name="ans .... bcd" class="org.nucleus8583.core.field.spi.BcdPrefixedAsciiText" prefixLength="4" maxLength="9999" />
+    <type name="ans ..... bcd" class="org.nucleus8583.core.field.spi.BcdPrefixedAsciiText" prefixLength="5" maxLength="99999" />
+    
+    <type name="b . bcd" class="org.nucleus8583.core.field.spi.BcdPrefixedBase16Binary" prefixLength="1" maxLength="9" />
+    <type name="b .. bcd" class="org.nucleus8583.core.field.spi.BcdPrefixedBase16Binary" prefixLength="2" maxLength="99" />
+    <type name="b ... bcd" class="org.nucleus8583.core.field.spi.BcdPrefixedBase16Binary" prefixLength="3" maxLength="999" />
+    <type name="b .... bcd" class="org.nucleus8583.core.field.spi.BcdPrefixedBase16Binary" prefixLength="4" maxLength="9999" />
+    <type name="b ..... bcd" class="org.nucleus8583.core.field.spi.BcdPrefixedBase16Binary" prefixLength="5" maxLength="99999" />
+    
+    <type name="lb . bcd" class="org.nucleus8583.core.field.spi.BcdPrefixedLiteralBinary" prefixLength="1" maxLength="9" />
+    <type name="lb .. bcd" class="org.nucleus8583.core.field.spi.BcdPrefixedLiteralBinary" prefixLength="2" maxLength="99" />
+    <type name="lb ... bcd" class="org.nucleus8583.core.field.spi.BcdPrefixedLiteralBinary" prefixLength="3" maxLength="999" />
+    <type name="lb .... bcd" class="org.nucleus8583.core.field.spi.BcdPrefixedLiteralBinary" prefixLength="4" maxLength="9999" />
+    <type name="lb ..... bcd" class="org.nucleus8583.core.field.spi.BcdPrefixedLiteralBinary" prefixLength="5" maxLength="99999" />
+    
+    <type name="bcd . bcd" class="org.nucleus8583.core.field.spi.BcdPrefixedBcdNumeric" prefixLength="1" maxLength="9" />
+    <type name="bcd .. bcd" class="org.nucleus8583.core.field.spi.BcdPrefixedBcdNumeric" prefixLength="2" maxLength="99" />
+    <type name="bcd ... bcd" class="org.nucleus8583.core.field.spi.BcdPrefixedBcdNumeric" prefixLength="3" maxLength="999" />
+    <type name="bcd .... bcd" class="org.nucleus8583.core.field.spi.BcdPrefixedBcdNumeric" prefixLength="4" maxLength="9999" />
+    <type name="bcd ..... bcd" class="org.nucleus8583.core.field.spi.BcdPrefixedBcdNumeric" prefixLength="5" maxLength="99999" />
+    
+    <type name="ebcdic . bcd" class="org.nucleus8583.core.field.spi.BcdPrefixedEbcdicText" prefixLength="1" maxLength="9" />
+    <type name="ebcdic .. bcd" class="org.nucleus8583.core.field.spi.BcdPrefixedEbcdicText" prefixLength="2" maxLength="99" />
+    <type name="ebcdic ... bcd" class="org.nucleus8583.core.field.spi.BcdPrefixedEbcdicText" prefixLength="3" maxLength="999" />
+    <type name="ebcdic .... bcd" class="org.nucleus8583.core.field.spi.BcdPrefixedEbcdicText" prefixLength="4" maxLength="9999" />
+    <type name="ebcdic ..... bcd" class="org.nucleus8583.core.field.spi.BcdPrefixedEbcdicText" prefixLength="5" maxLength="99999" />
+    
+    <type name="bcd . ebcdic" class="org.nucleus8583.core.field.spi.EbcdicPrefixedBcdNumeric" prefixLength="1" maxLength="9" />
+    <type name="bcd .. ebcdic" class="org.nucleus8583.core.field.spi.EbcdicPrefixedBcdNumeric" prefixLength="2" maxLength="99" />
+    <type name="bcd ... ebcdic" class="org.nucleus8583.core.field.spi.EbcdicPrefixedBcdNumeric" prefixLength="3" maxLength="999" />
+    <type name="bcd .... ebcdic" class="org.nucleus8583.core.field.spi.EbcdicPrefixedBcdNumeric" prefixLength="4" maxLength="9999" />
+    <type name="bcd ..... ebcdic" class="org.nucleus8583.core.field.spi.EbcdicPrefixedBcdNumeric" prefixLength="5" maxLength="99999" />
+    
+    <type name="ebcdic . ebcdic" class="org.nucleus8583.core.field.spi.EbcdicPrefixedEbcdicText" prefixLength="1" maxLength="9" />
+    <type name="ebcdic .. ebcdic" class="org.nucleus8583.core.field.spi.EbcdicPrefixedEbcdicText" prefixLength="2" maxLength="99" />
+    <type name="ebcdic ... ebcdic" class="org.nucleus8583.core.field.spi.EbcdicPrefixedEbcdicText" prefixLength="3" maxLength="999" />
+    <type name="ebcdic .... ebcdic" class="org.nucleus8583.core.field.spi.EbcdicPrefixedEbcdicText" prefixLength="4" maxLength="9999" />
+    <type name="ebcdic ..... ebcdic" class="org.nucleus8583.core.field.spi.EbcdicPrefixedEbcdicText" prefixLength="5" maxLength="99999" />
+</nucleus8583>

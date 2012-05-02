@@ -5,418 +5,282 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.URL;
-import java.util.Arrays;
-import java.util.Comparator;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.nucleus8583.core.field.type.FieldType;
-import org.nucleus8583.core.field.type.FieldTypes;
+import org.nucleus8583.core.field.DefaultFields;
+import org.nucleus8583.core.field.Field;
+import org.nucleus8583.core.field.Type;
 import org.nucleus8583.core.util.BitmapHelper;
-import org.nucleus8583.core.util.ResourceUtils;
-import org.nucleus8583.core.xml.FieldDefinition;
-import org.nucleus8583.core.xml.MessageDefinition;
-import org.nucleus8583.core.xml.MessageDefinitionReader;
-import org.w3c.dom.Node;
-import org.xml.sax.SAXParseException;
 
 /**
- * Serialize/deserialize {@link Message} object. Creating this class requires
- * configuration.
- *
+ * Serialize/deserialize {@link Message} object. This class can be instatiated
+ * using {@link XmlContext} object.
+ * 
  * @author Robbi Kurniawan
- *
+ * 
  */
 public final class MessageSerializer {
+	
+	public static MessageSerializer create(String location) {
+		return new XmlContext(location).getMessageSerializer();
+	}
 
-    private static final Comparator<FieldType> ORDER_BY_ID_ASC = new Comparator<FieldType>() {
+	private boolean hasMti;
 
-        public int compare(FieldType a, FieldType b) {
-            return a.getId() - b.getId();
-        }
-    };
+	@SuppressWarnings("rawtypes")
+	private Type[] types;
 
-    /**
-     * same as <code>
-     *     return new MessageSerializer(location);
-     * </code>
-     *
-     * @param location
-     * @return a new instance of MessageSerializer.
-     */
-    public static MessageSerializer create(String location) {
-        return new MessageSerializer(location);
-    }
+	private int count;
+	
+	/**
+	 * INTERNAL USE ONLY
+	 */
+	public MessageSerializer() {
+		// do nothing
+	}
 
-    /**
-     * same as <code>
-     *     return new MessageSerializer(in);
-     * </code>
-     *
-     * @param in
-     * @return a new instance of MessageSerializer.
-     */
-    public static MessageSerializer create(InputStream in) {
-        return new MessageSerializer(in);
-    }
+	private boolean setIfAbsent(int no, Field value, List<Field> fields,
+			int count) {
+		for (int i = 0; i < count; ++i) {
+			Field def = fields.get(i);
 
-    /**
-     * same as <code>
-     *     return new MessageSerializer(node);
-     * </code>
-     *
-     * @param node
-     * @return a new instance of MessageSerializer.
-     */
-    public static MessageSerializer create(Node node) {
-        return new MessageSerializer(node);
-    }
+			if (def.getNo() == no) {
+				return false;
+			}
+		}
 
-    private boolean hasMti;
+		fields.add(value);
+		return true;
+	}
 
-    private FieldType[] fields;
+	private void checkDuplicateNo(List<Field> list, int count) {
+		Set<Integer> set = new HashSet<Integer>();
 
-    private boolean[] binaries;
+		for (int i = 0; i < count; ++i) {
+			Integer id = Integer.valueOf(list.get(i).getNo());
 
-    private int fieldsCount;
+			if (set.contains(id)) {
+				throw new IllegalArgumentException("duplicate no " + id
+						+ " found");
+			}
 
-    /**
-     * create a new instance of {@link MessageSerializer} using given
-     * configuration.
-     *
-     * For example, if you want to load "nucleus8583.xml" from "META-INF"
-     * located in classpath, the location should be
-     * <code>classpath:META-INF/nucleus8583.xml</code>.
-     *
-     * If you want to load "nucleus8583.xml" from "conf" directory, the location
-     * should be <code>file:conf/nucleus8583.xml</code> or just
-     * <code>conf/nucleus8583.xml</code>.
-     *
-     * @param location
-     *            configuration location (in URI)
-     */
-    public MessageSerializer(String location) {
-        URL found = ResourceUtils.getURL(location);
-        if (found == null) {
-            throw new RuntimeException("unable to find " + location);
-        }
+			set.add(id);
+		}
+	}
 
-        MessageDefinition definition;
+	public void setFields(List<Field> fields) {
+		count = fields.size();
 
-        try {
-            definition = new MessageDefinitionReader().unmarshal(found);
-        } catch (SAXParseException e) {
-        	throw new IllegalArgumentException("invalid file format (line #" + e.getLineNumber() + ": " + e.getMessage() + ")");
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+		// has field #0?
+		hasMti = !setIfAbsent(0, DefaultFields.FIELD_0, fields, count);
 
-        init(definition);
-    }
+		// check duplicate numbers
+		checkDuplicateNo(fields, count);
 
-    /**
-     * create a new instance of {@link MessageSerializer} using given
-     * configuration
-     *
-     * @param in
-     *            input stream
-     */
-    public MessageSerializer(InputStream in) {
-        MessageDefinition definition;
+		// re-assign new count
+		count = fields.size();
 
-        try {
-            definition = new MessageDefinitionReader().unmarshal(in);
-        } catch (SAXParseException e) {
-        	throw new IllegalArgumentException("invalid file format (line #" + e.getLineNumber() + ": " + e.getMessage() + ")");
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+		// sort fields by it's id
+		Collections.sort(fields, Field.COMPARATOR_ASC);
 
-        init(definition);
-    }
+		// check for skipped fields
+		for (int i = hasMti ? 0 : 1; i < count; ++i) {
+			if (fields.get(i).getNo() != i) {
+				throw new IllegalArgumentException("field #" + i
+						+ " is not defined");
+			}
+		}
 
-    /**
-     * create a new instance of {@link MessageSerializer} using given
-     * configuration
-     *
-     * @param node
-     *            an DOM node where the entire XML start from
-     */
-    public MessageSerializer(Node node) {
-        MessageDefinition definition;
+		// gather types
+		types = new Type[count];
 
-        try {
-            definition = new MessageDefinitionReader().unmarshal(node);
-        } catch (SAXParseException e) {
-        	throw new IllegalArgumentException("invalid file format (line #" + e.getLineNumber() + ": " + e.getMessage() + ")");
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+		for (int i = hasMti ? 0 : 1; i < count; ++i) {
+			types[i] = fields.get(i).getType();
+		}
+	}
 
-        init(definition);
-    }
+	/**
+	 * read serialized data from buffer and set it's values to given
+	 * {@link Message} object
+	 * 
+	 * @param buf
+	 *            The buffer
+	 * @param out
+	 *            The {@link Message} object
+	 * @throws IOException
+	 *             thrown if the buffer length is shorter than expected.
+	 */
+	public void read(byte[] buf, Message out) throws IOException {
+		read(new ByteArrayInputStream(buf), out);
+	}
 
-    private boolean setIfAbsent(int id, FieldDefinition value, List<FieldDefinition> fields, int count) {
-        for (int i = 0; i < count; ++i) {
-            FieldDefinition def = fields.get(i);
+	/**
+	 * read serialized data from stream and set it's values to given
+	 * {@link Message} object
+	 * 
+	 * @param in
+	 *            The stream
+	 * @param out
+	 *            The {@link Message} object
+	 * @throws IOException
+	 *             thrown if an IO error occurred while serializing.
+	 */
+	public void read(InputStream in, Message out) throws IOException {
+		byte[] bits1To128 = out.bits1To128;
+		byte[] bits129To192 = out.bits129To192;
 
-            if (def.getId() == id) {
-                return false;
-            }
-        }
+		int count = out.count;
 
-        fields.add(value);
-        return true;
-    }
+		if (count > this.count) {
+			count = this.count;
+		}
 
-    private void checkDuplicateId(List<FieldDefinition> list, int count) {
-        Set<Integer> set = new HashSet<Integer>();
+		int i = 0;
 
-        for (int i = 0; i < count; ++i) {
-            Integer id = Integer.valueOf(list.get(i).getId());
+		try {
+			if (hasMti) {
+				// read bit-0
+				out.setMti(types[0].read(in));
+			}
 
-            if (set.contains(id)) {
-                throw new IllegalArgumentException("duplicate id " + id + " found");
-            }
+			// read bit-1
+			i = 1;
+			types[1].readBitmap(in, bits1To128, 0, 8);
 
-            set.add(id);
-        }
-    }
+			if (BitmapHelper.get(bits1To128, 0)) {
+				types[1].readBitmap(in, bits1To128, 8, 8);
+			}
 
-    private void init(MessageDefinition definition) {
-        List<FieldDefinition> fields = definition.getFields();
-        int count = fields.size();
+			// read bit-i
+			i = 2;
+			for (int iMin1 = 1, iMin129 = -127; i < count; ++i, ++iMin1, ++iMin129) {
+				if (i == 65) {
+					if (BitmapHelper.get(bits1To128, 64)) {
+						types[i].readBitmap(in, bits129To192, 0, 8);
+					}
+				} else if (i < 129) {
+					if (BitmapHelper.get(bits1To128, iMin1)) {
+						out.unsafeSet(i, types[i].read(in));
+					}
+				} else {
+					if (BitmapHelper.get(bits129To192, iMin129)) {
+						out.unsafeSet(i, types[i].read(in));
+					}
+				}
+			}
+		} catch (IOException ex) {
+			throw (IOException) new IOException("unable to read field #" + i)
+					.initCause(ex);
+		} catch (RuntimeException ex) {
+			throw new RuntimeException("unable to read field #" + i, ex);
+		}
+	}
 
-        hasMti = !setIfAbsent(0, FieldDefinition.FIELD_0, fields, count);
+	/**
+	 * serialize {@link Message} object into internal byte buffer and return the
+	 * buffer
+	 * 
+	 * @param msg
+	 *            The {@link Message} object
+	 */
+	public byte[] write(Message msg) {
+		ByteArrayOutputStream out = new ByteArrayOutputStream();
 
-        // set field 1 if absent
-        setIfAbsent(1, FieldDefinition.FIELD_1, fields, count);
+		try {
+			write(msg, out);
+		} catch (IOException e) {
+			// never been here
+		}
 
-        // set field 65 if absent
-        setIfAbsent(65, FieldDefinition.FIELD_65, fields, count);
+		return out.toByteArray();
+	}
 
-        checkDuplicateId(fields, count);
+	/**
+	 * serialize {@link Message} object into given stream
+	 * 
+	 * @param msg
+	 *            The {@link Message} object
+	 * @param out
+	 *            The stream
+	 * @throws IOException
+	 *             thrown if an IO error occurred while serializing.
+	 */
+	@SuppressWarnings("unchecked")
+	public void write(Message msg, OutputStream out) throws IOException {
+		byte[] bits1To128 = msg.bits1To128;
+		byte[] bits129To192 = msg.bits129To192;
 
-        fieldsCount = fields.size();
-        this.fields = new FieldType[fieldsCount];
+		Object[] values = msg.values;
 
-        FieldTypes.initialize();
+		// is bit 1 (secondary bitmap) on?
+		boolean bit1IsOn = false;
 
-        for (int i = 0; i < fieldsCount; ++i) {
-            try {
-                this.fields[i] = FieldTypes.getType(fields.get(i));
-            } catch (RuntimeException ex) {
-                throw new RuntimeException("unable to instantiate iso field number " + fields.get(i).getId(), ex);
-            }
-        }
+		if (BitmapHelper.realBytesInUse(bits1To128) > 8) {
+			BitmapHelper.set(bits1To128, 0);
 
-        // sort fields by it's id
-        Arrays.sort(this.fields, ORDER_BY_ID_ASC);
+			bit1IsOn = true;
+		} else {
+			BitmapHelper.clear(bits1To128, 0);
+		}
 
-        // check for skipped fields
-        for (int i = hasMti ? 1 : 0; i < fieldsCount; ++i) {
-            if (this.fields[i].getId() != i) {
-                throw new IllegalArgumentException("field #" + i + " is not defined");
-            }
-        }
+		// is bit 65 (tertiary bitmap) on?
+		if (BitmapHelper.isEmpty(bits129To192)) {
+			BitmapHelper.clear(bits1To128, 64);
 
-        binaries = new boolean[fieldsCount];
-        for (int i = fieldsCount - 1; i >= 0; --i) {
-            binaries[i] = this.fields[i].isBinary();
-        }
-    }
+			values[65] = null;
+		} else {
+			if (!bit1IsOn) {
+				BitmapHelper.set(bits1To128, 0); // bit 1 must set on
 
-    /**
-     * read serialized data from buffer and set it's values to given
-     * {@link Message} object
-     *
-     * @param buf
-     *            The buffer
-     * @param out
-     *            The {@link Message} object
-     * @throws IOException
-     *             thrown if the buffer length is shorter than expected.
-     */
-    public void read(byte[] buf, Message out) throws IOException {
-        read(new ByteArrayInputStream(buf), out);
-    }
+				bit1IsOn = true;
+			}
 
-    /**
-     * read serialized data from stream and set it's values to given
-     * {@link Message} object
-     *
-     * @param in
-     *            The stream
-     * @param out
-     *            The {@link Message} object
-     * @throws IOException
-     *             thrown if an IO error occurred while serializing.
-     */
-    public void read(InputStream in, Message out) throws IOException {
-        byte[] bits1To128 = out.directBits1To128();
-        byte[] bits129To192 = out.directBits129To192();
+			BitmapHelper.set(bits1To128, 64);
 
-        int count = out.size();
-        if (count > fieldsCount) {
-            count = fieldsCount;
-        }
+			values[65] = bits129To192;
+		}
 
-        int i = 0;
-        try {
-            if (hasMti) {
-                // read bit-0
-                out.setMti(fields[0].readString(in));
-            }
+		int count = msg.count;
+		if (count > this.count) {
+			count = this.count;
+		}
 
-            // read bit-1
-            i = 1;
-            fields[1].read(in, bits1To128, 0, 8);
+		int i = 0;
 
-            if (BitmapHelper.get(bits1To128, 0)) {
-                fields[1].read(in, bits1To128, 8, 8);
-            }
+		try {
+			// write bit 0
+			if (hasMti) {
+				types[0].write(out, msg.getMti());
+			}
 
-            // read bit-i
-            i = 2;
-            for (int iMin1 = 1, iMin129 = -127; i < count; ++i, ++iMin1, ++iMin129) {
-                if (i == 65) {
-                    if (BitmapHelper.get(bits1To128, 64)) {
-                        fields[i].read(in, bits129To192, 0, 8);
-                    }
-                } else if (i < 129) {
-                    if (BitmapHelper.get(bits1To128, iMin1)) {
-                        if (binaries[i]) {
-                            out.unsafeSet(i, fields[i].readBinary(in));
-                        } else {
-                            out.unsafeSet(i, fields[i].readString(in));
-                        }
-                    }
-                } else {
-                    if (BitmapHelper.get(bits129To192, iMin129)) {
-                        if (binaries[i]) {
-                            out.unsafeSet(i, fields[i].readBinary(in));
-                        } else {
-                            out.unsafeSet(i, fields[i].readString(in));
-                        }
-                    }
-                }
-            }
-        } catch (IOException ex) {
-            throw (IOException) new IOException("unable to read field #" + i).initCause(ex);
-        } catch (RuntimeException ex) {
-            throw new RuntimeException("unable to read field #" + i, ex);
-        }
-    }
+			// write bit 1 (primary + secondary bitmap)
+			i = 1;
+			types[1].writeBitmap(out, bits1To128, 0, bit1IsOn ? 16 : 8);
 
-    /**
-     * serialize {@link Message} object into internal byte buffer and return the
-     * buffer
-     *
-     * @param msg
-     *            The {@link Message} object
-     */
-    public byte[] write(Message msg) {
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
+			// write bit i
+			i = 2;
+			for (int j = 1; (i < count) && (i < 129); ++i, ++j) {
+				if (BitmapHelper.get(bits1To128, j)) {
+					if (i == 65) {
+						// tertiary bitmap
+						types[i].writeBitmap(out, (byte[]) values[i], 0, 8);
+					} else {
+						types[i].write(out, values[i]);
+					}
+				}
+			}
 
-        try {
-            write(msg, out);
-        } catch (IOException e) {
-            // never been here
-        }
-
-        return out.toByteArray();
-    }
-
-    /**
-     * serialize {@link Message} object into given stream
-     *
-     * @param msg
-     *            The {@link Message} object
-     * @param out
-     *            The stream
-     * @throws IOException
-     *             thrown if an IO error occurred while serializing.
-     */
-    public void write(Message msg, OutputStream out) throws IOException {
-        byte[] bits1To128 = msg.directBits1To128();
-        byte[] bits129To192 = msg.directBits129To192();
-
-        byte[][] binaryValues = msg.directBinaryValues();
-        String[] stringValues = msg.directStringValues();
-
-        // is bit 1 on?
-        boolean bit1IsOn = false;
-
-        if (BitmapHelper.realBytesInUse(bits1To128) > 8) {
-            BitmapHelper.set(bits1To128, 0);
-            bit1IsOn = true;
-        } else {
-            BitmapHelper.clear(bits1To128, 0);
-        }
-
-        // is bit 65 on?
-        if (BitmapHelper.isEmpty(bits129To192)) {
-            BitmapHelper.clear(bits1To128, 64);
-
-            binaryValues[65] = null;
-            stringValues[65] = null;
-        } else {
-            if (!bit1IsOn) {
-                BitmapHelper.set(bits1To128, 0); // bit 1 must be on
-                bit1IsOn = true;
-            }
-            BitmapHelper.set(bits1To128, 64);
-
-            binaryValues[65] = bits129To192;
-            stringValues[65] = null;
-        }
-
-        int count = msg.size();
-        if (count > fieldsCount) {
-            count = fieldsCount;
-        }
-
-        int i = 0;
-        try {
-            // write bit 0
-            if (hasMti) {
-                fields[0].write(out, msg.getMti());
-            }
-
-            // write bit 1
-            i = 1;
-            fields[1].write(out, bits1To128, 0, bit1IsOn ? 16 : 8);
-
-            // write bit i
-            i = 2;
-            for (int j = 1; (i < count) && (i < 129); ++i, ++j) {
-                if (BitmapHelper.get(bits1To128, j)) {
-                    if (i == 65) {
-                        fields[i].write(out, binaryValues[i], 0, 8);
-                    } else {
-                        if (binaries[i]) {
-                            fields[i].write(out, binaryValues[i]);
-                        } else {
-                            fields[i].write(out, stringValues[i]);
-                        }
-                    }
-                }
-            }
-
-            i = 129;
-            for (int j = 0; i < count; ++i, ++j) {
-                if (BitmapHelper.get(bits129To192, j)) {
-                    if (binaries[i]) {
-                        fields[i].write(out, binaryValues[i]);
-                    } else {
-                        fields[i].write(out, stringValues[i]);
-                    }
-                }
-            }
-        } catch (RuntimeException ex) {
-            throw new RuntimeException("unable to write field #" + i, ex);
-        }
-    }
+			i = 129;
+			for (int j = 0; i < count; ++i, ++j) {
+				if (BitmapHelper.get(bits129To192, j)) {
+					types[i].write(out, values[i]);
+				}
+			}
+		} catch (Throwable t) {
+			throw new RuntimeException("unable to write field #" + i, t);
+		}
+	}
 }

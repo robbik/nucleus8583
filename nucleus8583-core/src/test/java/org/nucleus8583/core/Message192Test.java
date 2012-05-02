@@ -36,22 +36,6 @@ public class Message192Test {
 
 		error = false;
 		try {
-			msg1.set(0, new byte[0]);
-		} catch (IllegalArgumentException ex) {
-			error = true;
-		}
-		assertTrue(error);
-
-		error = false;
-		try {
-			msg1.getBinary(0);
-		} catch (IllegalArgumentException ex) {
-			error = true;
-		}
-		assertTrue(error);
-
-		error = false;
-		try {
 			msg1.set(1, "ab");
 		} catch (IllegalArgumentException ex) {
 			error = true;
@@ -121,28 +105,23 @@ public class Message192Test {
 		msg1.set(162, "9000");
 		assertTrue(msg1.get(162) instanceof String);
 
-		assertNull(msg1.getBinary(162));
-		assertEquals("9000", msg1.getString(162));
+		assertEquals("9000", msg1.get(162));
 
 		msg1.unset(162);
-		assertNull(msg1.getBinary(162));
-		assertNull(msg1.getString(162));
+		assertNull(msg1.get(162));
 
 		msg1.set(162, "0200");
 		msg1.set(162, (String) null);
 
-		assertNull(msg1.getBinary(162));
-		assertNull(msg1.getString(2));
+		assertNull(msg1.get(162));
 
 		msg1.unsafeSet(162, "9000");
 		assertTrue(msg1.get(162) instanceof String);
 
-		assertNull(msg1.unsafeGetBinary(162));
-		assertEquals("9000", msg1.unsafeGetString(162));
+		assertEquals("9000", msg1.unsafeGet(162));
 
 		msg1.unsafeUnset(162);
-		assertNull(msg1.getBinary(162));
-		assertNull(msg1.getString(162));
+		assertNull(msg1.get(162));
 	}
 
 	@Test
@@ -153,24 +132,20 @@ public class Message192Test {
 		msg1.set(190, ori);
 		assertTrue(msg1.get(190) instanceof byte[]);
 
-		assertNull(msg1.getString(190));
-		assertEquals(ori, msg1.getBinary(190));
+		assertEquals(ori, msg1.get(190));
 
 		msg1.clear();
-		assertNull(msg1.getBinary(190));
-		assertNull(msg1.getString(190));
+		assertNull(msg1.get(190));
 
 		msg1.set(190, ori);
 		msg1.set(190, (byte[]) null);
 
-		assertNull(msg1.getBinary(190));
-		assertNull(msg1.getString(190));
+		assertNull(msg1.get(190));
 
 		msg1.unsafeSet(190, ori);
 		assertTrue(msg1.get(190) instanceof byte[]);
 
-		assertNull(msg1.getString(190));
-		assertEquals(ori, msg1.getBinary(190));
+		assertEquals(ori, msg1.get(190));
 	}
 
 	@Test

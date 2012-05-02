@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<nucleus8583 xmlns="http://www.nucleus8583.org/schema/nucleus8583"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="http://www.nucleus8583.org/schema/nucleus8583 
+                                 http://www.nucleus8583.org/schema/nucleus8583.xsd">
+
+    <import url="classpath:META-INF/nucleus8583/nucleus8583-types.xml" />
+    
+	<message>
+		<!-- <field no="0" type="ans" length="4" alignment="none" /> -->
+
+		<field no="1" type="bitmap" />
+		<field no="2" type="ans .." />
+		<field no="3" type="ans" length="6" alignment="none" />
+		<field no="4" type="ans" length="12" alignment="none" />
+		<field no="5" type="ans" length="12" alignment="none" />
+		<field no="6" type="ans" length="12" alignment="none" />
+		<field no="7" type="ans" length="10" alignment="none" />
+		<field no="8" type="ans" length="8" alignment="none" />
+		<field no="9" type="ans" length="8" alignment="none" />
+		<field no="10" type="ans" length="8" alignment="none" />
+		<field no="11" type="ans" length="6" alignment="none" />
+		<field no="12" type="ans" length="6" alignment="none" />
+		<field no="13" type="ans" length="4" alignment="none" />
+		<field no="14" type="ans" length="4" alignment="none" />
+		<field no="15" type="ans" length="4" alignment="none" />
+		<field no="16" type="ans" length="4" alignment="none" />
+		<field no="17" type="ans" length="4" alignment="none" />
+		<field no="18" type="ans" length="4" alignment="none" />
+		<field no="19" type="ans" length="3" alignment="none" />
+		<field no="20" type="ans" length="3" alignment="none" />
+		<field no="21" type="ans" length="3" alignment="none" />
+		<field no="22" type="ans" length="3" alignment="none" />
+		<field no="23" type="ans" length="3" alignment="none" />
+		<field no="24" type="ans" length="3" alignment="none" />
+		<field no="25" type="ans" length="2" alignment="none" />
+		<field no="26" type="ans" length="2" alignment="none" />
+		<field no="27" type="ans" length="1" alignment="none" />
+		<field no="28" type="ans" length="9" alignment="none" />
+		<field no="29" type="ans" length="9" alignment="none" />
+		<field no="30" type="ans" length="9" alignment="none" />
+		<field no="31" type="ans" length="9" alignment="none" />
+		<field no="32" type="ans .." />
+		<field no="33" type="ans .." />
+		<field no="34" type="ans .." />
+		<field no="35" type="ans .." />
+		<field no="36" type="ans ..." />
+		<field no="37" type="ans" length="12" alignment="none" />
+		<field no="38" type="ans" length="6" alignment="none" />
+		<field no="39" type="ans" length="2" alignment="none" />
+		<field no="40" type="ans" length="3" alignment="none" />
+		<field no="41" type="ans" length="8" alignment="none" />
+		<field no="42" type="ans" length="15" alignment="none" />
+		<field no="43" type="ans" length="40" alignment="none" />
+		<field no="44" type="ans .." />
+		<field no="45" type="ans .." />
+		<field no="46" type="ans ..." />
+		<field no="47" type="ans ..." />
+		<field no="48" type="ans ..." />
+		<field no="49" type="ans" length="3" alignment="none" />
+		<field no="50" type="ans" length="3" alignment="none" />
+		<field no="51" type="ans" length="3" alignment="none" />
+		<field no="52" type="ans" length="16" alignment="none" />
+		<field no="53" type="ans" length="16" alignment="none" />
+		<field no="54" type="ans ..." />
+		<field no="55" type="ans ..." />
+		<field no="56" type="ans ..." />
+		<field no="57" type="ans ..." />
+		<field no="58" type="ans ..." />
+		<field no="59" type="ans ..." />
+		<field no="60" type="ans ..." />
+		<field no="61" type="ans ..." />
+		<field no="62" type="ans ..." />
+		<field no="63" type="ans ..." />
+		<field no="64" type="b" length="16" />
+		<field no="65" type="bitmap" />
+		<field no="66" type="ans" length="1" alignment="none" />
+		<field no="67" type="ans" length="2" alignment="none" />
+		<field no="68" type="ans" length="3" alignment="none" />
+		<field no="69" type="ans" length="3" alignment="none" />
+		<field no="70" type="ans" length="3" alignment="none" />
+		<field no="71" type="ans" length="4" alignment="none" />
+		<field no="72" type="ans" length="4" alignment="none" />
+		<field no="73" type="ans" length="6" alignment="none" />
+		<field no="74" type="ans" length="10" alignment="none" />
+		<field no="75" type="ans" length="10" alignment="none" />
+		<field no="76" type="ans" length="10" alignment="none" />
+		<field no="77" type="ans" length="10" alignment="none" />
+		<field no="78" type="ans" length="10" alignment="none" />
+		<field no="79" type="ans" length="10" alignment="none" />
+		<field no="80" type="ans" length="10" alignment="none" />
+		<field no="81" type="ans" length="10" alignment="none" />
+		<field no="82" type="ans" length="12" alignment="none" />
+		<field no="83" type="ans" length="12" alignment="none" />
+		<field no="84" type="ans" length="12" alignment="none" />
+		<field no="85" type="ans" length="12" alignment="none" />
+		<field no="86" type="ans" length="16" alignment="none" />
+		<field no="87" type="ans" length="16" alignment="none" />
+		<field no="88" type="ans" length="16" alignment="none" />
+		<field no="89" type="ans" length="16" alignment="none" />
+		<field no="90" type="ans" length="26" alignment="none" />
+		<field no="91" type="ans" length="1" alignment="none" />
+		<field no="92" type="ans" length="2" alignment="none" />
+		<field no="93" type="ans" length="6" alignment="none" />
+		<field no="94" type="ans" length="7" alignment="none" />
+		<field no="95" type="ans" length="42" alignment="none" />
+		<field no="96" type="b" length="16" />
+		<field no="97" type="ans" length="17" alignment="none" />
+		<field no="98" type="ans" length="25" alignment="none" />
+		<field no="99" type="ans .." />
+		<field no="100" type="ans .." />
+		<field no="101" type="ans .." />
+		<field no="102" type="ans .." />
+		<field no="103" type="ans .." />
+		<field no="104" type="ans ..." />
+		<field no="105" type="ans ..." />
+		<field no="106" type="ans ..." />
+		<field no="107" type="ans ..." />
+		<field no="108" type="ans ..." />
+		<field no="109" type="ans ..." />
+		<field no="110" type="ans ..." />
+		<field no="111" type="ans ..." />
+		<field no="112" type="ans ..." />
+		<field no="113" type="ans ..." />
+		<field no="114" type="ans ..." />
+		<field no="115" type="ans ..." />
+		<field no="116" type="ans ..." />
+		<field no="117" type="ans ..." />
+		<field no="118" type="ans ..." />
+		<field no="119" type="ans ..." />
+		<field no="120" type="ans ..." />
+		<field no="121" type="ans ..." />
+		<field no="122" type="ans ..." />
+		<field no="123" type="ans ..." />
+		<field no="124" type="ans ..." />
+		<field no="125" type="ans ..." />
+		<field no="126" type="ans ..." />
+		<field no="127" type="ans ..." />
+		<field no="128" type="b" length="8" />
+	</message>
+</nucleus8583>

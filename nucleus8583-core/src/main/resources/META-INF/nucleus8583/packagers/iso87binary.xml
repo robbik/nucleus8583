@@ -1,132 +1,140 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<iso-message xmlns="http://www.nucleus8583.org/schema/iso-message">
-    <iso-field id="0" length="4" type="bcd" align="uright" description="MESSAGE TYPE INDICATOR" />
-    <iso-field id="1" length="16" type="literal bitmap" description="BIT MAP"  />
-    <iso-field id="2" length="19" type="bcd .. bcd" align="uleft" description="PRIMARY ACCOUNT NUMBER" />
-    <iso-field id="3" length="6" type="bcd" align="uright" description="PROCESSING CODE" />
-    <iso-field id="4" length="12" type="bcd" align="uright" description="AMOUNT, TRANSACTION" />
-    <iso-field id="5" length="12" type="bcd" align="uright" description="AMOUNT, SETTLEMENT" />
-    <iso-field id="6" length="12" type="bcd" align="uright" description="AMOUNT, CARDHOLDER BILLING" />
-    <iso-field id="7" length="10" type="bcd" align="uright" description="TRANSMISSION DATE AND TIME" />
-    <iso-field id="8" length="8" type="bcd" align="uright" description="AMOUNT, CARDHOLDER BILLING FEE" />
-    <iso-field id="9" length="8" type="bcd" align="uright" description="CONVERSION RATE, SETTLEMENT" />
-    <iso-field id="10" length="8" type="bcd" align="uright" description="CONVERSION RATE, CARDHOLDER BILLING" />
-    <iso-field id="11" length="6" type="bcd" align="uright" description="SYSTEM TRACE AUDIT NUMBER" />
-    <iso-field id="12" length="6" type="bcd" align="uright" description="TIME, LOCAL TRANSACTION" />
-    <iso-field id="13" length="4" type="bcd" align="uright" description="DATE, LOCAL TRANSACTION" />
-    <iso-field id="14" length="4" type="bcd" align="uright" description="DATE, EXPIRATION" />
-    <iso-field id="15" length="4" type="bcd" align="uright" description="DATE, SETTLEMENT" />
-    <iso-field id="16" length="4" type="bcd" align="uright" description="DATE, CONVERSION" />
-    <iso-field id="17" length="4" type="bcd" align="uright" description="DATE, CAPTURE" />
-    <iso-field id="18" length="4" type="bcd" align="uright" description="MERCHANTS TYPE" />
-    <iso-field id="19" length="3" type="bcd" align="uright" description="ACQUIRING INSTITUTION COUNTRY CODE" />
-    <iso-field id="20" length="3" type="bcd" align="uright" description="PAN EXTENDED COUNTRY CODE" />
-    <iso-field id="21" length="3" type="bcd" align="uright" description="FORWARDING INSTITUTION COUNTRY CODE" />
-    <iso-field id="22" length="3" type="bcd" align="uright" description="POINT OF SERVICE ENTRY MODE" />
-    <iso-field id="23" length="3" type="bcd" align="uright" description="CARD SEQUENCE NUMBER" />
-    <iso-field id="24" length="3" type="bcd" align="uright" description="NETWORK INTERNATIONAL IDENTIFIEER" />
-    <iso-field id="25" length="2" type="bcd" align="uright" description="POINT OF SERVICE CONDITION CODE" />
-    <iso-field id="26" length="2" type="bcd" align="uright" description="POINT OF SERVICE PIN CAPTURE CODE" />
-    <iso-field id="27" length="1" type="bcd" align="uright" description="AUTHORIZATION IDENTIFICATION RESP LEN" />
-    <iso-field id="28" length="9" type="bcd amount" align="uright" description="AMOUNT, TRANSACTION FEE" />
-    <iso-field id="29" length="9" type="bcd amount" align="uright" description="AMOUNT, SETTLEMENT FEE" />
-    <iso-field id="30" length="9" type="bcd amount" align="uright" description="AMOUNT, TRANSACTION PROCESSING FEE" />
-    <iso-field id="31" length="9" type="bcd amount" align="uright" description="AMOUNT, SETTLEMENT PROCESSING FEE" />
-    <iso-field id="32" length="11" type="bcd .. bcd" align="uleft" description="ACQUIRING INSTITUTION IDENT CODE" />
-    <iso-field id="33" length="11" type="bcd .. bcd" align="uleft" description="FORWARDING INSTITUTION IDENT CODE" />
-    <iso-field id="34" length="28" type="an .. bcd" description="PAN EXTENDED" />
-    <iso-field id="35" length="37" type="bcd .. bcd" align="uleft" description="TRACK 2 DATA" />
-    <iso-field id="36" length="104" type="an ... bcd" description="TRACK 3 DATA" />
-    <iso-field id="37" length="12" type="an" align="uleft" description="RETRIEVAL REFERENCE NUMBER" />
-    <iso-field id="38" length="6" type="an" align="uleft" description="AUTHORIZATION IDENTIFICATION RESPONSE" />
-    <iso-field id="39" length="2" type="an" align="uleft" description="RESPONSE CODE" />
-    <iso-field id="40" length="3" type="an" align="uleft" description="SERVICE RESTRICTION CODE" />
-    <iso-field id="41" length="8" type="an" align="uleft" description="CARD ACCEPTOR TERMINAL IDENTIFICACION" />
-    <iso-field id="42" length="15" type="an" align="uleft" description="CARD ACCEPTOR IDENTIFICATION CODE" />
-    <iso-field id="43" length="40" type="an" align="uleft" description="CARD ACCEPTOR NAME/LOCATION" />
-    <iso-field id="44" length="25" type="an .. bcd" description="ADITIONAL RESPONSE DATA" />
-    <iso-field id="45" length="76" type="an .. bcd" description="TRACK 1 DATA" />
-    <iso-field id="46" length="999" type="an ... bcd" description="ADITIONAL DATA - ISO" />
-    <iso-field id="47" length="999" type="an ... bcd" description="ADITIONAL DATA - NATIONAL" />
-    <iso-field id="48" length="999" type="an ... bcd" description="ADITIONAL DATA - PRIVATE" />
-    <iso-field id="49" length="3" type="an" align="uleft" description="CURRENCY CODE, TRANSACTION" />
-    <iso-field id="50" length="3" type="an" align="uleft" description="CURRENCY CODE, SETTLEMENT" />
-    <iso-field id="51" length="3" type="an" align="uleft" description="CURRENCY CODE, CARDHOLDER BILLING" />
-    <iso-field id="52" length="8" type="literal b" align="none" description="PIN DATA" />
-    <iso-field id="53" length="16" type="bcd" align="uright" description="SECURITY RELATED CONTROL INFORMATION" />
-    <iso-field id="54" length="120" type="an ... bcd" description="ADDITIONAL AMOUNTS" />
-    <iso-field id="55" length="999" type="an ... bcd" description="RESERVED ISO" />
-    <iso-field id="56" length="999" type="an ... bcd" description="RESERVED ISO" />
-    <iso-field id="57" length="999" type="an ... bcd" description="RESERVED NATIONAL" />
-    <iso-field id="58" length="999" type="an ... bcd" description="RESERVED NATIONAL" />
-    <iso-field id="59" length="999" type="an ... bcd" description="RESERVED NATIONAL" />
-    <iso-field id="60" length="999" type="an ... bcd" description="RESERVED PRIVATE" />
-    <iso-field id="61" length="999" type="an ... bcd" description="RESERVED PRIVATE" />
-    <iso-field id="62" length="999" type="an ... bcd" description="RESERVED PRIVATE" />
-    <iso-field id="63" length="999" type="an ... bcd" description="RESERVED PRIVATE" />
-    <iso-field id="64" length="8" type="literal b" description="MESSAGE AUTHENTICATION CODE FIELD" />
-    <iso-field id="65" length="1" type="literal b" description="BITMAP, EXTENDED" />
-    <iso-field id="66" length="1" type="bcd" align="uright" description="SETTLEMENT CODE" />
-    <iso-field id="67" length="2" type="bcd" align="uright" description="EXTENDED PAYMENT CODE" />
-    <iso-field id="68" length="3" type="bcd" align="uright" description="RECEIVING INSTITUTION COUNTRY CODE" />
-    <iso-field id="69" length="3" type="bcd" align="uright" description="SETTLEMENT INSTITUTION COUNTRY CODE" />
-    <iso-field id="70" length="3" type="bcd" align="uright" description="NETWORK MANAGEMENT INFORMATION CODE" />
-    <iso-field id="71" length="4" type="bcd" align="uright" description="MESSAGE NUMBER" />
-    <iso-field id="72" length="4" type="bcd" align="uright" description="MESSAGE NUMBER LAST" />
-    <iso-field id="73" length="6" type="bcd" align="uright" description="DATE ACTION" />
-    <iso-field id="74" length="10" type="bcd" align="uright" description="CREDITS NUMBER" />
-    <iso-field id="75" length="10" type="bcd" align="uright" description="CREDITS REVERSAL NUMBER" />
-    <iso-field id="76" length="10" type="bcd" align="uright" description="DEBITS NUMBER" />
-    <iso-field id="77" length="10" type="bcd" align="uright" description="DEBITS REVERSAL NUMBER" />
-    <iso-field id="78" length="10" type="bcd" align="uright" description="TRANSFER NUMBER" />
-    <iso-field id="79" length="10" type="bcd" align="uright" description="TRANSFER REVERSAL NUMBER" />
-    <iso-field id="80" length="10" type="bcd" align="uright" description="INQUIRIES NUMBER" />
-    <iso-field id="81" length="10" type="bcd" align="uright" description="AUTHORIZATION NUMBER" />
-    <iso-field id="82" length="12" type="bcd" align="uright" description="CREDITS, PROCESSING FEE AMOUNT" />
-    <iso-field id="83" length="12" type="bcd" align="uright" description="CREDITS, TRANSACTION FEE AMOUNT" />
-    <iso-field id="84" length="12" type="bcd" align="uright" description="DEBITS, PROCESSING FEE AMOUNT" />
-    <iso-field id="85" length="12" type="bcd" align="uright" description="DEBITS, TRANSACTION FEE AMOUNT" />
-    <iso-field id="86" length="16" type="bcd" align="uright" description="CREDITS, AMOUNT" />
-    <iso-field id="87" length="16" type="bcd" align="uright" description="CREDITS, REVERSAL AMOUNT" />
-    <iso-field id="88" length="16" type="bcd" align="uright" description="DEBITS, AMOUNT" />
-    <iso-field id="89" length="16" type="bcd" align="uright" description="DEBITS, REVERSAL AMOUNT" />
-    <iso-field id="90" length="42" type="bcd" align="none" description="ORIGINAL DATA ELEMENTS" />
-    <iso-field id="91" length="1" type="an" align="none" description="FILE UPDATE CODE" />
-    <iso-field id="92" length="2" type="an" align="none" description="FILE SECURITY CODE" />
-    <iso-field id="93" length="6" type="an" align="none" description="RESPONSE INDICATOR" />
-    <iso-field id="94" length="7" type="an" align="none" description="SERVICE INDICATOR" />
-    <iso-field id="95" length="42" type="an" align="none" description="REPLACEMENT AMOUNTS" />
-    <iso-field id="96" length="16" type="literal b" align="none" description="MESSAGE SECURITY CODE" />
-    <iso-field id="97" length="17" type="bcd amount" align="uright" description="AMOUNT, NET SETTLEMENT" />
-    <iso-field id="98" length="25" type="an" align="none" description="PAYEE" />
-    <iso-field id="99" length="11" type="bcd .. bcd" align="uleft" description="SETTLEMENT INSTITUTION IDENT CODE" />
-    <iso-field id="100" length="11" type="bcd .. bcd" align="uleft" description="RECEIVING INSTITUTION IDENT CODE" />
-    <iso-field id="101" length="17" type="an .. bcd" description="FILE NAME" />
-    <iso-field id="102" length="28" type="an .. bcd" description="ACCOUNT IDENTIFICATION 1" />
-    <iso-field id="103" length="28" type="an .. bcd" description="ACCOUNT IDENTIFICATION 2" />
-    <iso-field id="104" length="100" type="an ... bcd" description="TRANSACTION DESCRIPTION" />
-    <iso-field id="105" length="999" type="an ... bcd" description="RESERVED ISO USE" />
-    <iso-field id="106" length="999" type="an ... bcd" description="RESERVED ISO USE" />
-    <iso-field id="107" length="999" type="an ... bcd" description="RESERVED ISO USE" />
-    <iso-field id="108" length="999" type="an ... bcd" description="RESERVED ISO USE" />
-    <iso-field id="109" length="999" type="an ... bcd" description="RESERVED ISO USE" />
-    <iso-field id="110" length="999" type="an ... bcd" description="RESERVED ISO USE" />
-    <iso-field id="111" length="999" type="an ... bcd" description="RESERVED ISO USE" />
-    <iso-field id="112" length="999" type="an ... bcd" description="RESERVED NATIONAL USE" />
-    <iso-field id="113" length="999" type="an ... bcd" description="RESERVED NATIONAL USE" />
-    <iso-field id="114" length="999" type="an ... bcd" description="RESERVED NATIONAL USE" />
-    <iso-field id="115" length="999" type="an ... bcd" description="RESERVED NATIONAL USE" />
-    <iso-field id="116" length="999" type="an ... bcd" description="RESERVED NATIONAL USE" />
-    <iso-field id="117" length="999" type="an ... bcd" description="RESERVED NATIONAL USE" />
-    <iso-field id="118" length="999" type="an ... bcd" description="RESERVED NATIONAL USE" />
-    <iso-field id="119" length="999" type="an ... bcd" description="RESERVED NATIONAL USE" />
-    <iso-field id="120" length="999" type="an ... bcd" description="RESERVED PRIVATE USE" />
-    <iso-field id="121" length="999" type="an ... bcd" description="RESERVED PRIVATE USE" />
-    <iso-field id="122" length="999" type="an ... bcd" description="RESERVED PRIVATE USE" />
-    <iso-field id="123" length="999" type="an ... bcd" description="RESERVED PRIVATE USE" />
-    <iso-field id="124" length="999" type="an ... bcd" description="RESERVED PRIVATE USE" />
-    <iso-field id="125" length="999" type="an ... bcd" description="RESERVED PRIVATE USE" />
-    <iso-field id="126" length="999" type="an ... bcd" description="RESERVED PRIVATE USE" />
-    <iso-field id="127" length="999" type="an ... bcd" description="RESERVED PRIVATE USE" />
-    <iso-field id="128" length="8" type="literal b" align="none" description="MAC 2" />
-</iso-message>
+<nucleus8583 xmlns="http://www.nucleus8583.org/schema/nucleus8583"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="http://www.nucleus8583.org/schema/nucleus8583 
+                                 http://www.nucleus8583.org/schema/nucleus8583.xsd">
+    
+    <import url="classpath:META-INF/nucleus8583/nucleus8583-types.xml" />
+    
+    <message name="iso87binary">
+	    <field no="0"   type="bcd"        length="4"   alignment="uright"                 description="MESSAGE TYPE INDICATOR" />
+	    <field no="1"   type="lbitmap"                                                    description="BIT MAP"  />
+	    <field no="2"   type="bcd .. bcd"              alignment="uleft"  maxLength="19"  description="PRIMARY ACCOUNT NUMBER" />
+	    <field no="3"   type="bcd"        length="6"   alignment="uright"                 description="PROCESSING CODE" />
+	    <field no="4"   type="bcd"        length="12"  alignment="uright"                 description="AMOUNT, TRANSACTION" />
+	    <field no="5"   type="bcd"        length="12"  alignment="uright"                 description="AMOUNT, SETTLEMENT" />
+	    <field no="6"   type="bcd"        length="12"  alignment="uright"                 description="AMOUNT, CARDHOLDER BILLING" />
+	    <field no="7"   type="bcd"        length="10"  alignment="uright"                 description="TRANSMISSION DATE AND TIME" />
+	    <field no="8"   type="bcd"        length="8"   alignment="uright"                 description="AMOUNT, CARDHOLDER BILLING FEE" />
+	    <field no="9"   type="bcd"        length="8"   alignment="uright"                 description="CONVERSION RATE, SETTLEMENT" />
+	    <field no="10"  type="bcd"        length="8"   alignment="uright"                 description="CONVERSION RATE, CARDHOLDER BILLING" />
+	    <field no="11"  type="bcd"        length="6"   alignment="uright"                 description="SYSTEM TRACE AUDIT NUMBER" />
+	    <field no="12"  type="bcd"        length="6"   alignment="uright"                 description="TIME, LOCAL TRANSACTION" />
+	    <field no="13"  type="bcd"        length="4"   alignment="uright"                 description="DATE, LOCAL TRANSACTION" />
+	    <field no="14"  type="bcd"        length="4"   alignment="uright"                 description="DATE, EXPIRATION" />
+	    <field no="15"  type="bcd"        length="4"   alignment="uright"                 description="DATE, SETTLEMENT" />
+	    <field no="16"  type="bcd"        length="4"   alignment="uright"                 description="DATE, CONVERSION" />
+	    <field no="17"  type="bcd"        length="4"   alignment="uright"                 description="DATE, CAPTURE" />
+	    <field no="18"  type="bcd"        length="4"   alignment="uright"                 description="MERCHANTS TYPE" />
+	    <field no="19"  type="bcd"        length="3"   alignment="uright"                 description="ACQUIRING INSTITUTION COUNTRY CODE" />
+	    <field no="20"  type="bcd"        length="3"   alignment="uright"                 description="PAN EXTENDED COUNTRY CODE" />
+	    <field no="21"  type="bcd"        length="3"   alignment="uright"                 description="FORWARDING INSTITUTION COUNTRY CODE" />
+	    <field no="22"  type="bcd"        length="3"   alignment="uright"                 description="POINT OF SERVICE ENTRY MODE" />
+	    <field no="23"  type="bcd"        length="3"   alignment="uright"                 description="CARD SEQUENCE NUMBER" />
+	    <field no="24"  type="bcd"        length="3"   alignment="uright"                 description="NETWORK INTERNATIONAL IDENTIFIEER" />
+	    <field no="25"  type="bcd"        length="2"   alignment="uright"                 description="POINT OF SERVICE CONDITION CODE" />
+	    <field no="26"  type="bcd"        length="2"   alignment="uright"                 description="POINT OF SERVICE PIN CAPTURE CODE" />
+	    <field no="27"  type="bcd"        length="1"   alignment="uright"                 description="AUTHORIZATION IDENTIFICATION RESP LEN" />
+	    <field no="28"  type="bcd amount" length="9"   alignment="uright"                 description="AMOUNT, TRANSACTION FEE" />
+	    <field no="29"  type="bcd amount" length="9"   alignment="uright"                 description="AMOUNT, SETTLEMENT FEE" />
+	    <field no="30"  type="bcd amount" length="9"   alignment="uright"                 description="AMOUNT, TRANSACTION PROCESSING FEE" />
+	    <field no="31"  type="bcd amount" length="9"   alignment="uright"                 description="AMOUNT, SETTLEMENT PROCESSING FEE" />
+	    <field no="32"  type="bcd .. bcd"              alignment="uleft"  maxLength="11"  description="ACQUIRING INSTITUTION IDENT CODE" />
+	    <field no="33"  type="bcd .. bcd"              alignment="uleft"  maxLength="11"  description="FORWARDING INSTITUTION IDENT CODE" />
+	    <field no="34"  type="an .. bcd"                                  maxLength="28"  description="PAN EXTENDED" />
+	    <field no="35"  type="bcd .. bcd"              alignment="uleft"  maxLength="37"  description="TRACK 2 DATA" />
+	    <field no="36"  type="an ... bcd"                                 maxLength="104" description="TRACK 3 DATA" />
+	    <field no="37"  type="an"         length="12"  alignment="uleft"                  description="RETRIEVAL REFERENCE NUMBER" />
+	    <field no="38"  type="an"         length="6"   alignment="uleft"                  description="AUTHORIZATION IDENTIFICATION RESPONSE" />
+	    <field no="39"  type="an"         length="2"   alignment="uleft"                  description="RESPONSE CODE" />
+	    <field no="40"  type="an"         length="3"   alignment="uleft"                  description="SERVICE RESTRICTION CODE" />
+	    <field no="41"  type="an"         length="8"   alignment="uleft"                  description="CARD ACCEPTOR TERMINAL IDENTIFICACION" />
+	    <field no="42"  type="an"         length="15"  alignment="uleft"                  description="CARD ACCEPTOR IDENTIFICATION CODE" />
+	    <field no="43"  type="an"         length="40"  alignment="uleft"                  description="CARD ACCEPTOR NAME/LOCATION" />
+	    <field no="44"  type="an .. bcd"                                  maxLength="25"  description="ADITIONAL RESPONSE DATA" />
+	    <field no="45"  type="an .. bcd"                                  maxLength="76"  description="TRACK 1 DATA" />
+	    <field no="46"  type="an ... bcd"                                                 description="ADITIONAL DATA - ISO" />
+	    <field no="47"  type="an ... bcd"                                                 description="ADITIONAL DATA - NATIONAL" />
+	    <field no="48"  type="an ... bcd"                                                 description="ADITIONAL DATA - PRIVATE" />
+	    <field no="49"  type="an"         length="3"   alignment="uleft"                  description="CURRENCY CODE, TRANSACTION" />
+	    <field no="50"  type="an"         length="3"   alignment="uleft"                  description="CURRENCY CODE, SETTLEMENT" />
+	    <field no="51"  type="an"         length="3"   alignment="uleft"                  description="CURRENCY CODE, CARDHOLDER BILLING" />
+	    <field no="52"  type="lb"         length="8"   alignment="none"                   description="PIN DATA" />
+	    <field no="53"  type="bcd"        length="16"  alignment="uright"                 description="SECURITY RELATED CONTROL INFORMATION" />
+	    <field no="54"  type="an ... bcd"                                 maxLength="120" description="ADDITIONAL AMOUNTS" />
+	    <field no="55"  type="an ... bcd"                                                 description="RESERVED ISO" />
+	    <field no="56"  type="an ... bcd"                                                 description="RESERVED ISO" />
+	    <field no="57"  type="an ... bcd"                                                 description="RESERVED NATIONAL" />
+	    <field no="58"  type="an ... bcd"                                                 description="RESERVED NATIONAL" />
+	    <field no="59"  type="an ... bcd"                                                 description="RESERVED NATIONAL" />
+	    <field no="60"  type="an ... bcd"                                                 description="RESERVED PRIVATE" />
+	    <field no="61"  type="an ... bcd"                                                 description="RESERVED PRIVATE" />
+	    <field no="62"  type="an ... bcd"                                                 description="RESERVED PRIVATE" />
+	    <field no="63"  type="an ... bcd"                                                 description="RESERVED PRIVATE" />
+	    <field no="64"  type="lb"         length="8"                                      description="MESSAGE AUTHENTICATION CODE FIELD" />
+	    <field no="65"  type="lb"         length="1"                                      description="BITMAP, EXTENDED" />
+	    <field no="66"  type="bcd"        length="1"   alignment="uright"                 description="SETTLEMENT CODE" />
+	    <field no="67"  type="bcd"        length="2"   alignment="uright"                 description="EXTENDED PAYMENT CODE" />
+	    <field no="68"  type="bcd"        length="3"   alignment="uright"                 description="RECEIVING INSTITUTION COUNTRY CODE" />
+	    <field no="69"  type="bcd"        length="3"   alignment="uright"                 description="SETTLEMENT INSTITUTION COUNTRY CODE" />
+	    <field no="70"  type="bcd"        length="3"   alignment="uright"                 description="NETWORK MANAGEMENT INFORMATION CODE" />
+	    <field no="71"  type="bcd"        length="4"   alignment="uright"                 description="MESSAGE NUMBER" />
+	    <field no="72"  type="bcd"        length="4"   alignment="uright"                 description="MESSAGE NUMBER LAST" />
+	    <field no="73"  type="bcd"        length="6"   alignment="uright"                 description="DATE ACTION" />
+	    <field no="74"  type="bcd"        length="10"  alignment="uright"                 description="CREDITS NUMBER" />
+	    <field no="75"  type="bcd"        length="10"  alignment="uright"                 description="CREDITS REVERSAL NUMBER" />
+	    <field no="76"  type="bcd"        length="10"  alignment="uright"                 description="DEBITS NUMBER" />
+	    <field no="77"  type="bcd"        length="10"  alignment="uright"                 description="DEBITS REVERSAL NUMBER" />
+	    <field no="78"  type="bcd"        length="10"  alignment="uright"                 description="TRANSFER NUMBER" />
+	    <field no="79"  type="bcd"        length="10"  alignment="uright"                 description="TRANSFER REVERSAL NUMBER" />
+	    <field no="80"  type="bcd"        length="10"  alignment="uright"                 description="INQUIRIES NUMBER" />
+	    <field no="81"  type="bcd"        length="10"  alignment="uright"                 description="AUTHORIZATION NUMBER" />
+	    <field no="82"  type="bcd"        length="12"  alignment="uright"                 description="CREDITS, PROCESSING FEE AMOUNT" />
+	    <field no="83"  type="bcd"        length="12"  alignment="uright"                 description="CREDITS, TRANSACTION FEE AMOUNT" />
+	    <field no="84"  type="bcd"        length="12"  alignment="uright"                 description="DEBITS, PROCESSING FEE AMOUNT" />
+	    <field no="85"  type="bcd"        length="12"  alignment="uright"                 description="DEBITS, TRANSACTION FEE AMOUNT" />
+	    <field no="86"  type="bcd"        length="16"  alignment="uright"                 description="CREDITS, AMOUNT" />
+	    <field no="87"  type="bcd"        length="16"  alignment="uright"                 description="CREDITS, REVERSAL AMOUNT" />
+	    <field no="88"  type="bcd"        length="16"  alignment="uright"                 description="DEBITS, AMOUNT" />
+	    <field no="89"  type="bcd"        length="16"  alignment="uright"                 description="DEBITS, REVERSAL AMOUNT" />
+	    <field no="90"  type="bcd"        length="42"  alignment="none"                   description="ORIGINAL DATA ELEMENTS" />
+	    <field no="91"  type="an"         length="1"   alignment="none"                   description="FILE UPDATE CODE" />
+	    <field no="92"  type="an"         length="2"   alignment="none"                   description="FILE SECURITY CODE" />
+	    <field no="93"  type="an"         length="6"   alignment="none"                   description="RESPONSE INDICATOR" />
+	    <field no="94"  type="an"         length="7"   alignment="none"                   description="SERVICE INDICATOR" />
+	    <field no="95"  type="an"         length="42"  alignment="none"                   description="REPLACEMENT AMOUNTS" />
+	    <field no="96"  type="lb"         length="16"  alignment="none"                   description="MESSAGE SECURITY CODE" />
+	    <field no="97"  type="bcd amount" length="17"  alignment="uright"                 description="AMOUNT, NET SETTLEMENT" />
+	    <field no="98"  type="an"         length="25"  alignment="none"                   description="PAYEE" />
+	    <field no="99"  type="bcd .. bcd"              alignment="uleft"  maxLength="11"  description="SETTLEMENT INSTITUTION IDENT CODE" />
+	    <field no="100" type="bcd .. bcd"              alignment="uleft"  maxLength="11"  description="RECEIVING INSTITUTION IDENT CODE" />
+	    <field no="101" type="an .. bcd"                                  maxLength="17"  description="FILE NAME" />
+	    <field no="102" type="an .. bcd"                                  maxLength="28"  description="ACCOUNT IDENTIFICATION 1" />
+	    <field no="103" type="an .. bcd"                                  maxLength="28"  description="ACCOUNT IDENTIFICATION 2" />
+	    <field no="104" type="an ... bcd"                                 maxLength="100" description="TRANSACTION DESCRIPTION" />
+	    <field no="105" type="an ... bcd"                                                 description="RESERVED ISO USE" />
+	    <field no="106" type="an ... bcd"                                                 description="RESERVED ISO USE" />
+	    <field no="107" type="an ... bcd"                                                 description="RESERVED ISO USE" />
+	    <field no="108" type="an ... bcd"                                                 description="RESERVED ISO USE" />
+	    <field no="109" type="an ... bcd"                                                 description="RESERVED ISO USE" />
+	    <field no="110" type="an ... bcd"                                                 description="RESERVED ISO USE" />
+	    <field no="111" type="an ... bcd"                                                 description="RESERVED ISO USE" />
+	    <field no="112" type="an ... bcd"                                                 description="RESERVED NATIONAL USE" />
+	    <field no="113" type="an ... bcd"                                                 description="RESERVED NATIONAL USE" />
+	    <field no="114" type="an ... bcd"                                                 description="RESERVED NATIONAL USE" />
+	    <field no="115" type="an ... bcd"                                                 description="RESERVED NATIONAL USE" />
+	    <field no="116" type="an ... bcd"                                                 description="RESERVED NATIONAL USE" />
+	    <field no="117" type="an ... bcd"                                                 description="RESERVED NATIONAL USE" />
+	    <field no="118" type="an ... bcd"                                                 description="RESERVED NATIONAL USE" />
+	    <field no="119" type="an ... bcd"                                                 description="RESERVED NATIONAL USE" />
+	    <field no="120" type="an ... bcd"                                                 description="RESERVED PRIVATE USE" />
+	    <field no="121" type="an ... bcd"                                                 description="RESERVED PRIVATE USE" />
+	    <field no="122" type="an ... bcd"                                                 description="RESERVED PRIVATE USE" />
+	    <field no="123" type="an ... bcd"                                                 description="RESERVED PRIVATE USE" />
+	    <field no="124" type="an ... bcd"                                                 description="RESERVED PRIVATE USE" />
+	    <field no="125" type="an ... bcd"                                                 description="RESERVED PRIVATE USE" />
+	    <field no="126" type="an ... bcd"                                                 description="RESERVED PRIVATE USE" />
+	    <field no="127" type="an ... bcd"                                                 description="RESERVED PRIVATE USE" />
+	    <field no="128" type="lb"         length="8"   alignment="none"                   description="MAC 2" />
+    </message>
+</nucleus8583>

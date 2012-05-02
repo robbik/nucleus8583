@@ -10,7 +10,7 @@ import org.nucleus8583.core.Message;
 import org.nucleus8583.core.MessageSerializer;
 
 public class WritePerformanceTest {
-    private static int LOOPS = 1;
+    private static int LOOPS = 1500;
 
     private MessageSerializer serializer;
 
@@ -19,7 +19,7 @@ public class WritePerformanceTest {
     private OutputStream nullOut;
 
     public void initialize() throws Exception {
-        serializer = new MessageSerializer("classpath:META-INF/nucleus8583/packagers/iso87ascii.xml");
+        serializer = MessageSerializer.create("classpath:META-INF/nucleus8583/packagers/iso87ascii.xml");
 
         packager = new ISO87APackager();
 

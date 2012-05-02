@@ -5,7 +5,9 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Arrays;
 
-import org.nucleus8583.core.xml.FieldAlignments;
+import org.nucleus8583.core.xml.Alignment;
+
+import rk.commons.util.IOUtils;
 
 public class AsciiPadder {
 
@@ -18,17 +20,31 @@ public class AsciiPadder {
 	private char[] padder;
 
 	private char[] emptyValue;
+	
+	public AsciiPadder() {
+		// do nothing
+	}
+	
+	public AsciiPadder(AsciiPadder o) {
+		padWith = o.padWith;
+		align = o.align;
+		
+		length = o.length;
+		
+		padder = o.padder;
+		emptyValue = o.emptyValue;
+	}
 
 	public void setPadWith(char padWith) {
 		this.padWith = padWith;
 	}
 
-	public void setAlign(FieldAlignments align) {
+	public void setAlign(Alignment align) {
 		this.align = align.symbolicValue();
 	}
 
-	public FieldAlignments getAlign() {
-		return FieldAlignments.enumValueOf(align);
+	public Alignment getAlign() {
+		return Alignment.enumValueOf(align);
 	}
 
 	public void setLength(int length) {
@@ -37,6 +53,10 @@ public class AsciiPadder {
 
 	public void setEmptyValue(char[] emptyValue) {
 		this.emptyValue = emptyValue;
+	}
+	
+	public char[] getEmptyValue() {
+		return emptyValue;
 	}
 
 	public void initialize() {

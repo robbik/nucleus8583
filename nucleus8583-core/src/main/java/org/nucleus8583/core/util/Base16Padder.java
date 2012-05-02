@@ -5,7 +5,9 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Arrays;
 
-import org.nucleus8583.core.xml.FieldAlignments;
+import org.nucleus8583.core.xml.Alignment;
+
+import rk.commons.util.IOUtils;
 
 public class Base16Padder {
 
@@ -30,35 +32,37 @@ public class Base16Padder {
 
 	private byte padWith;
 
-	private FieldAlignments align;
+	private Alignment align;
 
 	private int length;
 
 	private byte[] padder;
 
 	private byte[] emptyValue;
-
-	public void setPadWith(String padWith) {
-		int len = padWith.length();
-		if (len == 0) {
-			padWith = "00";
-		} else if (len == 1) {
-			padWith += padWith;
-		}
-
-		setPadWith((byte) ((hex2int(padWith.charAt(0)) << 4) | hex2int(padWith
-				.charAt(1))));
+	
+	public Base16Padder() {
+		// do nothing
+	}
+	
+	public Base16Padder(Base16Padder o) {
+		padWith = o.padWith;
+		align = o.align;
+		
+		length = o.length;
+		
+		padder = o.padder;
+		emptyValue = o.emptyValue;
 	}
 
 	public void setPadWith(byte padWith) {
 		this.padWith = padWith;
 	}
 
-	public void setAlign(FieldAlignments align) {
+	public void setAlign(Alignment align) {
 		this.align = align;
 	}
 
-	public FieldAlignments getAlign() {
+	public Alignment getAlign() {
 		return align;
 	}
 
@@ -68,21 +72,6 @@ public class Base16Padder {
 
 	public void setEmptyValue(byte[] emptyValue) {
 		this.emptyValue = emptyValue;
-	}
-
-	public void setEmptyValue(String emptyValue) {
-		int len = emptyValue.length();
-		if (len == 0) {
-			emptyValue = "00";
-		} else if ((len % 2) != 0) {
-			emptyValue = "0" + emptyValue;
-		}
-
-		this.emptyValue = new byte[emptyValue.length() >> 1];
-		for (int i = 0, j = 0; i < this.emptyValue.length; ++i, j += 2) {
-			this.emptyValue[i] = (byte) ((hex2int(emptyValue.charAt(j)) << 4) | hex2int(emptyValue
-					.charAt(j + 1)));
-		}
 	}
 
 	public void initialize() {

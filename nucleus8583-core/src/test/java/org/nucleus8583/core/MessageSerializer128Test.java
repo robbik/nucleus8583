@@ -23,7 +23,7 @@ public class MessageSerializer128Test {
 
 	@Before
 	public void initialize() throws Exception {
-		serializer = new MessageSerializer("file:src/test/resources/META-INF/codec8583.xml");
+		serializer = new XmlContext("file:src/test/resources/META-INF/codec8583.xml").getMessageSerializer();
 
 		packed = "0200C000000000010001040000000000000006030000004999800000000000000000000000000000000301";
 		bpacked = packed.getBytes();
@@ -34,19 +34,6 @@ public class MessageSerializer128Test {
 		unpacked.set(48, "9998");
 		unpacked.set(64, BitmapHelper.create(128));
 		unpacked.set(70, "301");
-	}
-
-	@Test
-	public void testCreateNewInstanceIfNoF28Defined() throws Exception {
-		String errorMsg = null;
-
-		try {
-			MessageSerializer.create("classpath:META-INF/codec8583-4.xml");
-		} catch (IllegalArgumentException ex) {
-			errorMsg = ex.getMessage();
-		}
-
-		assertEquals("field #28 is not defined", errorMsg);
 	}
 
 	@Test

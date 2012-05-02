@@ -8,29 +8,23 @@ import java.io.EOFException;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.nucleus8583.core.field.type.FieldType;
-import org.nucleus8583.core.field.type.FieldTypes;
+import org.nucleus8583.core.field.Type;
+import org.nucleus8583.core.field.spi.Base16Binary;
 import org.nucleus8583.core.util.BitmapHelper;
 import org.nucleus8583.core.util.NullOutputStream;
-import org.nucleus8583.core.xml.FieldDefinition;
 
 public class Base16BinaryTest {
 
-	private FieldType binaryField;
+	private Type binaryField;
 
 	@Before
 	public void before() throws Exception {
-	    FieldTypes.initialize();
-
-        FieldDefinition def = new FieldDefinition();
-        def.setId(35);
-        def.setType("b");
-        def.setLength(1);
-
-        binaryField = FieldTypes.getType(def);
+		
+		binaryField = new Base16Binary();
+		((Base16Binary) binaryField).setLength(1);
 	}
 
-	@Test(expected = UnsupportedOperationException.class)
+	@Test(expected = ClassCastException.class)
 	public void packString() throws Exception {
 		binaryField.write(new NullOutputStream(), "a");
 	}
@@ -84,16 +78,6 @@ public class Base16BinaryTest {
 
 	@Test(expected = EOFException.class)
 	public void unpackEmptyBinary1() throws Exception {
-		binaryField.readBinary(new ByteArrayInputStream("".getBytes()));
-	}
-
-	@Test(expected = EOFException.class)
-	public void unpackEmptyBinary2() throws Exception {
-		binaryField.read(new ByteArrayInputStream("".getBytes()), new byte[0], 0, 1);
-	}
-
-	@Test(expected = UnsupportedOperationException.class)
-	public void unpackString() throws Exception {
-		binaryField.readString(new ByteArrayInputStream("".getBytes()));
+		binaryField.read(new ByteArrayInputStream("".getBytes()));
 	}
 }

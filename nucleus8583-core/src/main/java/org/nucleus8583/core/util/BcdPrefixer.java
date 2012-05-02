@@ -7,8 +7,16 @@ import java.io.OutputStream;
 public class BcdPrefixer {
 
 	private int prefixLength;
+	
+	public BcdPrefixer() {
+		// do nothing
+	}
+	
+	public BcdPrefixer(BcdPrefixer o) {
+		prefixLength = o.prefixLength;
+	}
 
-	public BcdPrefixer(int prefixLength) {
+	public void setPrefixLength(int prefixLength) {
 		this.prefixLength = (prefixLength + 1) >> 1;
 	}
 

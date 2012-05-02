@@ -20,8 +20,7 @@ public class ReadPerformanceTest {
 	private InputStream ipacked;
 
 	public void initialize() throws Exception {
-		serializer = new MessageSerializer(
-				"classpath:META-INF/nucleus8583/packagers/iso87ascii.xml");
+		serializer = MessageSerializer.create("classpath:META-INF/nucleus8583/packagers/iso87ascii.xml");
 
 		packager = new ISO87APackager();
 
@@ -118,7 +117,7 @@ public class ReadPerformanceTest {
 	}
 
 	public static void main(String[] args) throws Exception {
-		boolean nucleus8583 = true;
+		boolean nucleus8583 = false;
 		int recount = 10;
 
 		if (args.length > 0) {
