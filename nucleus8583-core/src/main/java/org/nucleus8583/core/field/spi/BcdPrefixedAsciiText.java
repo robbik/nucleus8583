@@ -44,7 +44,7 @@ public class BcdPrefixedAsciiText implements Type<String> {
 	public void setMaxLength(int maxLength) {
 		this.maxLength = maxLength;
 	}
-	
+
 	public void setEmptyValue(String emptyValue) {
 		if (emptyValue == null) {
 			this.emptyValue = "";
