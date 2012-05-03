@@ -15,7 +15,7 @@ public class Iso87AsciiTest {
 		msg.set(2, "suka2 ");
 		msg.set(4, "89");
 
-		MessageSerializer serializer = new XmlContext("classpath:META-INF/nucleus8583/packagers/iso87ascii.xml").getMessageSerializer("iso87ascii");
+		MessageSerializer serializer = new MessageSerializer("classpath:META-INF/nucleus8583/packagers/iso87ascii.xml");
 
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		serializer.write(msg, out);

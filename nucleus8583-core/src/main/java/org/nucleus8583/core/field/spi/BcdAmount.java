@@ -9,11 +9,11 @@ import org.nucleus8583.core.field.Type;
 import org.nucleus8583.core.util.BcdPadder;
 import org.nucleus8583.core.xml.Alignment;
 
-import rk.commons.beans.factory.support.InitializingBean;
+import rk.commons.ioc.factory.support.InitializingObject;
 import rk.commons.util.StringEscapeUtils;
 import rk.commons.util.StringUtils;
 
-public class BcdAmount implements Type<String>, InitializingBean {
+public class BcdAmount implements Type<String>, InitializingObject {
 
 	private static final long serialVersionUID = -5615324004502124085L;
 

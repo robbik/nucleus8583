@@ -1,19 +1,21 @@
 package org.nucleus8583.core.xml;
 
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import org.w3c.dom.Attr;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 
-import rk.commons.beans.factory.config.RuntimeBeanDefinition;
-import rk.commons.beans.factory.support.BeanDefinitionBuilder;
-import rk.commons.beans.factory.support.ManagedMap;
-import rk.commons.beans.factory.xml.BeanDefinitionParserDelegate;
-import rk.commons.beans.factory.xml.SingleBeanDefinitionParser;
+import rk.commons.ioc.factory.config.ObjectReference;
+import rk.commons.ioc.factory.support.ObjectDefinitionBuilder;
+import rk.commons.ioc.factory.xml.ObjectDefinitionParserDelegate;
+import rk.commons.ioc.factory.xml.SingleObjectDefinitionParser;
+import rk.commons.util.StringUtils;
 
-public class FieldDefinitionParser extends SingleBeanDefinitionParser {
+public class FieldDefinitionParser extends SingleObjectDefinitionParser {
 
 	public static final String ELEMENT_LOCAL_NAME = "field";
 	
@@ -21,23 +23,23 @@ public class FieldDefinitionParser extends SingleBeanDefinitionParser {
 	
 	static {
 		reserved = new HashSet<String>();
-		reserved.add("name");
-		reserved.add("name-ref");
-		reserved.add("type");
-		reserved.add("type-ref");
 		reserved.add("no");
 		reserved.add("no-ref");
+		reserved.add("type");
+		reserved.add("type-ref");
 		reserved.add("description");
 		reserved.add("description-ref");
+		reserved.add("subMessage");
+		reserved.add("subMessage-ref");
 	}
 	
 	@Override
-	protected Class<?> getBeanClass(Element element) {
-		return FieldFactoryBean.class;
+	protected Class<?> getObjectClass(Element element) {
+		return FieldFactory.class;
 	}
 	
-	protected void doParse(Element element, BeanDefinitionParserDelegate delegate, BeanDefinitionBuilder builder) {
-		ManagedMap<String, Object> properties = new ManagedMap<String, Object>();
+	protected void doParse(Element element, ObjectDefinitionParserDelegate delegate, ObjectDefinitionBuilder builder) {
+		Map<String, Object> properties = new HashMap<String, Object>();
 
 		NamedNodeMap attributeMap = element.getAttributes();
 		
@@ -48,17 +50,22 @@ public class FieldDefinitionParser extends SingleBeanDefinitionParser {
 			
 			if (!reserved.contains(attrName)) {
 				if (attrName.endsWith("-ref")) {
-					properties.put(attrName.substring(0, attrName.length() - 4), new RuntimeBeanDefinition(attr.getValue()));
+					properties.put(attrName.substring(0, attrName.length() - 4), new ObjectReference(attr.getValue()));
 				} else {
 					properties.put(attrName, attr.getValue());
 				}
 			}
 		}
 
-		builder.setBeanQName(element.getAttribute("name"));
+		builder.setObjectQName(element.getAttribute("name"));
 
 		builder.addPropertyValue("no", Integer.parseInt(element.getAttribute("no")));
 		builder.addPropertyReference("type", element.getAttribute("type"));
+		
+		if (StringUtils.hasText(element.getAttribute("subMessage-ref"), true)) {
+			builder.addPropertyReference("messageSerializer", element.getAttribute("subMessage-ref").trim());
+		}
+
 		builder.addPropertyValue("properties", properties);
 	}
 }

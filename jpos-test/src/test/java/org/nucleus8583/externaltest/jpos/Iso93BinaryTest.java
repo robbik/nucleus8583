@@ -90,7 +90,7 @@ public class Iso93BinaryTest {
 	public void writeShouldResultTheSameThing() throws Exception {
 		ISOPackager jposPackager = new ISO93BPackager();
 		
-		MessageSerializer nucSerializer = MessageSerializer.create(
+		MessageSerializer nucSerializer = new MessageSerializer(
 				"classpath:META-INF/nucleus8583/packagers/iso93binary.xml");
 
 		for (int retry = 0; retry < 20; ++retry) {
@@ -125,7 +125,7 @@ public class Iso93BinaryTest {
 	public void jposResultCanBeReadByNucleusAndShouldResultTheSame() throws Exception {
 		ISOPackager jposPackager = new ISO93BPackager();
 		
-		MessageSerializer nucSerializer = MessageSerializer.create(
+		MessageSerializer nucSerializer = new MessageSerializer(
 				"classpath:META-INF/nucleus8583/packagers/iso93binary.xml");
 
 		for (int retry = 0; retry < 20; ++retry) {
@@ -168,7 +168,7 @@ public class Iso93BinaryTest {
 	public void nucleusResultCanBeReadByJposAndShouldResultTheSame() throws Exception {
 		ISOPackager jposPackager = new ISO93BPackager();
 		
-		MessageSerializer nucSerializer = MessageSerializer.create(
+		MessageSerializer nucSerializer = new MessageSerializer(
 				"classpath:META-INF/nucleus8583/packagers/iso93binary.xml");
 
 		for (int retry = 0; retry < 20; ++retry) {

@@ -43,8 +43,10 @@
         <xsd:attribute name="padWith" type="xsd:string" use="optional" />
 
         <xsd:attribute name="emptyValue" type="xsd:string" use="optional" />
-
+    
         <xsd:attribute name="maxLength" type="length" use="optional" />
+        
+        <xsd:attribute name="subMessage-ref" type="xsd:string" use="optional" />
     </xsd:complexType>
 
     <xsd:complexType name="type">

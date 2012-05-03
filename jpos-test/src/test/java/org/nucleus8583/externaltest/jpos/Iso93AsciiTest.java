@@ -90,7 +90,7 @@ public class Iso93AsciiTest {
 	public void writeShouldResultTheSameThing() throws Exception {
 		ISOPackager jposPackager = new ISO93APackager();
 
-		MessageSerializer nucSerializer = MessageSerializer.create(
+		MessageSerializer nucSerializer = new MessageSerializer(
 				"classpath:META-INF/nucleus8583/packagers/iso93ascii.xml");
 
 		for (int retry = 0; retry < 20; ++retry) {
@@ -122,7 +122,7 @@ public class Iso93AsciiTest {
 	public void jposResultCanBeReadByNucleusAndShouldResultTheSame() throws Exception {
 		ISOPackager jposPackager = new ISO93APackager();
 		
-		MessageSerializer nucSerializer = MessageSerializer.create(
+		MessageSerializer nucSerializer = new MessageSerializer(
 				"classpath:META-INF/nucleus8583/packagers/iso93ascii.xml");
 
 		for (int retry = 0; retry < 20; ++retry) {
@@ -165,7 +165,7 @@ public class Iso93AsciiTest {
 	public void nucleusResultCanBeReadByJposAndShouldResultTheSame() throws Exception {
 		ISOPackager jposPackager = new ISO93APackager();
 
-		MessageSerializer nucSerializer = MessageSerializer.create(
+		MessageSerializer nucSerializer = new MessageSerializer(
 				"classpath:META-INF/nucleus8583/packagers/iso93ascii.xml");
 		
 		for (int retry = 0; retry < 20; ++retry) {

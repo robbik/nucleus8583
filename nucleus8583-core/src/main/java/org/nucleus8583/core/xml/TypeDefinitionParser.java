@@ -7,11 +7,11 @@ import org.w3c.dom.Attr;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 
-import rk.commons.beans.factory.support.BeanDefinitionBuilder;
-import rk.commons.beans.factory.xml.BeanDefinitionParserDelegate;
-import rk.commons.beans.factory.xml.SingleBeanDefinitionParser;
+import rk.commons.ioc.factory.support.ObjectDefinitionBuilder;
+import rk.commons.ioc.factory.xml.ObjectDefinitionParserDelegate;
+import rk.commons.ioc.factory.xml.SingleObjectDefinitionParser;
 
-public class TypeDefinitionParser extends SingleBeanDefinitionParser {
+public class TypeDefinitionParser extends SingleObjectDefinitionParser {
 	
 	public static final String ELEMENT_LOCAL_NAME = "type";
 	
@@ -28,12 +28,12 @@ public class TypeDefinitionParser extends SingleBeanDefinitionParser {
 	}
 	
 	@Override
-	protected String getBeanClassName(Element element) {
+	protected String getObjectClassName(Element element) {
 		return element.getAttribute("class");
 	}
 	
-	protected void doParse(Element element, BeanDefinitionParserDelegate delegate, BeanDefinitionBuilder builder) {
-		builder.setBeanQName(element.getAttribute("name"));
+	protected void doParse(Element element, ObjectDefinitionParserDelegate delegate, ObjectDefinitionBuilder builder) {
+		builder.setObjectQName(element.getAttribute("name"));
 		
 		NamedNodeMap attributeMap = element.getAttributes();
 		

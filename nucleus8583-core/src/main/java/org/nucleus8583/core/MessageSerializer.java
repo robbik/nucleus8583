@@ -17,16 +17,12 @@ import org.nucleus8583.core.util.BitmapHelper;
 
 /**
  * Serialize/deserialize {@link Message} object. This class can be instatiated
- * using {@link XmlContext} object.
+ * using {@link XmlContext} object or directly using constructor provided.
  * 
  * @author Robbi Kurniawan
  * 
  */
 public final class MessageSerializer {
-	
-	public static MessageSerializer create(String location) {
-		return new XmlContext(location).getMessageSerializer();
-	}
 
 	private boolean hasMti;
 
@@ -34,12 +30,59 @@ public final class MessageSerializer {
 	private Type[] types;
 
 	private int count;
-	
+
 	/**
-	 * INTERNAL USE ONLY
+	 * create a new instance of {@link MessageSerializer} using given
+	 * configuration.
+	 * 
+	 * For example, if you want to load "nucleus8583.xml" from "META-INF"
+	 * located in classpath, the location should be
+	 * <code>classpath:META-INF/nucleus8583.xml</code>.
+	 * 
+	 * If you want to load "nucleus8583.xml" from "conf" directory, the location
+	 * should be <code>file:conf/nucleus8583.xml</code> or just
+	 * <code>conf/nucleus8583.xml</code>.
+	 * 
+	 * @param name
+	 *            of message if there are multiple messages defined in
+	 *            configuration file
+	 * @param location
+	 *            configuration location (in URI)
 	 */
-	public MessageSerializer() {
+	public MessageSerializer(String name, String... locations) {
+		this(new XmlContext(locations).getMessageSerializer(name));
+	}
+
+	/**
+	 * create a new instance of {@link MessageSerializer} using given
+	 * configuration.
+	 * 
+	 * For example, if you want to load "nucleus8583.xml" from "META-INF"
+	 * located in classpath, the location should be
+	 * <code>classpath:META-INF/nucleus8583.xml</code>.
+	 * 
+	 * If you want to load "nucleus8583.xml" from "conf" directory, the location
+	 * should be <code>file:conf/nucleus8583.xml</code> or just
+	 * <code>conf/nucleus8583.xml</code>.
+	 * 
+	 * @param location
+	 *            configuration location (in URI)
+	 */
+	public MessageSerializer(String location) {
+		this(new XmlContext(location).getMessageSerializer());
+	}
+
+	@SuppressWarnings("unused")
+	private MessageSerializer() {
 		// do nothing
+	}
+
+	private MessageSerializer(MessageSerializer c) {
+		hasMti = c.hasMti;
+
+		types = c.types;
+
+		count = c.count;
 	}
 
 	private boolean setIfAbsent(int no, Field value, List<Field> fields,

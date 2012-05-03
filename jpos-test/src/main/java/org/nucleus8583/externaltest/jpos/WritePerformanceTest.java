@@ -19,7 +19,7 @@ public class WritePerformanceTest {
     private OutputStream nullOut;
 
     public void initialize() throws Exception {
-        serializer = MessageSerializer.create("classpath:META-INF/nucleus8583/packagers/iso87ascii.xml");
+        serializer = new MessageSerializer("classpath:META-INF/nucleus8583/packagers/iso87ascii.xml");
 
         packager = new ISO87APackager();
 

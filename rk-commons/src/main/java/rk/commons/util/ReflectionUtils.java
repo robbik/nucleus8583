@@ -3,7 +3,7 @@ package rk.commons.util;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 
-import rk.commons.beans.factory.type.converter.TypeConverterResolver;
+import rk.commons.ioc.factory.type.converter.TypeConverterResolver;
 
 public abstract class ReflectionUtils {
 	

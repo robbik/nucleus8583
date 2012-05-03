@@ -94,7 +94,7 @@ public class Iso87AsciiTest {
 	public void writeShouldResultTheSameThing() throws Exception {
 		ISOPackager jposPackager = new ISO87APackager();
 		
-		MessageSerializer nucSerializer = MessageSerializer.create(
+		MessageSerializer nucSerializer = new MessageSerializer(
 				"classpath:META-INF/nucleus8583/packagers/iso87ascii.xml");
 
 		for (int retry = 0; retry < 20; ++retry) {
@@ -130,7 +130,7 @@ public class Iso87AsciiTest {
 		
 		ISOPackager jposPackager = new ISO87APackager();
 		
-		MessageSerializer nucSerializer = MessageSerializer.create(
+		MessageSerializer nucSerializer = new MessageSerializer(
 				"classpath:META-INF/nucleus8583/packagers/iso87ascii.xml");
 
 		for (int retry = 0; retry < 20; ++retry) {
@@ -178,7 +178,7 @@ public class Iso87AsciiTest {
 		
 		ISOPackager jposPackager = new ISO87APackager();
 
-		MessageSerializer nucSerializer = MessageSerializer.create(
+		MessageSerializer nucSerializer = new MessageSerializer(
 				"classpath:META-INF/nucleus8583/packagers/iso87ascii.xml");
 
 		for (int retry = 0; retry < 20; ++retry) {

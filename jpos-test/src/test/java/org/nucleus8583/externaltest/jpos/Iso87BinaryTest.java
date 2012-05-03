@@ -86,7 +86,7 @@ public class Iso87BinaryTest {
     public void writeShouldResultTheSameThing() throws Exception {
         ISOPackager jposPackager = new ISO87BPackager();
 
-        MessageSerializer nucSerializer = MessageSerializer.create(
+        MessageSerializer nucSerializer = new MessageSerializer(
         		"classpath:META-INF/nucleus8583/packagers/iso87binary.xml");
 
         for (int retry = 0; retry < 20; ++retry) {
@@ -118,7 +118,7 @@ public class Iso87BinaryTest {
     public void jposResultCanBeReadByNucleusAndShouldResultTheSame() throws Exception {
         ISOPackager jposPackager = new ISO87BPackager();
 
-        MessageSerializer nucSerializer = MessageSerializer.create(
+        MessageSerializer nucSerializer = new MessageSerializer(
         		"classpath:META-INF/nucleus8583/packagers/iso87binary.xml");
 
         for (int retry = 0; retry < 20; ++retry) {
@@ -159,7 +159,7 @@ public class Iso87BinaryTest {
     public void nucleusResultCanBeReadByJposAndShouldResultTheSame() throws Exception {
         ISOPackager jposPackager = new ISO87BPackager();
 
-        MessageSerializer nucSerializer = MessageSerializer.create(
+        MessageSerializer nucSerializer = new MessageSerializer(
         		"classpath:META-INF/nucleus8583/packagers/iso87binary.xml");
 
         for (int retry = 0; retry < 20; ++retry) {

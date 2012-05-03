@@ -4,8 +4,6 @@
              xsi:schemaLocation="http://www.nucleus8583.org/schema/nucleus8583 
                                  http://www.nucleus8583.org/schema/nucleus8583.xsd">
     
-    <import url="classpath:META-INF/nucleus8583/nucleus8583-types.xml" />
-    
 	<message name="iso87ascii">
 	    <field no="0"   type="n"       length="4"  alignment="uright"                              description="MESSAGE TYPE INDICATOR" />
 	    <field no="1"   type="bitmap"                                                              description="BIT MAP" />

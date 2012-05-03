@@ -1,27 +1,28 @@
 package org.nucleus8583.core.xml;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.nucleus8583.core.MessageSerializer;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import rk.commons.beans.factory.support.BeanDefinitionBuilder;
-import rk.commons.beans.factory.support.ManagedList;
-import rk.commons.beans.factory.xml.BeanDefinitionParserDelegate;
-import rk.commons.beans.factory.xml.SingleBeanDefinitionParser;
+import rk.commons.ioc.factory.support.ObjectDefinitionBuilder;
+import rk.commons.ioc.factory.xml.ObjectDefinitionParserDelegate;
+import rk.commons.ioc.factory.xml.SingleObjectDefinitionParser;
 
-public class MessageSerializerDefinitionParser extends SingleBeanDefinitionParser {
+public class MessageSerializerDefinitionParser extends SingleObjectDefinitionParser {
 
 	public static final String ELEMENT_LOCAL_NAME = "message";
 
 	@Override
-	protected Class<?> getBeanClass(Element element) {
+	protected Class<?> getObjectClass(Element element) {
 		return MessageSerializer.class;
 	}
 
-	protected void doParse(Element element, BeanDefinitionParserDelegate delegate, BeanDefinitionBuilder builder) {
-
-		ManagedList<Object> fields = new ManagedList<Object>();
+	protected void doParse(Element element, ObjectDefinitionParserDelegate delegate, ObjectDefinitionBuilder builder) {
+		List<Object> fields = new ArrayList<Object>();
 
 		NodeList childNodes = element.getChildNodes();
 
@@ -33,7 +34,7 @@ public class MessageSerializerDefinitionParser extends SingleBeanDefinitionParse
 			}
 		}
 
-		builder.setBeanQName(element.getAttribute("name"));
+		builder.setObjectQName(element.getAttribute("name"));
 
 		builder.addPropertyValue("fields", fields);
 	}

@@ -4,6 +4,8 @@ import static org.junit.Assert.assertEquals;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.lang.reflect.Array;
+import java.lang.reflect.ParameterizedType;
 
 import org.junit.Before;
 import org.junit.Test;

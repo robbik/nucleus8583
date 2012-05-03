@@ -1,6 +1,6 @@
 package org.nucleus8583.core.xml;
 
-import rk.commons.beans.factory.type.converter.TypeConverter;
+import rk.commons.ioc.factory.type.converter.TypeConverter;
 
 public class StringToAlignmentConverter implements TypeConverter {
 	

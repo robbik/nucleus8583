@@ -16,7 +16,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.nucleus8583.core.util.BitmapHelper;
 
-import rk.commons.beans.factory.BeanInstantiationException;
+import rk.commons.ioc.factory.ObjectInstantiationException;
 
 public class MessageSerializer64Test {
 
@@ -38,8 +38,8 @@ public class MessageSerializer64Test {
 
 	@Before
 	public void initialize() throws Exception {
-		serializer = new XmlContext("file:src/test/resources/META-INF/codec8583.xml").getMessageSerializer();
-		serializer2 = new XmlContext("file:src/test/resources/META-INF/codec8583-noMTI.xml").getMessageSerializer();
+		serializer = new MessageSerializer("file:src/test/resources/META-INF/codec8583.xml");
+		serializer2 = new MessageSerializer("file:src/test/resources/META-INF/codec8583-noMTI.xml");
 
 		packed = "0200400000000001000106030000004999800000000000000000000000000000000";
         packed2 = "400000000001000106030000004999800000000000000000000000000000000";
@@ -65,7 +65,7 @@ public class MessageSerializer64Test {
 
 		try {
 			new XmlContext("classpath:META-INF/codec8583-no28.xml").getMessageSerializer();
-		} catch (BeanInstantiationException ex) {
+		} catch (ObjectInstantiationException ex) {
 			StringWriter sw = new StringWriter();
 			ex.printStackTrace(new PrintWriter(sw));
 			

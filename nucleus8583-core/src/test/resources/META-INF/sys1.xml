@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<nucleus8583 xmlns="http://www.nucleus8583.org/schema/nucleus8583"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="http://www.nucleus8583.org/schema/nucleus8583 
+                                 http://www.nucleus8583.org/schema/nucleus8583.xsd">
+    
+    <message>
+        <field no="0" description="MESSAGE TYPE INDICATOR" length="4" type="an"/>
+        <field no="1" description="BITMAP" type="bitmap"/>
+        <field no="2" description="PAN - PRIMARY ACCOUNT NUMBER" maxLength="16" type="n .."/>
+        <field no="3" description="PROCESSING CODE" length="6" type="n"/>
+        <field no="4" description="AMOUNT, TRANSACTION" length="12" type="n"/>
+        <field no="5" description="AMOUNT, SETTLEMENT" length="12" type="n"/>
+        <field no="6" description="AMOUNT, CARDHOLDER BILLING" length="12" type="n"/>
+        <field no="7" description="TRANSMISSION DATE AND TIME" length="10" type="n"/>
+        <field no="8" description="AMOUNT, CARDHOLDER BILLING FEE" length="8" type="n"/>
+        <field no="9" description="CONVERSION RATE, SETTLEMENT" length="8" type="n"/>
+        <field no="10" description="CONVERSION RATE, CARDHOLDER BILLING" length="8" type="n"/>
+        <field no="11" description="SYSTEM TRACE AUDIT NUMBER" length="6" type="n"/>
+        <field no="12" description="TIME, LOCAL TRANSACTION" length="6" type="an"/>
+        <field no="13" description="DATE, LOCAL TRANSACTION" length="4" type="an"/>
+        <field no="14" description="DATE, EXPIRATION" length="4" type="an"/>
+        <field no="15" description="DATE, SETTLEMENT" length="4" type="an"/>
+        <field no="16" description="DATE, CONVERSION" length="4" type="an"/>
+        <field no="17" description="DATE, CAPTURE" length="4" type="an"/>
+        <field no="18" description="MERCHANTS TYPE" length="4" type="an"/>
+        <field no="19" description="ACQUIRING INSTITUTION COUNTRY CODE" length="3" type="n"/>
+        <field no="20" description="PAN EXTENDED COUNTRY CODE" length="3" type="n"/>
+        <field no="21" description="FORWARDING INSTITUTION COUNTRY CODE" length="3" type="n"/>
+        <field no="22" description="POINT OF SERVICE ENTRY MODE" length="3" type="n"/>
+        <field no="23" description="CARD SEQUENCE NUMBER" length="3" type="n"/>
+        <field no="24" description="NETWORK INTERNATIONAL IDENTIFIEER" length="3" type="n"/>
+        <field no="25" description="POINT OF SERVICE CONDITION CODE" length="2" type="n"/>
+        <field no="26" description="POINT OF SERVICE PIN CAPTURE CODE" length="2" type="n"/>
+        <field no="27" description="AUTHORIZATION IDENTIFICATION RESP LEN" length="1" type="n"/>
+        <field no="28" description="AMOUNT, TRANSACTION FEE" length="9" type="n"/>
+        <field no="29" description="AMOUNT, SETTLEMENT FEE" length="9" type="s"/>
+        <field no="30" description="AMOUNT, TRANSACTION PROCESSING FEE" length="9" type="n"/>
+        <field no="31" description="AMOUNT, SETTLEMENT PROCESSING FEE" length="9" type="n"/>
+        <field no="32" description="ACQUIRING INSTITUTION IDENT CODE" maxLength="11" type="n .."/>
+        <field no="33" description="FORWARDING INSTITUTION IDENT CODE" maxLength="11" type="n .."/>
+        <field no="34" description="PAN EXTENDED" maxLength="28" type="ans .."/>
+        <field no="35" description="TRACK 2 DATA" maxLength="37" type="n .."/>
+        <field no="36" description="TRACK 3 DATA" maxLength="104" type="ans ..."/>
+        <field no="37" description="RETRIEVAL REFERENCE NUMBER" length="12" type="s"/>
+        <field no="38" description="AUTHORIZATION IDENTIFICATION RESPONSE" length="6" type="s"/>
+        <field no="39" description="RESPONSE CODE" length="2" type="s"/>
+        <field no="40" description="SERVICE RESTRICTION CODE" length="3" type="s"/>
+        <field no="41" description="CARD ACCEPTOR TERMINAL IDENTIFICACION" length="8" type="s"/>
+        <field no="42" description="CARD ACCEPTOR IDENTIFICATION CODE" length="15" type="s"/>
+        <field no="43" description="CARD ACCEPTOR NAME/LOCATION" length="40" type="s"/>
+        <field no="44" description="ADITIONAL RESPONSE DATA" maxLength="25" type="ans .."/>
+        <field no="45" description="TRACK 1 DATA" maxLength="76" type="ans .."/>
+        <field no="46" description="ADITIONAL DATA - ISO" type="ans ..."/>
+        <field no="47" description="ADITIONAL DATA - NATIONAL" type="ans ..."/>
+        <field no="48" description="ADITIONAL DATA - PRIVATE" type="ans ..."/>
+        <field no="49" description="CURRENCY CODE, TRANSACTION" length="3" type="s"/>
+        <field no="50" description="CURRENCY CODE, SETTLEMENT" length="3" type="s"/>
+        <field no="51" description="CURRENCY CODE, CARDHOLDER BILLING" length="3" type="s"/>
+        <field no="52" description="PIN DATA" length="16" type="n"/>
+        <field no="53" description="SECURITY RELATED CONTROL INFORMATION" length="16" type="n"/>
+        <field no="54" description="ADDITIONAL AMOUNTS" maxLength="120" type="ans ..."/>
+        <field no="55" description="RESERVED ISO" type="ans ..."/>
+        <field no="56" description="RESERVED ISO" type="ans ..."/>
+        <field no="57" description="RESERVED NATIONAL" type="ans ..."/>
+        <field no="58" description="RESERVED NATIONAL" type="ans ..."/>
+        <field no="59" description="RESERVED NATIONAL" type="ans ..."/>
+        <field no="60" description="RESERVED PRIVATE" type="ans ..."/>
+        <field no="61" description="RESERVED PRIVATE" type="ans ..."/>
+        <field no="62" description="RESERVED PRIVATE" type="ans ..."/>
+        <field no="63" description="RESERVED PRIVATE" type="ans ..."/>
+        <field no="64" description="MESSAGE AUTHENTICATION CODE FIELD" length="8" type="b"/>
+        <field no="65" description="BITMAP, EXTENDED" type="bitmap"/>
+        <field no="66" description="SETTLEMENT CODE" length="1" type="n"/>
+        <field no="67" description="EXTENDED PAYMENT CODE" length="2" type="n"/>
+        <field no="68" description="RECEIVING INSTITUTION COUNTRY CODE" length="3" type="n"/>
+        <field no="69" description="SETTLEMENT INSTITUTION COUNTRY CODE" length="3" type="n"/>
+        <field no="70" description="NETWORK MANAGEMENT INFORMATION CODE" length="3" type="an"/>
+        <field no="71" description="MESSAGE NUMBER" length="4" type="n"/>
+        <field no="72" description="MESSAGE NUMBER LAST" length="4" type="n"/>
+        <field no="73" description="DATE ACTION" length="6" type="n"/>
+        <field no="74" description="CREDITS NUMBER" length="10" type="n"/>
+        <field no="75" description="CREDITS REVERSAL NUMBER" length="10" type="n"/>
+        <field no="76" description="DEBITS NUMBER" length="10" type="n"/>
+        <field no="77" description="DEBITS REVERSAL NUMBER" length="10" type="n"/>
+        <field no="78" description="TRANSFER NUMBER" length="10" type="n"/>
+        <field no="79" description="TRANSFER REVERSAL NUMBER" length="10" type="n"/>
+        <field no="80" description="INQUIRIES NUMBER" length="10" type="n"/>
+        <field no="81" description="AUTHORIZATION NUMBER" length="10" type="n"/>
+        <field no="82" description="CREDITS, PROCESSING FEE AMOUNT" length="12" type="n"/>
+        <field no="83" description="CREDITS, TRANSACTION FEE AMOUNT" length="12" type="n"/>
+        <field no="84" description="DEBITS, PROCESSING FEE AMOUNT" length="12" type="n"/>
+        <field no="85" description="DEBITS, TRANSACTION FEE AMOUNT" length="12" type="n"/>
+        <field no="86" description="CREDITS, AMOUNT" length="16" type="n"/>
+        <field no="87" description="CREDITS, REVERSAL AMOUNT" length="16" type="n"/>
+        <field no="88" description="DEBITS, AMOUNT" length="16" type="n"/>
+        <field no="89" description="DEBITS, REVERSAL AMOUNT" length="16" type="n"/>
+        <field no="90" description="ORIGINAL DATA ELEMENTS" length="42" type="n"/>
+        <field no="91" description="FILE UPDATE CODE" length="1" type="s"/>
+        <field no="92" description="FILE SECURITY CODE" length="2" type="s"/>
+        <field no="93" description="RESPONSE INDICATOR" length="6" type="s"/>
+        <field no="94" description="SERVICE INDICATOR" length="7" type="s"/>
+        <field no="95" description="REPLACEMENT AMOUNTS" length="42" type="s"/>
+        <field no="96" description="MESSAGE SECURITY CODE" length="16" type="b"/>
+        <field no="97" description="AMOUNT, NET SETTLEMENT" length="17" type="n"/>
+        <field no="98" description="PAYEE" length="25" type="s"/>
+        <field no="99" description="SETTLEMENT INSTITUTION IDENT CODE" maxLength="11" type="n .."/>
+        <field no="100" description="RECEIVING INSTITUTION IDENT CODE" maxLength="11" type="n .."/>
+        <field no="101" description="FILE NAME" maxLength="17" type="ans .."/>
+        <field no="102" description="ACCOUNT IDENTIFICATION 1" maxLength="13" type="ans .."/>
+        <field no="103" description="ACCOUNT IDENTIFICATION 2" maxLength="10" type="ans .."/>
+        <field no="104" description="TRANSACTION DESCRIPTION" maxLength="100" type="ans ..."/>
+        <field no="105" description="RESERVED ISO USE" type="ans ..."/>
+        <field no="106" description="RESERVED ISO USE" type="ans ..."/>
+        <field no="107" description="RESERVED ISO USE" type="ans ..."/>
+        <field no="108" description="RESERVED ISO USE" type="ans ..."/>
+        <field no="109" description="RESERVED ISO USE" type="ans ..."/>
+        <field no="110" description="RESERVED ISO USE" type="ans ..."/>
+        <field no="111" description="RESERVED ISO USE" type="ans ..."/>
+        <field no="112" description="RESERVED NATIONAL USE" type="ans ..."/>
+        <field no="113" description="RESERVED NATIONAL USE" type="ans ..."/>
+        <field no="114" description="RESERVED NATIONAL USE" type="ans ..."/>
+        <field no="115" description="RESERVED NATIONAL USE" type="ans ..."/>
+        <field no="116" description="RESERVED NATIONAL USE" type="ans ..."/>
+        <field no="117" description="RESERVED NATIONAL USE" type="ans ..."/>
+        <field no="118" description="RESERVED NATIONAL USE" type="ans ..."/>
+        <field no="119" description="RESERVED NATIONAL USE" type="ans ..."/>
+        <field no="120" description="RESERVED PRIVATE USE" type="ans ..."/>
+        <field no="121" description="RESERVED PRIVATE USE" type="ans ..."/>
+        <field no="122" description="RESERVED PRIVATE USE" type="ans ..."/>
+        <field no="123" description="RESERVED PRIVATE USE" type="ans ..."/>
+        <field no="124" description="RESERVED PRIVATE USE" type="ans ..."/>
+        <field no="125" description="RESERVED PRIVATE USE" type="ans ..."/>
+        <field no="126" description="RESERVED PRIVATE USE" type="ans ..."/>
+        <field no="127" description="RESERVED PRIVATE USE" type="ans ..."/>
+        <field no="128" description="MAC 2" length="8" type="b"/>
+    </message>
+</nucleus8583>
