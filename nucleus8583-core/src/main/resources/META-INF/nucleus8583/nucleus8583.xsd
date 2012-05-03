@@ -37,16 +37,18 @@
 
         <xsd:attribute name="description" type="xsd:string" use="optional" default="" />
 
-        <xsd:attribute name="length" type="length" use="optional" />
+        <!-- xsd:attribute name="length" type="length" use="optional" />
 
         <xsd:attribute name="alignment" type="alignment" use="optional" />
         <xsd:attribute name="padWith" type="xsd:string" use="optional" />
 
         <xsd:attribute name="emptyValue" type="xsd:string" use="optional" />
     
-        <xsd:attribute name="maxLength" type="length" use="optional" />
+        <xsd:attribute name="maxLength" type="length" use="optional" / -->
         
         <xsd:attribute name="subMessage-ref" type="xsd:string" use="optional" />
+        
+        <xsd:anyAttribute namespace="##any" processContents="lax" />
     </xsd:complexType>
 
     <xsd:complexType name="type">
@@ -55,13 +57,15 @@
 
         <xsd:attribute name="description" type="xsd:string" use="optional" default="" />
 
-        <xsd:attribute name="alignment" type="alignment" use="optional" />
+        <!-- xsd:attribute name="alignment" type="alignment" use="optional" />
         <xsd:attribute name="padWith" type="xsd:string" use="optional" />
 
         <xsd:attribute name="emptyValue" type="xsd:string" use="optional" />
 
         <xsd:attribute name="prefixLength" type="prefixLength" use="optional" />
-        <xsd:attribute name="maxLength" type="length" use="optional" />
+        <xsd:attribute name="maxLength" type="length" use="optional" / -->
+        
+        <xsd:anyAttribute namespace="##any" processContents="lax" />
     </xsd:complexType>
 
     <xsd:complexType name="message">

@@ -13,7 +13,7 @@ import org.xml.sax.SAXParseException;
 
 import rk.commons.ioc.factory.IocObjectFactory;
 import rk.commons.ioc.factory.support.ObjectDefinitionRegistry;
-import rk.commons.ioc.factory.xml.BeanDefinitionReader;
+import rk.commons.ioc.factory.xml.ObjectDefinitionReader;
 import rk.commons.ioc.factory.xml.NamespaceHandlerResolver;
 import rk.commons.ioc.factory.xml.NamespaceSchemaResolver;
 import rk.commons.ioc.factory.xml.ObjectDefinitionParserDelegate;
@@ -31,9 +31,9 @@ public class XmlIocContext {
 
 	private NamespaceSchemaResolver schemaResolver;
 
-	protected IocObjectFactory beanFactory;
+	protected IocObjectFactory iocObjectFactory;
 
-	protected ObjectDefinitionRegistry beanDefinitionRegistry;
+	protected ObjectDefinitionRegistry objectDefinitionRegistry;
 	
 	protected String xmlDefaultNamespace;
 
@@ -51,12 +51,12 @@ public class XmlIocContext {
 		schemaResolver = new NamespaceSchemaResolver(resourceLoader, path);
 	}
 	
-	public void setBeanFactory(IocObjectFactory beanFactory) {
-		this.beanFactory = beanFactory;  
+	public void setIocObjectFactory(IocObjectFactory iocObjectFactory) {
+		this.iocObjectFactory = iocObjectFactory;  
 	}
 	
-	public void setBeanDefinitionRegistry(ObjectDefinitionRegistry beanDefinitionRegistry) {
-		this.beanDefinitionRegistry = beanDefinitionRegistry;
+	public void setObjectDefinitionRegistry(ObjectDefinitionRegistry objectDefinitionRegistry) {
+		this.objectDefinitionRegistry = objectDefinitionRegistry;
 	}
 	
 	public void setXmlDefaultNamespace(String xmlDefaultNamespace) {
@@ -67,18 +67,18 @@ public class XmlIocContext {
 		this.locations = locations;
 	}
 
-	protected void loadBeanDefinitions(URL url, Set<URL> importedURLs) {
+	protected void loadObjectDefinitions(URL url, Set<URL> importedURLs) {
 		if (!importedURLs.add(url)) {
 			// already loaded, skip it!
 			return;
 		}
 		
 		ObjectDefinitionParserDelegate delegate = new ObjectDefinitionParserDelegate(resourceLoader);
-		delegate.setObjectDefinitionRegistry(beanDefinitionRegistry);
+		delegate.setObjectDefinitionRegistry(objectDefinitionRegistry);
 		delegate.setNamespaceHandlerResolver(handlerResolver);
 		delegate.setPackageName(null);
 
-		BeanDefinitionReader reader = new BeanDefinitionReader(url, schemaResolver);
+		ObjectDefinitionReader reader = new ObjectDefinitionReader(url, schemaResolver);
 
 		Element rootElement = null;
 
@@ -115,7 +115,7 @@ public class XmlIocContext {
 					URL[] refURLs = resourceLoader.getURLs(element.getAttribute("url"));
 
 					for (int j = 0, m = refURLs.length; j < m; ++j) {
-						loadBeanDefinitions(refURLs[i], importedURLs);
+						loadObjectDefinitions(refURLs[i], importedURLs);
 					}
 				} else {
 					delegate.parse((Element) node);
@@ -128,19 +128,19 @@ public class XmlIocContext {
 		Set<URL> importedURLs = new HashSet<URL>();
 		
 		for (int i = 0, n = locations.length; i < n; ++i) {
-			loadBeanDefinitions(resourceLoader.getURL(locations[i]), importedURLs);
+			loadObjectDefinitions(resourceLoader.getURL(locations[i]), importedURLs);
 		}
 
 		if (!lazy) {
-			String[] beanQNames = beanDefinitionRegistry.getObjectQNames();
+			String[] objectQNames = objectDefinitionRegistry.getObjectQNames();
 	
-			for (int i = 0; i < beanQNames.length; ++i) {
-				beanFactory.createObject(beanDefinitionRegistry.getObjectDefinition(beanQNames[i]));
+			for (int i = 0; i < objectQNames.length; ++i) {
+				iocObjectFactory.createObject(objectDefinitionRegistry.getObjectDefinition(objectQNames[i]));
 			}
 		}
 	}
 
 	public void refresh(String location) {
-		loadBeanDefinitions(resourceLoader.getURL(location), new HashSet<URL>());
+		loadObjectDefinitions(resourceLoader.getURL(location), new HashSet<URL>());
 	}
 }

@@ -70,7 +70,8 @@ public abstract class ReflectionUtils {
 		return found;
 	}
 
-	public static Method findStringConvertablePublicMethod(Class<?> _class, String methodName, TypeConverterResolver resolver) {
+	public static Method findConvertablePublicMethod(Class<?> _class, String methodName,
+			TypeConverterResolver resolver, Class<?> valueType) {
 		Method found = null;
 		
 		while (_class != null) {
@@ -83,7 +84,7 @@ public abstract class ReflectionUtils {
 					Class<?>[] methodParameterTypes = method.getParameterTypes();
 					
 					if ((methodParameterTypes != null) && (methodParameterTypes.length == 1)) {
-						if (resolver.resolve(String.class, methodParameterTypes[0]) != null) {
+						if (resolver.resolve(valueType, methodParameterTypes[0]) != null) {
 							found = method;
 							
 							break;

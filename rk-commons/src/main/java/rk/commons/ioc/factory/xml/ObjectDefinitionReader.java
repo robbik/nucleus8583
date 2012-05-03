@@ -14,7 +14,7 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
-public class BeanDefinitionReader implements ErrorHandler, EntityResolver {
+public class ObjectDefinitionReader implements ErrorHandler, EntityResolver {
 
 	private static final String JAXP_SCHEMA_LANGUAGE = "http://java.sun.com/xml/jaxp/properties/schemaLanguage";
 
@@ -28,7 +28,7 @@ public class BeanDefinitionReader implements ErrorHandler, EntityResolver {
 
 	private NamespaceSchemaResolver resolver;
 
-	public BeanDefinitionReader(URL docURL, NamespaceSchemaResolver resolver) {
+	public ObjectDefinitionReader(URL docURL, NamespaceSchemaResolver resolver) {
 		this.docURL = docURL;
 		this.resolver = resolver;
 

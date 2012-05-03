@@ -1,11 +1,16 @@
 package rk.commons.ioc.factory.type.converter;
 
+import java.net.URI;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import rk.commons.ioc.factory.type.converter.spi.StringToBooleanConverter;
+import rk.commons.ioc.factory.type.converter.spi.StringToDoubleConverter;
+import rk.commons.ioc.factory.type.converter.spi.StringToFloatConverter;
 import rk.commons.ioc.factory.type.converter.spi.StringToIntConverter;
 import rk.commons.ioc.factory.type.converter.spi.StringToLongConverter;
+import rk.commons.ioc.factory.type.converter.spi.StringToUriConverter;
 import rk.commons.util.ObjectUtils;
 
 public class TypeConverterResolver {
@@ -16,8 +21,13 @@ public class TypeConverterResolver {
 		map = Collections.synchronizedMap(new HashMap<Tupple, TypeConverter>());
 		
 		// register embedded type converters
-		register(StringToIntConverter.FROM, StringToIntConverter.TO, new StringToIntConverter());
-		register(StringToLongConverter.FROM, StringToLongConverter.TO, new StringToLongConverter());
+		register(String.class, int.class, new StringToIntConverter());
+		register(String.class, long.class, new StringToLongConverter());
+		register(String.class, boolean.class, new StringToBooleanConverter());
+		register(String.class, float.class, new StringToFloatConverter());
+		register(String.class, double.class, new StringToDoubleConverter());
+
+		register(String.class, URI.class, new StringToUriConverter());
 	}
 	
 	public void register(Class<?> from, Class<?> to, TypeConverter converter) {

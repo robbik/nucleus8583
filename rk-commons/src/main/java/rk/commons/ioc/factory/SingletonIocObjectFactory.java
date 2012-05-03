@@ -20,6 +20,7 @@ import rk.commons.ioc.factory.support.ObjectDefinitionRegistry;
 import rk.commons.ioc.factory.support.ObjectDefinitionValueResolver;
 import rk.commons.ioc.factory.support.ObjectFactory;
 import rk.commons.ioc.factory.support.ObjectQNameAware;
+import rk.commons.ioc.factory.support.ResourceLoaderAware;
 import rk.commons.ioc.factory.type.converter.TypeConverterResolver;
 import rk.commons.loader.ResourceLoader;
 import rk.commons.logging.Logger;
@@ -81,17 +82,17 @@ public class SingletonIocObjectFactory implements IocObjectFactory, ObjectDefini
 
 	@SuppressWarnings("unchecked")
 	public <T> List<T> getObjectsOfType(Class<T> type) {
-		List<T> beans = new ArrayList<T>();
+		List<T> objects = new ArrayList<T>();
 
 		synchronized (singletons) {
 			for (Object o : singletons.values()) {
 				if (type.isInstance(o)) {
-					beans.add((T) o);
+					objects.add((T) o);
 				}
 			}
 		}
 
-		return beans;
+		return objects;
 	}
 
 	public String[] getObjectQNames() {
@@ -181,6 +182,10 @@ public class SingletonIocObjectFactory implements IocObjectFactory, ObjectDefini
 			((IocObjectFactoryAware) object).setIocObjectFactory(this);
 		}
 		
+		if (object instanceof ResourceLoaderAware) {
+			((ResourceLoaderAware) object).setResourceLoader(resourceLoader);
+		}
+		
 		if (object instanceof InitializingObject) {
 			try {
 				((InitializingObject) object).initialize();
@@ -194,10 +199,10 @@ public class SingletonIocObjectFactory implements IocObjectFactory, ObjectDefini
 	
 	public void destroy() {
 		synchronized (singletons) {
-			for (Object bean : singletons.values()) {
-				if (bean instanceof DisposableObject) {
+			for (Object object : singletons.values()) {
+				if (object instanceof DisposableObject) {
 					try {
-						((DisposableObject) bean).destroy();
+						((DisposableObject) object).destroy();
 					} catch (Throwable t) {
 						// do nothing
 					}

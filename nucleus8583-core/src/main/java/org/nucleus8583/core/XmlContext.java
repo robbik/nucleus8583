@@ -54,8 +54,8 @@ public class XmlContext {
 		context.setNamespaceHandlerPath(NAMESPACE_HANDLER);
 		context.setNamespaceSchemaPath(NAMESPACE_SCHEMA);
 		
-		context.setBeanFactory(beanFactory);
-		context.setBeanDefinitionRegistry(beanFactory);
+		context.setIocObjectFactory(beanFactory);
+		context.setObjectDefinitionRegistry(beanFactory);
 		
 		boolean defTypesFound = false;
 
