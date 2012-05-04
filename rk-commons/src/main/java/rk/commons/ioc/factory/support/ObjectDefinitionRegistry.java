@@ -1,5 +1,7 @@
 package rk.commons.ioc.factory.support;
 
+import java.util.Set;
+
 import rk.commons.ioc.factory.config.ObjectDefinition;
 
 public interface ObjectDefinitionRegistry {
@@ -12,5 +14,5 @@ public interface ObjectDefinitionRegistry {
 	
 	boolean containsObjectDefinition(String objectQName);
 	
-	String[] getObjectQNames();
+	Set<String> getObjectQNames();
 }

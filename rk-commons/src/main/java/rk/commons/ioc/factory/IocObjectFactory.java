@@ -1,6 +1,7 @@
 package rk.commons.ioc.factory;
 
-import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import rk.commons.ioc.factory.config.ObjectDefinition;
 
@@ -10,9 +11,9 @@ public interface IocObjectFactory {
 
 	Object getObject(String objectQName);
 
-	<T> List<T> getObjectsOfType(Class<T> type);
+	<T> Map<String, T> getObjectsOfType(Class<T> type);
 
-	String[] getObjectQNames();
+	Set<String> getObjectQNames();
 	
 	Object createObject(ObjectDefinition definition);
 	

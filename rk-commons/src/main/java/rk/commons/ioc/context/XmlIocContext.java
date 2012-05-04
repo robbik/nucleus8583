@@ -12,11 +12,13 @@ import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
 import rk.commons.ioc.factory.IocObjectFactory;
+import rk.commons.ioc.factory.ObjectNotFoundException;
+import rk.commons.ioc.factory.config.ObjectDefinition;
 import rk.commons.ioc.factory.support.ObjectDefinitionRegistry;
-import rk.commons.ioc.factory.xml.ObjectDefinitionReader;
 import rk.commons.ioc.factory.xml.NamespaceHandlerResolver;
 import rk.commons.ioc.factory.xml.NamespaceSchemaResolver;
 import rk.commons.ioc.factory.xml.ObjectDefinitionParserDelegate;
+import rk.commons.ioc.factory.xml.ObjectDefinitionReader;
 import rk.commons.loader.ResourceLoader;
 import rk.commons.logging.Logger;
 import rk.commons.logging.LoggerFactory;
@@ -132,10 +134,18 @@ public class XmlIocContext {
 		}
 
 		if (!lazy) {
-			String[] objectQNames = objectDefinitionRegistry.getObjectQNames();
+			Set<String> objectQNames = objectDefinitionRegistry.getObjectQNames();
 	
-			for (int i = 0; i < objectQNames.length; ++i) {
-				iocObjectFactory.createObject(objectDefinitionRegistry.getObjectDefinition(objectQNames[i]));
+			for (String objectQName : objectQNames) {
+				ObjectDefinition def;
+				
+				try {
+					def = objectDefinitionRegistry.getObjectDefinition(objectQName);
+				} catch (ObjectNotFoundException e) {
+					continue;
+				}
+				
+				iocObjectFactory.createObject(def);
 			}
 		}
 	}

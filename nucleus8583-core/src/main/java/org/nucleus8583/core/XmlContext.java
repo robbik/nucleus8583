@@ -1,6 +1,7 @@
 package org.nucleus8583.core;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import org.nucleus8583.core.xml.StringToAlignmentConverter;
@@ -91,7 +92,7 @@ public class XmlContext {
 	}
 
 	public MessageSerializer getMessageSerializer() {
-		List<MessageSerializer> list = beanFactory.getObjectsOfType(MessageSerializer.class);
+		Collection<MessageSerializer> list = beanFactory.getObjectsOfType(MessageSerializer.class).values();
 		
 		if (list.isEmpty()) {
 			throw new IllegalArgumentException("no message serializer defined");
@@ -99,6 +100,6 @@ public class XmlContext {
 			throw new IllegalArgumentException("more than one message serializers defined");
 		}
 		
-		return list.get(0);
+		return list.iterator().next();
 	}
 }

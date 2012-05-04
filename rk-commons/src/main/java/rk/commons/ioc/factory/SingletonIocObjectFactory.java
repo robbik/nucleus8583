@@ -4,11 +4,9 @@ import java.lang.reflect.Constructor;
 import java.security.AccessController;
 import java.security.PrivilegedActionException;
 import java.security.PrivilegedExceptionAction;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -81,13 +79,13 @@ public class SingletonIocObjectFactory implements IocObjectFactory, ObjectDefini
 	}
 
 	@SuppressWarnings("unchecked")
-	public <T> List<T> getObjectsOfType(Class<T> type) {
-		List<T> objects = new ArrayList<T>();
+	public <T> Map<String, T> getObjectsOfType(Class<T> type) {
+		Map<String, T> objects = new HashMap<String, T>();
 
 		synchronized (singletons) {
-			for (Object o : singletons.values()) {
-				if (type.isInstance(o)) {
-					objects.add((T) o);
+			for (Map.Entry<String, Object> entry : singletons.entrySet()) {
+				if (type.isInstance(entry.getValue())) {
+					objects.put(entry.getKey(), (T) entry.getValue());
 				}
 			}
 		}
@@ -95,12 +93,12 @@ public class SingletonIocObjectFactory implements IocObjectFactory, ObjectDefini
 		return objects;
 	}
 
-	public String[] getObjectQNames() {
+	public Set<String> getObjectQNames() {
 		Set<String> set = new HashSet<String>();
 		set.addAll(singletons.keySet());
 		set.addAll(definitions.keySet());
 
-		return set.toArray(StringUtils.EMPTY_STRING_ARRAY);
+		return set;
 	}
 
 	public Object createObject(final ObjectDefinition definition) {

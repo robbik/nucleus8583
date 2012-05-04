@@ -73,11 +73,14 @@
                             org.slf4j;resolution:=optional,
                             org.apache.commons.logging;resolution:=optional,
                             java.util.logging;resolution:=optional,
-                            *
+                            javax.xml.parsers,
+                            org.w3c.dom,
+                            org.xml.sax,
+                            !org.springframework.*
                         </Import-Package>
                         <Export-Package>
-                            org.nucleus8583.core;version=${project.version},
-                            org.nucleus8583.core.field;version=${project.version},
+                            org.nucleus8583.core;version=${project.version};-noimport:=true,
+                            org.nucleus8583.core.field;version=${project.version};-noimport:=true,
                             org.nucleus8583.core.field.spi;version=${project.version}
                         </Export-Package>
                         <Private-Package>
