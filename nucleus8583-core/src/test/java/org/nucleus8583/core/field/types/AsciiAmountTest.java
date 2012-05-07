@@ -6,9 +6,9 @@ import java.io.ByteArrayOutputStream;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.nucleus8583.core.field.Alignment;
 import org.nucleus8583.core.field.Type;
 import org.nucleus8583.core.field.spi.AsciiAmount;
-import org.nucleus8583.core.xml.Alignment;
 
 public class AsciiAmountTest {
 

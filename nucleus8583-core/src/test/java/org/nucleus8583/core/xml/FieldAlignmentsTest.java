@@ -3,6 +3,7 @@ package org.nucleus8583.core.xml;
 import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
+import org.nucleus8583.core.field.Alignment;
 
 public class FieldAlignmentsTest {
 

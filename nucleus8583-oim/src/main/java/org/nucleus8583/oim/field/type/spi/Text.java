@@ -1,27 +1,29 @@
-package org.nucleus8583.core.field.spi;
+package org.nucleus8583.oim.field.type.spi;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.Reader;
+import java.io.Writer;
 
-import org.nucleus8583.core.field.Alignment;
-import org.nucleus8583.core.field.Type;
-import org.nucleus8583.core.util.AsciiPadder;
+import org.nucleus8583.oim.field.Alignment;
+import org.nucleus8583.oim.field.type.Type;
+import org.nucleus8583.oim.util.TextPadder;
 
 import rk.commons.ioc.factory.support.InitializingObject;
+import rk.commons.util.IOUtils;
 import rk.commons.util.StringEscapeUtils;
 import rk.commons.util.StringUtils;
 
-public class AsciiText implements Type<String>, InitializingObject {
+public class Text implements Type, InitializingObject {
 
 	private static final long serialVersionUID = -5615324004502124085L;
 
-	protected final AsciiPadder padder;
+	protected final TextPadder padder;
 
 	protected int length;
 
-	public AsciiText() {
-		padder = new AsciiPadder();
+	public Text() {
+		padder = new TextPadder();
 		
 		padder.setAlign(Alignment.TRIMMED_LEFT);
 		padder.setPadWith(' ');
@@ -29,8 +31,8 @@ public class AsciiText implements Type<String>, InitializingObject {
 		padder.setEmptyValue(new char[0]);
 	}
 	
-	public AsciiText(AsciiText o) {
-		padder = new AsciiPadder(o.padder);
+	public Text(Text o) {
+		padder = new TextPadder(o.padder);
 		
 		length = o.length;
 	}
@@ -77,30 +79,52 @@ public class AsciiText implements Type<String>, InitializingObject {
 		padder.initialize();
 	}
 
-	public String read(InputStream in) throws IOException {
-		return new String(padder.unpad(in, length));
+	public boolean supportWriter() {
+		return true;
 	}
 
-	public void write(OutputStream out, String value) throws IOException {
-		int vlen = value.length();
-		if (vlen > length) {
-			throw new IllegalArgumentException("value too long, expected " + length + " but actual is " + vlen);
+	public boolean supportOutputStream() {
+		return false;
+	}
+
+	public Object read(InputStream in) throws Exception {
+		throw new UnsupportedOperationException();
+	}
+
+	public Object read(Reader in) throws Exception {
+		if (length > 0) {
+			char[] buf = new char[length];
+			IOUtils.readFully(in, buf, 0, length);
+			
+			return new String(padder.unpad(buf, length));
+		} else {
+			char[] buf = IOUtils.readUntilEof(in);
+			
+			return new String(padder.unpad(buf, buf.length));
 		}
-
-		padder.pad(out, value, vlen);
 	}
 
-	public void readBitmap(InputStream in, byte[] bitmap, int off, int len)
-			throws IOException {
+	public void write(OutputStream out, Object o) throws Exception {
 		throw new UnsupportedOperationException();
 	}
 
-	public void writeBitmap(OutputStream out, byte[] bitmap, int off, int len)
-			throws IOException {
-		throw new UnsupportedOperationException();
+	public void write(Writer out, Object o) throws Exception {
+		String value = (String) o;
+		
+		if (length > 0) {
+			int vlen = value.length();
+
+			if (vlen > length) {
+				vlen = length;
+			}
+			
+			padder.pad(out, value, vlen);
+		} else {
+			out.write(value);
+		}
 	}
 	
-	public Type<String> clone() {
-		return new AsciiText(this);
+	public Type clone() {
+		return new Text(this);
 	}
 }

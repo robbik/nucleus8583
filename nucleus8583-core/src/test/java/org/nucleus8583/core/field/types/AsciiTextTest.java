@@ -9,9 +9,9 @@ import java.lang.reflect.ParameterizedType;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.nucleus8583.core.field.Alignment;
 import org.nucleus8583.core.field.Type;
 import org.nucleus8583.core.field.spi.AsciiText;
-import org.nucleus8583.core.xml.Alignment;
 
 public class AsciiTextTest {
 

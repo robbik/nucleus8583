@@ -1,29 +1,56 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<iso8583-messages>
-	<message name="ipm1" class="org.nucleus8583.oim.metadata.Ipm1">
-		<basic no="0" type="string" generated-value="literal:0200" length="4" />
-		<basic no="2" name="cardNumber" type="string" length="13" />
-		<!-- <basic no="7" type="MMddHHmmss" generated-value="new java.util.Date()" 
-			/> -->
-		<basic no="11" name="stan" type="string" align="right" pad-with="0"
-			length="6" />
-		<basic no="12" name="transactionTime" type="HHmmss" />
-		<basic no="13" name="transactionDate" type="MMdd" />
+<nucleus8583-oim xmlns="http://www.nucleus8583.org/schema/nucleus8583-oim"
+                 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                 xsi:schemaLocation="http://www.nucleus8583.org/schema/nucleus8583-oim 
+                                     http://www.nucleus8583.org/schema/nucleus8583-oim.xsd">
+    
+	<message name="msg1">
+		<basic no="0" name="mti" type="text" />
+		<basic no="2" name="cardNumber" type="text" />
+		<basic no="7" name="transmissionDateTime" type="dateTime" pattern="MMddHHmmss" />
+		<basic no="11" name="stan" type="int" />
+		<basic no="12" name="transactionTime" type="dateTime" pattern="HHmmss" />
+		<basic no="13" name="transactionDate" type="dateTime" pattern="MMdd" />
 
-		<data-structure no="29">
-			<skip fill-with="C" length="1" />
-			<basic name="charge" type="decimal;precision=2" length="8" />
-		</data-structure>
+		<record no="29" mode="text">
+			<pad padWith="C" mode="text" />
+			<basic name="charge" type="numeric" length="8" precision="2" />
+		</record>
 
-		<basic no="37" name="rrn" type="string" length="10" />
-		<basic no="39" name="responseCode" type="string" length="2" />
-
-		<data-structure no="48">
-			<transient name="details" generated-value="mvel:details.length"
-				type="integer" align="right" pad-with="0" length="2" />
-			<skip fill-with="0" length="3" />
-			<list name="details" size="transient:details" append="false"
-				data-structure-ref="ipm1detail" />
-		</data-structure>
+		<basic no="37" name="rrn" type="text" />
+		<basic no="39" name="responseCode" type="text" />
+		
+        <record no="48" mode="text">
+            <basic name="details_count" type="int" length="2" />
+            
+            <list name="details" countName="details_count" mode="text">
+                <basic name="z" type="text" length="8" />
+            </list>
+        </record>
 	</message>
-</iso8583-messages>
+
+    <message name="msg1_rev">
+        <basic no="0" name="mti" type="text" />
+        <basic no="2" name="cardNumber" type="text" />
+        <basic no="7" name="transmissionDateTime" type="dateTime" pattern="MMddHHmmss" />
+        <basic no="11" name="stan" type="int" alignment="right" padWith="0" />
+        <basic no="12" name="transactionTime" type="dateTime" pattern="HHmmss" />
+        <basic no="13" name="transactionDate" type="dateTime" pattern="MMdd" />
+
+        <record no="29" mode="text">
+            <skip length="1" />
+            <basic name="charge" type="numeric" length="8" precision="2" />
+        </record>
+
+        <basic no="37" name="rrn" type="text" />
+        <basic no="39" name="responseCode" type="text" />
+
+        <record no="48" mode="text">
+            <basic name="details_count" type="int" length="2" />
+            
+            <list name="details" countName="details_count" mode="text">
+                <basic name="z" type="text" length="8" />
+            </list>
+        </record>
+    </message>
+</nucleus8583-oim>

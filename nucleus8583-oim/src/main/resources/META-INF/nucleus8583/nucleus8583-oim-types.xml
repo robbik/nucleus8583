@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<nucleus8583-oim xmlns="http://www.nucleus8583.org/schema/nucleus8583-oim"
+                 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                 xsi:schemaLocation="http://www.nucleus8583.org/schema/nucleus8583-oim 
+                                     http://www.nucleus8583.org/schema/nucleus8583-oim.xsd">
+    
+    <type name="text" class="org.nucleus8583.oim.field.type.spi.Text" />
+    
+    <type name="numeric" class="org.nucleus8583.oim.field.type.spi.Numeric" />
+    
+    <type name="dateTime" class="org.nucleus8583.oim.field.type.spi.DateTime" />
+    
+    <type name="bytes" class="org.nucleus8583.oim.field.type.spi.Bytes" />
+    
+    <type name="int" class="org.nucleus8583.oim.field.type.spi.Int" />
+</nucleus8583-oim>

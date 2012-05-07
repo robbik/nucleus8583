@@ -1,7 +1,6 @@
 package org.nucleus8583.core.field;
 
 import org.nucleus8583.core.field.spi.AsciiText;
-import org.nucleus8583.core.xml.Alignment;
 
 public abstract class DefaultFields {
 

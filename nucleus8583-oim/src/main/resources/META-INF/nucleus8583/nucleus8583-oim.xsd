@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns="http://www.nucleus8583.org/schema/nucleus8583-oim"
+            xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            targetNamespace="http://www.nucleus8583.org/schema/nucleus8583-oim"
+            elementFormDefault="qualified"
+            attributeFormDefault="unqualified">
+
+    <xsd:simpleType name="fieldNo">
+        <xsd:restriction base="xsd:unsignedInt">
+            <xsd:minInclusive value="0" />
+            <xsd:maxInclusive value="192" />
+        </xsd:restriction>
+    </xsd:simpleType>
+    
+    <xsd:simpleType name="length">
+        <xsd:restriction base="xsd:int">
+            <xsd:minInclusive value="1" />
+            <xsd:maxInclusive value="2000000000" />
+        </xsd:restriction>
+    </xsd:simpleType>
+    
+    <xsd:simpleType name="mode">
+        <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="text" />
+            <xsd:enumeration value="binary" />
+        </xsd:restriction>
+    </xsd:simpleType>
+    
+    <xsd:complexType name="type">
+        <xsd:attribute name="name" type="xsd:string" use="required" />
+        <xsd:attribute name="class" type="xsd:string" use="required" />
+
+        <xsd:attribute name="description" type="xsd:string" use="optional" default="" />
+        
+        <xsd:anyAttribute namespace="##any" processContents="lax" />
+    </xsd:complexType>
+
+    <xsd:complexType name="basic">
+        <xsd:attribute name="name" type="xsd:string" use="required" />
+        <xsd:attribute name="type" type="xsd:string" use="required" />
+        
+        <xsd:anyAttribute namespace="##any" processContents="lax" />
+    </xsd:complexType>
+
+    <xsd:complexType name="skip">
+        <xsd:attribute name="length" type="length" use="required" />
+    </xsd:complexType>
+
+    <xsd:complexType name="pad">
+        <xsd:attribute name="padWith" type="xsd:string" use="required" />
+        <xsd:attribute name="mode" type="mode" use="required" />
+    </xsd:complexType>
+
+    <xsd:complexType name="record">
+        <xsd:choice minOccurs="1" maxOccurs="unbounded">
+            <xsd:element name="basic" type="basic" />
+            <xsd:element name="skip" type="skip" />
+            <xsd:element name="pad" type="pad" />
+            <xsd:element name="record" type="record" />
+            <xsd:element name="list" type="list" />
+        </xsd:choice>
+
+        <xsd:attribute name="name" type="xsd:string" use="optional" />
+        <xsd:attribute name="mode" type="mode" use="required" />
+    </xsd:complexType>
+
+    <xsd:complexType name="list">
+        <xsd:complexContent>
+            <xsd:extension base="record">
+                <xsd:attribute name="append" type="xsd:boolean" use="optional" default="false" />
+                <xsd:attribute name="countName" type="xsd:string" use="optional" />
+                <xsd:attribute name="maxCount" type="length" use="optional" default="2000000000" />
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+
+    <xsd:complexType name="root-basic">
+        <xsd:complexContent>
+            <xsd:extension base="basic">
+                <xsd:attribute name="no" type="fieldNo" use="required" />
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+
+    <xsd:complexType name="root-skip">
+        <xsd:complexContent>
+            <xsd:extension base="skip">
+                <xsd:attribute name="no" type="fieldNo" use="required" />
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+
+    <xsd:complexType name="root-pad">
+        <xsd:complexContent>
+            <xsd:extension base="pad">
+                <xsd:attribute name="no" type="fieldNo" use="required" />
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+
+    <xsd:complexType name="root-record">
+        <xsd:complexContent>
+            <xsd:extension base="record">
+                <xsd:attribute name="no" type="fieldNo" use="required" />
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+
+    <xsd:complexType name="root-list">
+        <xsd:complexContent>
+            <xsd:extension base="list">
+                <xsd:attribute name="no" type="fieldNo" use="required" />
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+
+    <xsd:complexType name="message">
+        <xsd:choice minOccurs="1" maxOccurs="unbounded">
+            <xsd:element name="basic" type="root-basic" />
+            <xsd:element name="skip" type="root-skip" />
+            <xsd:element name="pad" type="root-pad" />
+            <xsd:element name="record" type="root-record" />
+            <xsd:element name="list" type="root-list" />
+        </xsd:choice>
+
+        <xsd:attribute name="name" type="xsd:string" use="required" />
+    </xsd:complexType>
+
+    <xsd:complexType name="import">
+        <xsd:attribute name="url" type="xsd:string" use="required" />
+    </xsd:complexType>
+
+    <xsd:element name="nucleus8583-oim">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:choice minOccurs="0" maxOccurs="unbounded">
+                    <xsd:element name="type" type="type" />
+                    <xsd:element name="message" type="message" />
+                    <xsd:element name="import" type="import" />
+                </xsd:choice>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+</xsd:schema>

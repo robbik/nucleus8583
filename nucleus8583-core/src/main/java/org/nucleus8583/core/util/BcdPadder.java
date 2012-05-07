@@ -5,7 +5,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Arrays;
 
-import org.nucleus8583.core.xml.Alignment;
+import org.nucleus8583.core.field.Alignment;
 
 import rk.commons.util.IOUtils;
 

@@ -1,33 +1,68 @@
-package org.nucleus8583.core.util;
+package org.nucleus8583.oim.util;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Arrays;
 
-import org.nucleus8583.core.field.Alignment;
+import org.nucleus8583.oim.field.Alignment;
 
 import rk.commons.util.IOUtils;
 
-public class Base16Padder {
-
-	private static final char[] HEX = { '0', '1', '2', '3', '4', '5', '6', '7',
-			'8', '9', 'A', 'B', 'C', 'D', 'E', 'F' };
+public class BytesPadder {
 
 	public static int hex2int(char ichar) {
-        if ((ichar >= '0') && (ichar <= '9')) {
-            return ichar - '0';
-        }
+		switch (ichar) {
+		case '0':
+			break;
+		case '1':
+			// 0001
+			return 1;
+		case '2':
+			// 0010
+			return 2;
+		case '3':
+			// 0011
+			return 3;
+		case '4':
+			// 0100
+			return 4;
+		case '5':
+			// 0101
+			return 5;
+		case '6':
+			// 0110
+			return 6;
+		case '7':
+			// 0111
+			return 7;
+		case '8':
+			// 1000
+			return 8;
+		case '9':
+			// 1001
+			return 9;
+		case 'A':
+			// 1010
+			return 10;
+		case 'B':
+			// 1011
+			return 11;
+		case 'C':
+			// 1100
+			return 12;
+		case 'D':
+			// 1101
+			return 13;
+		case 'E':
+			// 1110
+			return 14;
+		case 'F':
+			// 1111
+			return 15;
+		}
 
-        if ((ichar >= 'A') && (ichar <= 'F')) {
-            return ichar - 'A' + 10;
-        }
-
-	    if ((ichar >= 'a') && (ichar <= 'f')) {
-	        return ichar - 'a' + 10;
-	    }
-
-        return 0;
+		return 0;
 	}
 
 	private byte padWith;
@@ -40,11 +75,11 @@ public class Base16Padder {
 
 	private byte[] emptyValue;
 	
-	public Base16Padder() {
+	public BytesPadder() {
 		// do nothing
 	}
 	
-	public Base16Padder(Base16Padder o) {
+	public BytesPadder(BytesPadder o) {
 		padWith = o.padWith;
 		align = o.align;
 		
@@ -67,11 +102,15 @@ public class Base16Padder {
 	}
 
 	public void setLength(int length) {
-		this.length = (length + 1) >> 1;
+		this.length = length;
 	}
 
 	public void setEmptyValue(byte[] emptyValue) {
 		this.emptyValue = emptyValue;
+	}
+
+	public byte[] getEmptyValue() {
+	    return emptyValue;
 	}
 
 	public void initialize() {
@@ -79,39 +118,36 @@ public class Base16Padder {
 		Arrays.fill(padder, padWith);
 	}
 
-	public void pad(OutputStream out, byte[] value, int off, int vlen)
+	public void pad(OutputStream out, byte[] value, int off, int valueLength)
 			throws IOException {
-		if (vlen == 0) {
+		if (valueLength == 0) {
 			write(out, padder, 0, length);
-		} else if (vlen == length) {
-			write(out, value, off, vlen);
+		} else if (valueLength == length) {
+			write(out, value, 0, valueLength);
 		} else {
 			switch (align) {
 			case TRIMMED_LEFT:
-			case UNTRIMMED_LEFT:
-				write(out, value, off, vlen);
-				write(out, padder, 0, length - vlen);
+            case UNTRIMMED_LEFT:
+				write(out, value, off, valueLength);
+				write(out, padder, 0, length - valueLength);
 
 				break;
 			case TRIMMED_RIGHT:
-			case UNTRIMMED_RIGHT:
-				write(out, padder, 0, length - vlen);
-				write(out, value, off, vlen);
+            case UNTRIMMED_RIGHT:
+				write(out, padder, 0, length - valueLength);
+				write(out, value, off, valueLength);
 
 				break;
 			default: // NONE
-				write(out, value, off, vlen);
-				write(out, padder, 0, length - vlen);
+				write(out, value, off, valueLength);
+				write(out, padder, 0, length - valueLength);
 
 				break;
 			}
 		}
 	}
 
-	public byte[] unpad(InputStream in) throws IOException {
-		byte[] value = new byte[length << 1];
-		read(in, value, 0, value.length);
-
+	public byte[] unpad(byte[] value, int length) throws IOException {
 		byte[] result;
 		int resultLength;
 
@@ -221,7 +257,7 @@ public class Base16Padder {
 	}
 
 	/**
-	 * read N*2 bytes from input stream and store it to <code>value</code>
+	 * read N bytes from input stream and store it to <code>value</code>
 	 * starting from offset <code>off</code>.
 	 *
 	 * @param in
@@ -232,20 +268,11 @@ public class Base16Padder {
 	 */
 	public void read(InputStream in, byte[] value, int off, int vlen)
 			throws IOException {
-		vlen <<= 1;
-
-		byte[] bbuf = new byte[vlen];
-		IOUtils.readFully(in, bbuf, vlen);
-
-		for (int i = 0, j = off; i < vlen; i += 2, ++j) {
-			value[j] = (byte) ((hex2int((char) (bbuf[i] & 0xFF)) << 4) | hex2int((char) (bbuf[i + 1] & 0xFF)));
-		}
+		IOUtils.readFully(in, value, off, vlen);
 	}
 
 	/**
-	 * write N bytes of value to output stream. As the each byte of value will
-	 * be written in hexadecimal form, so this method will write N*2 bytes in
-	 * the stream.
+	 * write N bytes of value to output stream.
 	 *
 	 * @param out
 	 * @param value
@@ -255,9 +282,6 @@ public class Base16Padder {
 	 */
 	public void write(OutputStream out, byte[] value, int off, int vlen)
 			throws IOException {
-		for (int i = off; i < vlen; ++i) {
-			out.write(HEX[(value[i] & 0xF0) >> 4]); // hi
-			out.write(HEX[value[i] & 0x0F]); // lo
-		}
+		out.write(value, off, vlen);
 	}
 }

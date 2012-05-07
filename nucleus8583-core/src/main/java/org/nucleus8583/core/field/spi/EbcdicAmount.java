@@ -5,10 +5,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+import org.nucleus8583.core.field.Alignment;
 import org.nucleus8583.core.field.Type;
 import org.nucleus8583.core.util.EbcdicAsciiTable;
 import org.nucleus8583.core.util.EbcdicPadder;
-import org.nucleus8583.core.xml.Alignment;
 
 import rk.commons.ioc.factory.support.InitializingObject;
 import rk.commons.util.StringEscapeUtils;

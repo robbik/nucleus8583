@@ -1,26 +1,27 @@
-package org.nucleus8583.core.field.spi;
+package org.nucleus8583.oim.field.type.spi;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.Reader;
+import java.io.Writer;
 
-import org.nucleus8583.core.field.Alignment;
-import org.nucleus8583.core.field.Type;
-import org.nucleus8583.core.util.LiteralBinaryPadder;
+import org.nucleus8583.oim.field.Alignment;
+import org.nucleus8583.oim.field.type.Type;
+import org.nucleus8583.oim.util.BytesPadder;
 
 import rk.commons.ioc.factory.support.InitializingObject;
+import rk.commons.util.IOUtils;
 import rk.commons.util.StringEscapeUtils;
 import rk.commons.util.StringUtils;
 
-public class LiteralBinary implements Type<byte[]>, InitializingObject {
-	private static final long serialVersionUID = -5615324004502124085L;
-
-	protected final LiteralBinaryPadder padder;
-
-    protected int length;
-
-	public LiteralBinary() {
-		padder = new LiteralBinaryPadder();
+public class Bytes implements Type, InitializingObject {
+	
+	protected final BytesPadder padder;
+	
+	protected int length;
+	
+	public Bytes() {
+		padder = new BytesPadder();
 		
 		padder.setAlign(Alignment.NONE);
 		padder.setPadWith((byte) 0);
@@ -28,8 +29,8 @@ public class LiteralBinary implements Type<byte[]>, InitializingObject {
 		padder.setEmptyValue(new byte[0]);
 	}
 	
-	public LiteralBinary(LiteralBinary o) {
-		padder = new LiteralBinaryPadder(o.padder);
+	public Bytes(Bytes o) {
+		padder = new BytesPadder(o.padder);
 		
 		length = o.length;
 	}
@@ -76,30 +77,51 @@ public class LiteralBinary implements Type<byte[]>, InitializingObject {
 		padder.initialize();
 	}
 
-	public byte[] read(InputStream in) throws IOException {
-		return padder.unpad(in);
+	public boolean supportWriter() {
+		return false;
 	}
 
-	public void write(OutputStream out, byte[] value) throws IOException {
-		int vlen = value.length;
-        if (vlen != length) {
-            throw new IllegalArgumentException("value length is not equals to " + length + ", actual is " + vlen);
-        }
-
-        padder.pad(out, value, 0, vlen);
+	public boolean supportOutputStream() {
+		return true;
 	}
 
-	public void readBitmap(InputStream in, byte[] bitmap, int off, int len)
-			throws IOException {
+	public Object read(InputStream in) throws Exception {
+		if (length > 0) {
+			byte[] buf = new byte[length];
+			IOUtils.readFully(in, buf, 0, length);
+			
+			return padder.unpad(buf, length);
+		} else {
+			byte[] buf = IOUtils.readUntilEof(in);
+			
+			return new String(padder.unpad(buf, buf.length));
+		}
+	}
+
+	public void write(OutputStream out, Object o) throws Exception {
+		byte[] value = (byte[]) o;
+		
+		if (length > 0) {
+			int vlen = value.length;
+			if (vlen > length) {
+				vlen = length;
+			}
+			
+			padder.pad(out, value, 0, vlen);
+		} else {
+			out.write(value);
+		}
+	}
+
+	public Object read(Reader in) throws Exception {
 		throw new UnsupportedOperationException();
 	}
 
-	public void writeBitmap(OutputStream out, byte[] bitmap, int off, int len)
-			throws IOException {
+	public void write(Writer out, Object value) throws Exception {
 		throw new UnsupportedOperationException();
 	}
 	
-	public Type<byte[]> clone() {
-		return new LiteralBinary(this);
+	public Type clone() {
+		return new Bytes(this);
 	}
 }

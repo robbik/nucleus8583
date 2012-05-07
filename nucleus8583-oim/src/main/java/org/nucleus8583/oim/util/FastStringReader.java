@@ -3,6 +3,8 @@ package org.nucleus8583.oim.util;
 import java.io.IOException;
 import java.io.Reader;
 
+import rk.commons.util.StringUtils;
+
 public class FastStringReader extends Reader {
 	private final String value;
 
@@ -14,7 +16,7 @@ public class FastStringReader extends Reader {
 
 	public FastStringReader(String value) {
 		this.value = value;
-		this.vlen = StringUtils.nullOrEmpty(value, false) ? 0 : value.length();
+		this.vlen = StringUtils.hasText(value, false) ? value.length() : 0;
 
 		this.readIndex = 0;
 		this.remaining = this.vlen;

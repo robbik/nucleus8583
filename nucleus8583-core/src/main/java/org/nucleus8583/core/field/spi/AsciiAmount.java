@@ -5,8 +5,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+import org.nucleus8583.core.field.Alignment;
 import org.nucleus8583.core.field.Type;
-import org.nucleus8583.core.xml.Alignment;
 
 public class AsciiAmount extends AsciiText {
 	private static final long serialVersionUID = -5615324004502124085L;

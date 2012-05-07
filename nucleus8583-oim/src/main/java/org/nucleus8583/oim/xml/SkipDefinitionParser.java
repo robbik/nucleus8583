@@ -1,0 +1,28 @@
+package org.nucleus8583.oim.xml;
+
+import org.nucleus8583.oim.field.spi.Skip;
+import org.w3c.dom.Element;
+
+import rk.commons.ioc.factory.support.ObjectDefinitionBuilder;
+import rk.commons.ioc.factory.xml.ObjectDefinitionParserDelegate;
+import rk.commons.ioc.factory.xml.SingleObjectDefinitionParser;
+import rk.commons.util.StringUtils;
+
+public class SkipDefinitionParser extends SingleObjectDefinitionParser {
+
+	public static final String ELEMENT_LOCAL_NAME = "skip";
+	
+	@Override
+	protected Class<?> getObjectClass(Element element) {
+		return Skip.class;
+	}
+	
+	protected void doParse(Element element, ObjectDefinitionParserDelegate delegate, ObjectDefinitionBuilder builder) {
+		String stmp = element.getAttribute("no");
+		if (StringUtils.hasText(stmp)) {
+			builder.addPropertyValue("no", Integer.parseInt(stmp));
+		}
+		
+		builder.addPropertyValue("length", element.getAttribute("length"));
+	}
+}
