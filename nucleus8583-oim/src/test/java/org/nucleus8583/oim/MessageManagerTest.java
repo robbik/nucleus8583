@@ -1,6 +1,10 @@
 package org.nucleus8583.oim;
 
+import static org.junit.Assert.assertEquals;
+
 import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -13,82 +17,82 @@ import org.junit.Test;
 import org.nucleus8583.core.Message;
 
 public class MessageManagerTest {
+	
+	private static final SimpleDateFormat sdfMMddHHmmss = new SimpleDateFormat("MMddHHmmss");
+	
+	private static final SimpleDateFormat sdfHHmmss = new SimpleDateFormat("HHmmss");
+	
+	private static final SimpleDateFormat sdfMMdd = new SimpleDateFormat("MMdd");
+	
 	private MessageManager manager;
-
-	@Before
-	public void initialize() throws Exception {
-		manager = new MessageManager("classpath:META-INF/oim-sample.xml");
-	}
-
-	@Test
-	public void testPersist() throws Exception {
-		Message isoMsg = new Message();
+	
+	private Map<String, Object> map1;
+	
+	private Message isoMsg1;
+	
+	private void initialize1(Date dt) throws Exception {
+		String strMMddHHmmss = sdfMMddHHmmss.format(dt);
+		String strHHmmss = sdfHHmmss.format(dt);
+		String strMMdd = sdfMMdd.format(dt);
 		
-		Date dt = new Date();
+		map1 = new HashMap<String, Object>();
+		map1.put("mti", "0110");
+		map1.put("cardNumber", "9939");
+		map1.put("transmissionDateTime", sdfMMddHHmmss.parse(strMMddHHmmss));
+		map1.put("stan", 37);
+		map1.put("transactionTime", sdfHHmmss.parse(strHHmmss));
+		map1.put("transactionDate", sdfMMdd.parse(strMMdd));
 		
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("mti", "0110");
-		map.put("cardNumber", "9939");
-		map.put("transmissionDateTime", dt);
-		map.put("stan", 37);
-		map.put("transactionTime", dt);
-		map.put("transactionDate", dt);
-		map.put("charge", new BigDecimal(10));
-		map.put("rrn", "9987");
-		map.put("responseCode", "00");
+		map1.put("charge", new BigDecimal(-10).setScale(2, RoundingMode.CEILING));
+		map1.put("rrn", "9987");
+		map1.put("responseCode", "00");
 		
 		List<Map<String, Object>> details = new ArrayList<Map<String,Object>>();
 		details.add(Collections.singletonMap("z", (Object) "z1"));
 		details.add(Collections.singletonMap("z", (Object) "z2"));
 		details.add(Collections.singletonMap("z", (Object) "z3"));
 		
-		map.put("details_count", details.size());
-		map.put("details", details);
+		map1.put("details", details);
 		
-		int n = 100000;
+		map1.put("transient:details____count", details.size());
+
+		isoMsg1 = new Message();
+		isoMsg1.setMti("0110");
+		isoMsg1.set(2, "9939");
+		isoMsg1.set(7, strMMddHHmmss);
+		isoMsg1.set(11, "37");
+		isoMsg1.set(12, strHHmmss);
+		isoMsg1.set(13, strMMdd);
+		isoMsg1.set(29, "C0001000-");
+		isoMsg1.set(37, "9987");
+		isoMsg1.set(39, "00");
+		isoMsg1.set(48, "03z1      z2      z3      ");
+	}
+
+	@Before
+	public void initialize() throws Exception {
+		manager = new MessageManager("classpath:META-INF/oim-sample.xml");
 		
-		long dtstart = System.currentTimeMillis();
+		Date dt = new Date();
+
+		initialize1(dt);
+	}
+
+	@Test
+	public void testPersist() throws Exception {
+		Message isoMsg = new Message();
 		
-		for (int i = 0; i < n; ++i) {
-			manager.persist(isoMsg, "msg1", map);
-		}
+		manager.persist(isoMsg, "msg1", map1);
 		
-		long dtend = System.currentTimeMillis();
-		
-		System.out.println((float) (n * 1000) / (float) (dtend - dtstart));
-		
-		System.out.println(isoMsg);
+		assertEquals(isoMsg1, isoMsg);
 	}
 
 	@Test
 	public void testLoad() throws Exception {
-		Message isoMsg = new Message();
-		isoMsg.setMti("0110");
-		isoMsg.set(2, "9939");
-		isoMsg.set(7, "0507194411");
-		isoMsg.set(11, "37");
-		isoMsg.set(12, "194411");
-		isoMsg.set(13, "0507");
-		isoMsg.set(29, "C00001000");
-		isoMsg.set(37, "9987");
-		isoMsg.set(39, "00");
-		isoMsg.set(48, "03z1      z2      z3      ");
-		
 		Map<String, Object> map = new HashMap<String, Object>();
-		int n = 100000;
 		
-		long dtstart = System.currentTimeMillis();
+		manager.load(isoMsg1, "msg1_rev", map);
 		
-		for (int i = 0; i < n; ++i) {
-			map.clear();
-
-			manager.load(isoMsg, "msg1_rev", map);
-		}
-		
-		long dtend = System.currentTimeMillis();
-		
-		System.out.println((float) (n * 1000) / (float) (dtend - dtstart));
-		
-		System.out.println(map);
+		assertEquals(map1, map);
 	}
 }

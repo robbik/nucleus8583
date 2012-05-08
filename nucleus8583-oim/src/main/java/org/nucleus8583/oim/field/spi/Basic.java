@@ -11,11 +11,11 @@ import org.nucleus8583.oim.field.type.Type;
 
 public class Basic implements Field {
 
-	private int no;
+	protected int no;
 
-	private String name;
+	protected String name;
 
-	private Type type;
+	protected Type type;
 
 	public int getNo() {
 		return no;

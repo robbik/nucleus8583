@@ -11,24 +11,24 @@
 		<basic no="11" name="stan" type="int" />
 		<basic no="12" name="transactionTime" type="dateTime" pattern="HHmmss" />
 		<basic no="13" name="transactionDate" type="dateTime" pattern="MMdd" />
-
+        
 		<record no="29" mode="text">
 			<pad padWith="C" mode="text" />
-			<basic name="charge" type="numeric" length="8" precision="2" />
+			<basic name="charge" type="signedNumeric" length="8" precision="2" signFirst="false" />
 		</record>
-
+        
 		<basic no="37" name="rrn" type="text" />
 		<basic no="39" name="responseCode" type="text" />
 		
         <record no="48" mode="text">
-            <basic name="details_count" type="int" length="2" />
+            <list-count name="details" type="int" length="2" />
             
-            <list name="details" countName="details_count" mode="text">
+            <list name="details" mode="text">
                 <basic name="z" type="text" length="8" />
             </list>
         </record>
 	</message>
-
+    
     <message name="msg1_rev">
         <basic no="0" name="mti" type="text" />
         <basic no="2" name="cardNumber" type="text" />
@@ -36,19 +36,19 @@
         <basic no="11" name="stan" type="int" alignment="right" padWith="0" />
         <basic no="12" name="transactionTime" type="dateTime" pattern="HHmmss" />
         <basic no="13" name="transactionDate" type="dateTime" pattern="MMdd" />
-
+        
         <record no="29" mode="text">
             <skip length="1" />
-            <basic name="charge" type="numeric" length="8" precision="2" />
+            <basic name="charge" type="signedNumeric" length="8" precision="2" signFirst="false" />
         </record>
-
+        
         <basic no="37" name="rrn" type="text" />
         <basic no="39" name="responseCode" type="text" />
-
+        
         <record no="48" mode="text">
-            <basic name="details_count" type="int" length="2" />
+            <list-count name="details" type="int" length="2" />
             
-            <list name="details" countName="details_count" mode="text">
+            <list name="details" mode="text">
                 <basic name="z" type="text" length="8" />
             </list>
         </record>

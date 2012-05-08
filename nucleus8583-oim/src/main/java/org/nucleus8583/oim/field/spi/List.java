@@ -10,13 +10,17 @@ import java.util.Map;
 
 import org.nucleus8583.oim.field.Field;
 
-public class List implements Field {
+import rk.commons.ioc.factory.support.InitializingObject;
+
+public class List implements Field, InitializingObject {
 
 	private int no;
 
 	private String name;
-
+	
 	private String countName;
+
+	private String counterName;
 	
 	private boolean append;
 	
@@ -25,7 +29,7 @@ public class List implements Field {
 	private Field[] childFields;
 	
 	private boolean textMode;
-
+	
 	public int getNo() {
 		return no;
 	}
@@ -36,10 +40,6 @@ public class List implements Field {
 
 	public void setName(String name) {
 		this.name = name;
-	}
-	
-	public void setCountName(String countName) {
-		this.countName = countName;
 	}
 
 	public void setAppend(boolean append) {
@@ -56,6 +56,11 @@ public class List implements Field {
 	
 	public void setTextMode(boolean textMode) {
 		this.textMode = textMode;
+	}
+	
+	public void initialize() throws Exception {
+		countName = "transient:" + name + "____count";
+		counterName = "transient:" + name + "____i";
 	}
 
 	public boolean supportWriter() {
@@ -95,13 +100,8 @@ public class List implements Field {
 	
 	public void read(InputStream in, Map<String, Object> root) throws Exception {
 		java.util.List<Map<String, Object>> list = beforeRead(root);
-		int count;
 		
-		if (root.containsKey(countName)) {
-			count = ((Integer) root.get(countName)).intValue();
-		} else {
-			count = list.size();
-		}
+		int count = ((Integer) root.get(countName)).intValue();
 		
 		if (count > maxCount) {
 			count = maxCount;
@@ -120,14 +120,8 @@ public class List implements Field {
 
 	public void read(Reader in, Map<String, Object> root) throws Exception {
 		java.util.List<Map<String, Object>> list = beforeRead(root);
-		int count;
 		
-		if (root.containsKey(countName)) {
-			count = ((Integer) root.get(countName)).intValue();
-		} else {
-			count = list.size();
-		}
-		
+		int count = ((Integer) root.get(countName)).intValue();
 		if (count > maxCount) {
 			count = maxCount;
 		}
@@ -151,8 +145,8 @@ public class List implements Field {
 		
 		int i;
 		
-		if (append && root.containsKey(countName)) {
-			i = ((Integer) root.get(countName)).intValue();
+		if (append && root.containsKey(counterName)) {
+			i = ((Integer) root.get(counterName)).intValue();
 		} else {
 			i = 0;
 		}
@@ -171,7 +165,7 @@ public class List implements Field {
 		}
 		
 		if (append) {
-			root.put(countName, Integer.valueOf(i));
+			root.put(counterName, Integer.valueOf(i));
 		}
 	}
 
@@ -183,8 +177,8 @@ public class List implements Field {
 		
 		int i;
 		
-		if (append && root.containsKey(countName)) {
-			i = int.class.cast(root.get(countName));
+		if (append && root.containsKey(counterName)) {
+			i = ((Integer) root.get(counterName)).intValue();
 		} else {
 			i = 0;
 		}
@@ -203,7 +197,7 @@ public class List implements Field {
 		}
 		
 		if (append) {
-			root.put(countName, i);
+			root.put(counterName, Integer.valueOf(i));
 		}
 	}
 }

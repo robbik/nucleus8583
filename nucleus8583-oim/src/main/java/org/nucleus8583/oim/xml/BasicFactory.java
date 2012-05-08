@@ -18,15 +18,15 @@ import rk.commons.util.ObjectUtils;
 
 public class BasicFactory extends ObjectFactory<Field> implements IocObjectFactoryAware {
 
-	private int no;
+	protected int no;
 	
-	private String name;
+	protected String name;
 
-	private Type type;
+	protected Type type;
 
-	private Map<String, Object> properties;
+	protected Map<String, Object> properties;
 	
-	private IocObjectFactory factory;
+	protected IocObjectFactory factory;
 
 	public void setNo(int no) {
 		this.no = no;
@@ -47,8 +47,8 @@ public class BasicFactory extends ObjectFactory<Field> implements IocObjectFacto
 	public void setIocObjectFactory(IocObjectFactory factory) {
 		this.factory = factory;
 	}
-
-	protected Field createInstance() {
+	
+	protected Type reInitializeType() {
 		Type type;
 		
 		try {
@@ -74,10 +74,14 @@ public class BasicFactory extends ObjectFactory<Field> implements IocObjectFacto
 			}
 		}
 		
+		return type;
+	}
+
+	protected Field createInstance() {
 		Basic basic = new Basic();
 		basic.setNo(no);
 		basic.setName(name);
-		basic.setType(type);
+		basic.setType(reInitializeType());
 		
 		return basic;
 	}

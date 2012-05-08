@@ -8,6 +8,8 @@
     
     <type name="numeric" class="org.nucleus8583.oim.field.type.spi.Numeric" />
     
+    <type name="signedNumeric" class="org.nucleus8583.oim.field.type.spi.SignedNumeric" />
+    
     <type name="dateTime" class="org.nucleus8583.oim.field.type.spi.DateTime" />
     
     <type name="bytes" class="org.nucleus8583.oim.field.type.spi.Bytes" />

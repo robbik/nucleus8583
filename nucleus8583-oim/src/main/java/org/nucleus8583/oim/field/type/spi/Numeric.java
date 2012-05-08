@@ -3,6 +3,7 @@ package org.nucleus8583.oim.field.type.spi;
 import java.io.Reader;
 import java.io.Writer;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 import org.nucleus8583.oim.field.Alignment;
 import org.nucleus8583.oim.field.type.Type;
@@ -12,6 +13,8 @@ public class Numeric extends Text {
 	private static final long serialVersionUID = -5615324004502124085L;
 	
 	protected int precision;
+	
+	protected RoundingMode roundingMode;
 
 	public Numeric() {
 		padder.setAlign(Alignment.TRIMMED_RIGHT);
@@ -31,6 +34,14 @@ public class Numeric extends Text {
 		
 		this.precision = precision;
 	}
+	
+	public void setRoundingMode(String roundingMode) {
+		this.roundingMode = RoundingMode.valueOf(roundingMode);
+	}
+	
+	public void setRoundingMode(RoundingMode roundingMode) {
+		this.roundingMode = roundingMode;
+	}
 
 	public Object read(Reader in) throws Exception {
 		BigDecimal bd;
@@ -49,6 +60,8 @@ public class Numeric extends Text {
 		
 		if (bd == null) {
 			bd = BigDecimal.ZERO;
+		} else {
+			bd = bd.setScale(precision, roundingMode);
 		}
 		
 		super.write(out, bd.movePointRight(precision).toPlainString());

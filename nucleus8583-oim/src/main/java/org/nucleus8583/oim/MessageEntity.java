@@ -1,14 +1,14 @@
 package org.nucleus8583.oim;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.StringWriter;
 import java.util.List;
 import java.util.Map;
 
 import org.nucleus8583.core.Message;
 import org.nucleus8583.oim.field.Field;
+import org.nucleus8583.oim.util.FastByteArrayInputStream;
+import org.nucleus8583.oim.util.FastByteArrayOutputStream;
 import org.nucleus8583.oim.util.FastStringReader;
+import org.nucleus8583.oim.util.FastStringWriter;
 
 public final class MessageEntity {
 
@@ -23,8 +23,8 @@ public final class MessageEntity {
 	}
 	
 	public void persist(Message isoMsg, Map<String, Object> root) throws Exception {
-		StringWriter sw = new StringWriter();
-		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		FastStringWriter sw = new FastStringWriter(1024);
+		FastByteArrayOutputStream baos = new FastByteArrayOutputStream(1024);
 
 		for (int i = 0; i < count; ++i) {
 			Field f = fields[i];
@@ -37,7 +37,7 @@ public final class MessageEntity {
 				isoMsg.set(f.getNo(), sw.toString());
 
 				// reset for later reuse
-				sw.getBuffer().setLength(0);
+				sw.reset();
 			} else {
 				// persist the field
 				f.write(baos, root);
@@ -52,6 +52,9 @@ public final class MessageEntity {
 	}
 	
 	public void load(Message isoMsg, Map<String, Object> root) throws Exception {
+		FastStringReader reader = new FastStringReader();
+		FastByteArrayInputStream inputstream = new FastByteArrayInputStream();
+		
 		for (int i = 0; i < count; ++i) {
 			Field f = fields[i];
 			
@@ -59,11 +62,15 @@ public final class MessageEntity {
 			Object v = isoMsg.get(f.getNo());
 			
 			if (v instanceof String) {
+				reader.reset((String) v);
+				
 				// load the field
-				f.read(new FastStringReader((String) v), root);
+				f.read(reader, root);
 			} else if (v instanceof byte[]) {
+				inputstream.reset((byte[]) v);
+				
 				// load the field
-				f.read(new ByteArrayInputStream((byte[]) v), root);
+				f.read(inputstream, root);
 			} else {
 				throw new UnsupportedOperationException("unable to persist field #" + f.getNo() +
 						" because the field value is not string nor byte[], it is " + v.getClass());

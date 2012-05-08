@@ -46,8 +46,6 @@ public class ListDefinitionParser extends SingleObjectDefinitionParser {
 			builder.addPropertyValue("append", Boolean.parseBoolean(stmp));
 		}
 		
-		builder.addPropertyValue("countName", element.getAttribute("countName"));
-		
 		stmp = element.getAttribute("maxCount");
 		if (StringUtils.hasText(stmp)) {
 			builder.addPropertyValue("maxCount", Integer.parseInt(stmp));

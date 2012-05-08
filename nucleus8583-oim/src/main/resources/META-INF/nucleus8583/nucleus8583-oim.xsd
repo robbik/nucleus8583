@@ -35,6 +35,17 @@
         <xsd:anyAttribute namespace="##any" processContents="lax" />
     </xsd:complexType>
 
+    <xsd:complexType name="expression">
+        <xsd:simpleContent>
+            <xsd:extension base="xsd:string">
+                <xsd:attribute name="language" type="xsd:string" use="required" />
+		        <xsd:attribute name="type" type="xsd:string" use="required" />
+		        
+		        <xsd:anyAttribute namespace="##any" processContents="lax" />
+            </xsd:extension>
+        </xsd:simpleContent>
+    </xsd:complexType>
+
     <xsd:complexType name="basic">
         <xsd:attribute name="name" type="xsd:string" use="required" />
         <xsd:attribute name="type" type="xsd:string" use="required" />
@@ -53,11 +64,13 @@
 
     <xsd:complexType name="record">
         <xsd:choice minOccurs="1" maxOccurs="unbounded">
+            <xsd:element name="expression" type="expression" />
             <xsd:element name="basic" type="basic" />
             <xsd:element name="skip" type="skip" />
             <xsd:element name="pad" type="pad" />
             <xsd:element name="record" type="record" />
             <xsd:element name="list" type="list" />
+            <xsd:element name="list-count" type="list-count" />
         </xsd:choice>
 
         <xsd:attribute name="name" type="xsd:string" use="optional" />
@@ -68,8 +81,22 @@
         <xsd:complexContent>
             <xsd:extension base="record">
                 <xsd:attribute name="append" type="xsd:boolean" use="optional" default="false" />
-                <xsd:attribute name="countName" type="xsd:string" use="optional" />
                 <xsd:attribute name="maxCount" type="length" use="optional" default="2000000000" />
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+
+    <xsd:complexType name="list-count">
+        <xsd:attribute name="name" type="xsd:string" use="required" />
+        <xsd:attribute name="type" type="xsd:string" use="required" />
+        
+        <xsd:anyAttribute namespace="##any" processContents="lax" />
+    </xsd:complexType>
+
+    <xsd:complexType name="root-expression">
+        <xsd:complexContent>
+            <xsd:extension base="basic">
+                <xsd:attribute name="expression" type="fieldNo" use="required" />
             </xsd:extension>
         </xsd:complexContent>
     </xsd:complexType>
@@ -114,13 +141,23 @@
         </xsd:complexContent>
     </xsd:complexType>
 
+    <xsd:complexType name="root-list-count">
+        <xsd:complexContent>
+            <xsd:extension base="list-count">
+                <xsd:attribute name="no" type="fieldNo" use="required" />
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+
     <xsd:complexType name="message">
         <xsd:choice minOccurs="1" maxOccurs="unbounded">
+            <xsd:element name="expression" type="root-expression" />
             <xsd:element name="basic" type="root-basic" />
             <xsd:element name="skip" type="root-skip" />
             <xsd:element name="pad" type="root-pad" />
             <xsd:element name="record" type="root-record" />
             <xsd:element name="list" type="root-list" />
+            <xsd:element name="list-count" type="root-list-count" />
         </xsd:choice>
 
         <xsd:attribute name="name" type="xsd:string" use="required" />

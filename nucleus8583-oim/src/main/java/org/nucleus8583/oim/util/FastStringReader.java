@@ -6,15 +6,27 @@ import java.io.Reader;
 import rk.commons.util.StringUtils;
 
 public class FastStringReader extends Reader {
-	private final String value;
+	private String value;
 
-	private final int vlen;
+	private int vlen;
 
 	private int readIndex;
 
 	private int remaining;
+	
+	public FastStringReader() {
+		// do nothing
+	}
 
 	public FastStringReader(String value) {
+		this.value = value;
+		this.vlen = StringUtils.hasText(value, false) ? value.length() : 0;
+
+		this.readIndex = 0;
+		this.remaining = this.vlen;
+	}
+	
+	public void reset(String value) {
 		this.value = value;
 		this.vlen = StringUtils.hasText(value, false) ? value.length() : 0;
 

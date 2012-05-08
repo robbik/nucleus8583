@@ -36,9 +36,15 @@ public class BasicDefinitionParser extends SingleObjectDefinitionParser {
 		return BasicFactory.class;
 	}
 	
-	protected void doParse(Element element, ObjectDefinitionParserDelegate delegate, ObjectDefinitionBuilder builder) {
+	protected Set<String> getReservedAttrs() {
+		return reserved;
+	}
+	
+	protected Map<String, Object> parseDynamicAttrs(Element element, ObjectDefinitionParserDelegate delegate,
+			ObjectDefinitionBuilder builder) {
 		Map<String, Object> properties = new HashMap<String, Object>();
-
+		Set<String> reserved = getReservedAttrs();
+		
 		NamedNodeMap attributeMap = element.getAttributes();
 		
 		for (int i = 0, n = attributeMap.getLength(); i < n; ++i) {
@@ -54,15 +60,23 @@ public class BasicDefinitionParser extends SingleObjectDefinitionParser {
 				}
 			}
 		}
-
+		
+		return properties;
+	}
+	
+	protected void doParse(Element element, ObjectDefinitionParserDelegate delegate, ObjectDefinitionBuilder builder) {
 		String stmp = element.getAttribute("no");
 		if (StringUtils.hasText(stmp)) {
 			builder.addPropertyValue("no", Integer.parseInt(stmp));
 		}
 		
-		builder.addPropertyValue("name", element.getAttribute("name"));
+		stmp = element.getAttribute("name");
+		if (StringUtils.hasText(stmp)) {
+			builder.addPropertyValue("name", stmp);
+		}
+		
 		builder.addPropertyReference("type", element.getAttribute("type"));
 
-		builder.addPropertyValue("properties", properties);
+		builder.addPropertyValue("properties", parseDynamicAttrs(element, delegate, builder));
 	}
 }
