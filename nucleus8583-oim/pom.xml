@@ -76,14 +76,18 @@
                             org.w3c.dom,
                             org.xml.sax,
                             !org.springframework.*,
-                            org.nucleus8583.core
+                            org.nucleus8583.core,
+                            ognl;resolution:=optional,
+                            org.mvel2;resolution:=optional
                         </Import-Package>
                         <Export-Package>
                             org.nucleus8583.oim;version=${project.version};-noimport:=true,
                             org.nucleus8583.oim.field;version=${project.version};-noimport:=true,
                             org.nucleus8583.oim.field.spi;version=${project.version},
                             org.nucleus8583.oim.field.type;version=${project.version};-noimport:=true,
-                            org.nucleus8583.oim.field.type.spi;version=${project.version}
+                            org.nucleus8583.oim.field.type.spi;version=${project.version},
+                            org.nucleus8583.oim.expression;version=${project.version};-noimport:=true,
+                            org.nucleus8583.oim.expression.spi;version=${project.version}
                         </Export-Package>
                         <Private-Package>
                             org.nucleus8583.oim.util,
@@ -165,13 +169,6 @@
             <groupId>org.nucleus8583</groupId>
             <artifactId>nucleus8583-core</artifactId>
             <version>3.0.0</version>
-        </dependency>
-
-        <dependency>
-            <groupId>rk</groupId>
-            <artifactId>rk-commons</artifactId>
-            <version>1.0.0</version>
-            <scope>provided</scope>
         </dependency>
 
         <!-- OSGi -->
