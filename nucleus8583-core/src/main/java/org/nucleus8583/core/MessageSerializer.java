@@ -1,7 +1,5 @@
 package org.nucleus8583.core;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -14,6 +12,9 @@ import org.nucleus8583.core.field.DefaultFields;
 import org.nucleus8583.core.field.Field;
 import org.nucleus8583.core.field.Type;
 import org.nucleus8583.core.util.BitmapHelper;
+
+import rk.commons.util.FastByteArrayInputStream;
+import rk.commons.util.FastByteArrayOutputStream;
 
 /**
  * Serialize/deserialize {@link Message} object. This class can be instatiated
@@ -157,7 +158,10 @@ public final class MessageSerializer {
 	 *             thrown if the buffer length is shorter than expected.
 	 */
 	public void read(byte[] buf, Message out) throws IOException {
-		read(new ByteArrayInputStream(buf), out);
+		FastByteArrayInputStream in = new FastByteArrayInputStream();
+		in.reset(buf);
+		
+		read(in, out);
 	}
 
 	/**
@@ -230,7 +234,7 @@ public final class MessageSerializer {
 	 *            The {@link Message} object
 	 */
 	public byte[] write(Message msg) {
-		ByteArrayOutputStream out = new ByteArrayOutputStream();
+		FastByteArrayOutputStream out = new FastByteArrayOutputStream();
 
 		try {
 			write(msg, out);

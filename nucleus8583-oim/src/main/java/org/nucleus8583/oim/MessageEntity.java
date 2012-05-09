@@ -5,10 +5,11 @@ import java.util.Map;
 
 import org.nucleus8583.core.Message;
 import org.nucleus8583.oim.field.Field;
-import org.nucleus8583.oim.util.FastByteArrayInputStream;
-import org.nucleus8583.oim.util.FastByteArrayOutputStream;
-import org.nucleus8583.oim.util.FastStringReader;
-import org.nucleus8583.oim.util.FastStringWriter;
+
+import rk.commons.util.FastByteArrayInputStream;
+import rk.commons.util.FastByteArrayOutputStream;
+import rk.commons.util.FastStringReader;
+import rk.commons.util.FastStringWriter;
 
 public final class MessageEntity {
 
