@@ -6,8 +6,8 @@ import java.util.Set;
 import org.nucleus8583.oim.expression.ExpressionHandlerResolver;
 import org.w3c.dom.Element;
 
-import rk.commons.ioc.factory.support.ObjectDefinitionBuilder;
-import rk.commons.ioc.factory.xml.ObjectDefinitionParserDelegate;
+import rk.commons.inject.factory.support.ObjectDefinitionBuilder;
+import rk.commons.inject.factory.xml.ObjectDefinitionParserDelegate;
 import rk.commons.util.StringUtils;
 
 public class ExpressionDefinitionParser extends BasicDefinitionParser {

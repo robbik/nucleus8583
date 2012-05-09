@@ -7,13 +7,13 @@ import org.nucleus8583.oim.field.Field;
 import org.nucleus8583.oim.field.spi.Basic;
 import org.nucleus8583.oim.field.type.Type;
 
-import rk.commons.ioc.factory.IocObjectFactory;
-import rk.commons.ioc.factory.ObjectInstantiationException;
-import rk.commons.ioc.factory.support.InitializingObject;
-import rk.commons.ioc.factory.support.IocObjectFactoryAware;
-import rk.commons.ioc.factory.support.ObjectDefinitionValueResolver;
-import rk.commons.ioc.factory.support.ObjectFactory;
-import rk.commons.ioc.factory.type.converter.TypeConverterResolver;
+import rk.commons.inject.factory.IocObjectFactory;
+import rk.commons.inject.factory.ObjectInstantiationException;
+import rk.commons.inject.factory.support.InitializingObject;
+import rk.commons.inject.factory.support.IocObjectFactoryAware;
+import rk.commons.inject.factory.support.ObjectDefinitionValueResolver;
+import rk.commons.inject.factory.support.ObjectFactory;
+import rk.commons.inject.factory.type.converter.TypeConverterResolver;
 import rk.commons.util.ObjectUtils;
 
 public class BasicFactory extends ObjectFactory<Field> implements IocObjectFactoryAware {

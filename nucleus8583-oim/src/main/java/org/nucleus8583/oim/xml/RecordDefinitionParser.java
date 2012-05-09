@@ -8,9 +8,9 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import rk.commons.ioc.factory.support.ObjectDefinitionBuilder;
-import rk.commons.ioc.factory.xml.ObjectDefinitionParserDelegate;
-import rk.commons.ioc.factory.xml.SingleObjectDefinitionParser;
+import rk.commons.inject.factory.support.ObjectDefinitionBuilder;
+import rk.commons.inject.factory.xml.ObjectDefinitionParserDelegate;
+import rk.commons.inject.factory.xml.SingleObjectDefinitionParser;
 import rk.commons.util.StringUtils;
 
 public class RecordDefinitionParser extends SingleObjectDefinitionParser {

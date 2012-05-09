@@ -9,7 +9,7 @@ import org.nucleus8583.oim.field.Alignment;
 import org.nucleus8583.oim.field.type.Type;
 import org.nucleus8583.oim.util.TextPadder;
 
-import rk.commons.ioc.factory.support.InitializingObject;
+import rk.commons.inject.factory.support.InitializingObject;
 import rk.commons.util.IOUtils;
 import rk.commons.util.StringEscapeUtils;
 import rk.commons.util.StringUtils;

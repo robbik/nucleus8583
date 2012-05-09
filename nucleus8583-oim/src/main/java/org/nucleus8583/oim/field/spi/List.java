@@ -10,7 +10,7 @@ import java.util.Map;
 
 import org.nucleus8583.oim.field.Field;
 
-import rk.commons.ioc.factory.support.InitializingObject;
+import rk.commons.inject.factory.support.InitializingObject;
 
 public class List implements Field, InitializingObject {
 

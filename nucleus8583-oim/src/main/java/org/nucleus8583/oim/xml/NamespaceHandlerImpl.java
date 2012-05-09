@@ -1,7 +1,6 @@
 package org.nucleus8583.oim.xml;
 
-
-import rk.commons.ioc.factory.xml.NamespaceHandlerSupport;
+import rk.commons.inject.factory.xml.NamespaceHandlerSupport;
 
 public class NamespaceHandlerImpl extends NamespaceHandlerSupport {
 

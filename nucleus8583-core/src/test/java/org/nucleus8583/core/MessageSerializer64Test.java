@@ -16,7 +16,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.nucleus8583.core.util.BitmapHelper;
 
-import rk.commons.ioc.factory.ObjectInstantiationException;
+import rk.commons.inject.factory.ObjectInstantiationException;
 
 public class MessageSerializer64Test {
 

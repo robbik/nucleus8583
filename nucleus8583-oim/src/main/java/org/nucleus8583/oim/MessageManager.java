@@ -8,9 +8,9 @@ import org.nucleus8583.core.Message;
 import org.nucleus8583.oim.field.Alignment;
 import org.nucleus8583.oim.xml.StringToAlignmentConverter;
 
-import rk.commons.ioc.context.XmlIocContext;
-import rk.commons.ioc.factory.IocObjectFactory;
-import rk.commons.ioc.factory.SingletonIocObjectFactory;
+import rk.commons.inject.context.XmlIocContext;
+import rk.commons.inject.factory.IocObjectFactory;
+import rk.commons.inject.factory.SingletonIocObjectFactory;
 import rk.commons.loader.ResourceLoader;
 
 public class MessageManager {

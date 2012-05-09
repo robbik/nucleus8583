@@ -4,9 +4,9 @@ import org.nucleus8583.oim.field.spi.BinaryPad;
 import org.nucleus8583.oim.field.spi.TextPad;
 import org.w3c.dom.Element;
 
-import rk.commons.ioc.factory.support.ObjectDefinitionBuilder;
-import rk.commons.ioc.factory.xml.ObjectDefinitionParserDelegate;
-import rk.commons.ioc.factory.xml.SingleObjectDefinitionParser;
+import rk.commons.inject.factory.support.ObjectDefinitionBuilder;
+import rk.commons.inject.factory.xml.ObjectDefinitionParserDelegate;
+import rk.commons.inject.factory.xml.SingleObjectDefinitionParser;
 import rk.commons.util.StringEscapeUtils;
 import rk.commons.util.StringUtils;
 

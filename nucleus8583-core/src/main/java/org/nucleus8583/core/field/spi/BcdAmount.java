@@ -9,7 +9,7 @@ import org.nucleus8583.core.field.Alignment;
 import org.nucleus8583.core.field.Type;
 import org.nucleus8583.core.util.BcdPadder;
 
-import rk.commons.ioc.factory.support.InitializingObject;
+import rk.commons.inject.factory.support.InitializingObject;
 import rk.commons.util.StringEscapeUtils;
 import rk.commons.util.StringUtils;
 
