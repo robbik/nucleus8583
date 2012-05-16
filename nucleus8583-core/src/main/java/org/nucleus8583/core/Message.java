@@ -289,6 +289,19 @@ public final class Message implements Serializable {
 	}
 
 	/**
+	 * set MTI to become a request one if and only-if the MTI is a response MTI
+	 */
+	public void setRequestMti() {
+		char[] chars = ((String) getMti()).toCharArray();
+
+		int num = Character.getNumericValue(chars[2]);
+		if ((num & 0x01) != 0x00) {
+			chars[2] = (char) ((num - 1) + '1');
+			setMti(new String(chars));
+		}
+	}
+
+	/**
 	 * check whether the MTI is a request MTI.
 	 * 
 	 * @return <code>true</code> if the MTI is a request MTI, otherwise
