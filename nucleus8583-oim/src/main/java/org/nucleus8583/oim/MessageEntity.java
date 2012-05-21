@@ -62,7 +62,9 @@ public final class MessageEntity {
 			// get from iso-message
 			Object v = isoMsg.get(f.getNo());
 			
-			if (v instanceof String) {
+			if (v == null) {
+				// value is not set, skipping
+			} else if (v instanceof String) {
 				reader.reset((String) v);
 				
 				// load the field
