@@ -101,6 +101,10 @@ public class Bytes implements Type, InitializingObject {
 	public void write(OutputStream out, Object o) throws Exception {
 		byte[] value = (byte[]) o;
 		
+		if (value == null) {
+			value = new byte[0];
+		}		
+		
 		if (length > 0) {
 			int vlen = value.length;
 			if (vlen > length) {

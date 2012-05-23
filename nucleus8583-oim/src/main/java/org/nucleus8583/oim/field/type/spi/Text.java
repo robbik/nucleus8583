@@ -111,6 +111,10 @@ public class Text implements Type, InitializingObject {
 	public void write(Writer out, Object o) throws Exception {
 		String value = (String) o;
 		
+		if (value == null) {
+			value = "";
+		}
+		
 		if (length > 0) {
 			int vlen = value.length();
 
