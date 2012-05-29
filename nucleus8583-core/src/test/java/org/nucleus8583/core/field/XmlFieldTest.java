@@ -1,12 +1,12 @@
 package org.nucleus8583.core.field;
 
 import org.junit.Test;
-import org.nucleus8583.core.XmlContext;
+import org.nucleus8583.core.XmlMessageSerializerFactory;
 
 public class XmlFieldTest {
 
 	@Test
 	public void testLoadXml() throws Exception {
-		new XmlContext("classpath:META-INF/nucleus8583/nucleus8583-types.xml");
+		new XmlMessageSerializerFactory("classpath:META-INF/nucleus8583/nucleus8583-types.xml");
 	}
 }

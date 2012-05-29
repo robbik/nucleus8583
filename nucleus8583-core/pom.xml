@@ -86,7 +86,10 @@
                         <Private-Package>
                             org.nucleus8583.core.util,
                             org.nucleus8583.core.xml,
-                            rk.commons.*
+                            rk.commons.loader,
+                            rk.commons.logging,
+                            rk.commons.util,
+                            rk.commons.inject.*
                         </Private-Package>
                     </instructions>
                 </configuration>
@@ -145,8 +148,8 @@
 
     <dependencies>
         <dependency>
-            <groupId>rk</groupId>
-            <artifactId>rk-commons</artifactId>
+            <groupId>rk-commons</groupId>
+            <artifactId>inject</artifactId>
             <version>1.0.0</version>
             <scope>provided</scope>
         </dependency>

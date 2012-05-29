@@ -18,7 +18,7 @@ import rk.commons.util.FastByteArrayOutputStream;
 
 /**
  * Serialize/deserialize {@link Message} object. This class can be instatiated
- * using {@link XmlContext} object or directly using constructor provided.
+ * using {@link XmlMessageSerializerFactory} object or directly using constructor provided.
  * 
  * @author Robbi Kurniawan
  * 
@@ -51,7 +51,7 @@ public final class MessageSerializer {
 	 *            configuration location (in URI)
 	 */
 	public MessageSerializer(String name, String... locations) {
-		this(new XmlContext(locations).getMessageSerializer(name));
+		this(new XmlMessageSerializerFactory(locations).getMessageSerializer(name));
 	}
 
 	/**
@@ -70,7 +70,7 @@ public final class MessageSerializer {
 	 *            configuration location (in URI)
 	 */
 	public MessageSerializer(String location) {
-		this(new XmlContext(location).getMessageSerializer());
+		this(new XmlMessageSerializerFactory(location).getMessageSerializer());
 	}
 
 	@SuppressWarnings("unused")

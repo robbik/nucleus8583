@@ -64,7 +64,7 @@ public class MessageSerializer64Test {
 		String errorMsg = null;
 
 		try {
-			new XmlContext("classpath:META-INF/codec8583-no28.xml").getMessageSerializer();
+			new XmlMessageSerializerFactory("classpath:META-INF/codec8583-no28.xml").getMessageSerializer();
 		} catch (ObjectInstantiationException ex) {
 			StringWriter sw = new StringWriter();
 			ex.printStackTrace(new PrintWriter(sw));

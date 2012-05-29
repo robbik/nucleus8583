@@ -8,9 +8,9 @@ import org.nucleus8583.core.Message;
 import org.nucleus8583.oim.field.Alignment;
 import org.nucleus8583.oim.xml.StringToAlignmentConverter;
 
-import rk.commons.inject.context.XmlIocContext;
-import rk.commons.inject.factory.IocObjectFactory;
-import rk.commons.inject.factory.SingletonIocObjectFactory;
+import rk.commons.inject.context.XmlContext;
+import rk.commons.inject.factory.ObjectFactory;
+import rk.commons.inject.factory.SingletonObjectFactory;
 import rk.commons.loader.ResourceLoader;
 
 public class MessageManager {
@@ -21,9 +21,9 @@ public class MessageManager {
 
     private static final String NAMESPACE_SCHEMA = "classpath:META-INF/nucleus8583/nucleus8583-oim.schemas";
 	
-	private XmlIocContext context;
+	private XmlContext context;
 	
-	private IocObjectFactory beanFactory;
+	private ObjectFactory factory;
 
     /**
      * create a new instance of {@link MessageManager} using given
@@ -43,11 +43,11 @@ public class MessageManager {
 	public MessageManager(String... locations) {
 		ResourceLoader resourceLoader = new ResourceLoader();
 		
-		SingletonIocObjectFactory beanFactory = new SingletonIocObjectFactory(resourceLoader);
+		SingletonObjectFactory factory = new SingletonObjectFactory(resourceLoader);
 
-		beanFactory.getTypeConverterResolver().register(String.class, Alignment.class, new StringToAlignmentConverter());
+		factory.getTypeConverterResolver().register(String.class, Alignment.class, new StringToAlignmentConverter());
 		
-		context = new XmlIocContext();
+		context = new XmlContext();
 		
 		context.setResourceLoader(resourceLoader);
 		
@@ -56,13 +56,13 @@ public class MessageManager {
 		context.setNamespaceHandlerPath(NAMESPACE_HANDLER);
 		context.setNamespaceSchemaPath(NAMESPACE_SCHEMA);
 		
-		context.setIocObjectFactory(beanFactory);
-		context.setObjectDefinitionRegistry(beanFactory);
+		context.setObjectFactory(factory);
+		context.setObjectDefinitionRegistry(factory);
 		
 		boolean defTypesFound = false;
 
 		for (int i = 0, n = locations.length; i < n; ++i) {
-			if ("classpath:META-INF/nucleus8583/nucleus8583-oim-types.xml".equals(locations[i])) {
+			if ("classpath:META-INF/nucleus8583/nucleus8583-oim.xml".equals(locations[i])) {
 				defTypesFound = true;
 				break;
 			}
@@ -71,7 +71,7 @@ public class MessageManager {
 		if (!defTypesFound) {
 			List<String> newLocations = new ArrayList<String>();
 			
-			newLocations.add("classpath:META-INF/nucleus8583/nucleus8583-oim-types.xml");
+			newLocations.add("classpath:META-INF/nucleus8583/nucleus8583-oim.xml");
 			
 			for (int i = 0, n = locations.length; i < n; ++i) {
 				newLocations.add(locations[i]);
@@ -85,16 +85,16 @@ public class MessageManager {
 
 		context.refresh(false);
 		
-		this.beanFactory = beanFactory;
+		this.factory = factory;
 	}
 	
 	public void persist(Message isoMsg, String name, Map<String, Object> root) throws Exception {
-		MessageEntity me = (MessageEntity) beanFactory.getObject(name);
+		MessageEntity me = (MessageEntity) factory.getObject(name);
 		me.persist(isoMsg, root);
 	}
 	
 	public void load(Message isoMsg, String name, Map<String, Object> root) throws Exception {
-		MessageEntity me = (MessageEntity) beanFactory.getObject(name);
+		MessageEntity me = (MessageEntity) factory.getObject(name);
 		me.load(isoMsg, root);
 	}
 }

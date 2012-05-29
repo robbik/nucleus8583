@@ -23,7 +23,7 @@ public class MessageSerializer128Test {
 
 	@Before
 	public void initialize() throws Exception {
-		serializer = new XmlContext("file:src/test/resources/META-INF/codec8583.xml").getMessageSerializer();
+		serializer = new XmlMessageSerializerFactory("file:src/test/resources/META-INF/codec8583.xml").getMessageSerializer();
 
 		packed = "0200C000000000010001040000000000000006030000004999800000000000000000000000000000000301";
 		bpacked = packed.getBytes();

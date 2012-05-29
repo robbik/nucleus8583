@@ -7,16 +7,16 @@ import org.nucleus8583.oim.field.Field;
 import org.nucleus8583.oim.field.spi.Basic;
 import org.nucleus8583.oim.field.type.Type;
 
-import rk.commons.inject.factory.IocObjectFactory;
+import rk.commons.inject.factory.ObjectFactory;
 import rk.commons.inject.factory.ObjectInstantiationException;
+import rk.commons.inject.factory.support.FactoryObject;
 import rk.commons.inject.factory.support.InitializingObject;
-import rk.commons.inject.factory.support.IocObjectFactoryAware;
 import rk.commons.inject.factory.support.ObjectDefinitionValueResolver;
-import rk.commons.inject.factory.support.ObjectFactory;
+import rk.commons.inject.factory.support.ObjectFactoryAware;
 import rk.commons.inject.factory.type.converter.TypeConverterResolver;
-import rk.commons.util.ObjectUtils;
+import rk.commons.inject.util.PropertyUtils;
 
-public class BasicFactory extends ObjectFactory<Field> implements IocObjectFactoryAware {
+public class BasicFactory extends FactoryObject<Field> implements ObjectFactoryAware {
 
 	protected int no;
 	
@@ -26,7 +26,7 @@ public class BasicFactory extends ObjectFactory<Field> implements IocObjectFacto
 
 	protected Map<String, Object> properties;
 	
-	protected IocObjectFactory factory;
+	protected ObjectFactory factory;
 
 	public void setNo(int no) {
 		this.no = no;
@@ -44,7 +44,7 @@ public class BasicFactory extends ObjectFactory<Field> implements IocObjectFacto
 		this.properties = properties;
 	}
 
-	public void setIocObjectFactory(IocObjectFactory factory) {
+	public void setObjectFactory(ObjectFactory factory) {
 		this.factory = factory;
 	}
 	
@@ -63,7 +63,7 @@ public class BasicFactory extends ObjectFactory<Field> implements IocObjectFacto
 			
 			ObjectDefinitionValueResolver valueResolver = new ObjectDefinitionValueResolver(factory);
 			
-			ObjectUtils.applyPropertyValues(name, type, properties, valueResolver, typeResolver);
+			PropertyUtils.applyPropertyValues(name, type, properties, valueResolver, typeResolver);
 		}
 		
 		if (type instanceof InitializingObject) {

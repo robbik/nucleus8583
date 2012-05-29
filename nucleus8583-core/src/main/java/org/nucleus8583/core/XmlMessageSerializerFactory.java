@@ -4,14 +4,15 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import org.nucleus8583.core.field.Alignment;
 import org.nucleus8583.core.xml.StringToAlignmentConverter;
 
-import rk.commons.inject.context.XmlIocContext;
-import rk.commons.inject.factory.IocObjectFactory;
-import rk.commons.inject.factory.SingletonIocObjectFactory;
+import rk.commons.inject.context.XmlContext;
+import rk.commons.inject.factory.ObjectFactory;
+import rk.commons.inject.factory.SingletonObjectFactory;
 import rk.commons.loader.ResourceLoader;
 
-public class XmlContext {
+public class XmlMessageSerializerFactory {
 
     private static final String NAMESPACE_URI = "http://www.nucleus8583.org/schema/nucleus8583";
 
@@ -19,12 +20,12 @@ public class XmlContext {
 
     private static final String NAMESPACE_SCHEMA = "classpath:META-INF/nucleus8583/nucleus8583.schemas";
 	
-	private XmlIocContext context;
+	private XmlContext context;
 	
-	private IocObjectFactory beanFactory;
+	private ObjectFactory factory;
 
     /**
-     * create a new instance of {@link XmlContext} using given
+     * create a new instance of {@link XmlMessageSerializerFactory} using given
      * configuration.
      *
      * For example, if you want to load "nucleus8583.xml" from "META-INF"
@@ -38,15 +39,15 @@ public class XmlContext {
      * @param location
      *            configuration location (in URI)
      */
-	public XmlContext(String... locations) {
+	public XmlMessageSerializerFactory(String... locations) {
 		ResourceLoader resourceLoader = new ResourceLoader();
 		
-		SingletonIocObjectFactory beanFactory = new SingletonIocObjectFactory(resourceLoader);
+		SingletonObjectFactory factory = new SingletonObjectFactory(resourceLoader);
 
-		beanFactory.getTypeConverterResolver().register(
-				StringToAlignmentConverter.FROM, StringToAlignmentConverter.TO, new StringToAlignmentConverter());
+		factory.getTypeConverterResolver().register(
+				String.class, Alignment.class, new StringToAlignmentConverter());
 		
-		context = new XmlIocContext();
+		context = new XmlContext();
 		
 		context.setResourceLoader(resourceLoader);
 		
@@ -55,8 +56,8 @@ public class XmlContext {
 		context.setNamespaceHandlerPath(NAMESPACE_HANDLER);
 		context.setNamespaceSchemaPath(NAMESPACE_SCHEMA);
 		
-		context.setIocObjectFactory(beanFactory);
-		context.setObjectDefinitionRegistry(beanFactory);
+		context.setObjectFactory(factory);
+		context.setObjectDefinitionRegistry(factory);
 		
 		boolean defTypesFound = false;
 
@@ -84,15 +85,15 @@ public class XmlContext {
 
 		context.refresh(false);
 		
-		this.beanFactory = beanFactory;
+		this.factory = factory;
 	}
 
 	public MessageSerializer getMessageSerializer(String name) {
-		return (MessageSerializer) beanFactory.getObject(name);
+		return (MessageSerializer) factory.getObject(name);
 	}
 
 	public MessageSerializer getMessageSerializer() {
-		Collection<MessageSerializer> list = beanFactory.getObjectsOfType(MessageSerializer.class).values();
+		Collection<MessageSerializer> list = factory.getObjectsOfType(MessageSerializer.class).values();
 		
 		if (list.isEmpty()) {
 			throw new IllegalArgumentException("no message serializer defined");

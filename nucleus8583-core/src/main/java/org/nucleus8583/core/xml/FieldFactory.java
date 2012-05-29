@@ -6,20 +6,21 @@ import java.lang.reflect.Proxy;
 import java.util.Map;
 
 import org.nucleus8583.core.MessageSerializer;
+import org.nucleus8583.core.field.Alignment;
 import org.nucleus8583.core.field.Field;
 import org.nucleus8583.core.field.Type;
 
-import rk.commons.inject.factory.IocObjectFactory;
+import rk.commons.inject.factory.ObjectFactory;
 import rk.commons.inject.factory.ObjectInstantiationException;
+import rk.commons.inject.factory.support.FactoryObject;
 import rk.commons.inject.factory.support.InitializingObject;
-import rk.commons.inject.factory.support.IocObjectFactoryAware;
 import rk.commons.inject.factory.support.ObjectDefinitionValueResolver;
-import rk.commons.inject.factory.support.ObjectFactory;
+import rk.commons.inject.factory.support.ObjectFactoryAware;
 import rk.commons.inject.factory.support.ObjectQNameAware;
 import rk.commons.inject.factory.type.converter.TypeConverterResolver;
-import rk.commons.util.ObjectUtils;
+import rk.commons.inject.util.PropertyUtils;
 
-public class FieldFactory extends ObjectFactory<Field> implements ObjectQNameAware, IocObjectFactoryAware {
+public class FieldFactory extends FactoryObject<Field> implements ObjectQNameAware, ObjectFactoryAware {
 
 	private int no;
 
@@ -31,7 +32,7 @@ public class FieldFactory extends ObjectFactory<Field> implements ObjectQNameAwa
 	
 	private String objectQName;
 	
-	private IocObjectFactory factory;
+	private ObjectFactory factory;
 
 	public void setNo(int no) {
 		this.no = no;
@@ -53,7 +54,7 @@ public class FieldFactory extends ObjectFactory<Field> implements ObjectQNameAwa
 		this.objectQName = objectQName;
 	}
 
-	public void setIocObjectFactory(IocObjectFactory factory) {
+	public void setObjectFactory(ObjectFactory factory) {
 		this.factory = factory;
 	}
 
@@ -68,11 +69,11 @@ public class FieldFactory extends ObjectFactory<Field> implements ObjectQNameAwa
 		
 		if ((properties != null) && !properties.isEmpty()) {
 			TypeConverterResolver typeConverterResolver = new TypeConverterResolver();
-			typeConverterResolver.register(StringToAlignmentConverter.FROM, StringToAlignmentConverter.TO, new StringToAlignmentConverter());
+			typeConverterResolver.register(String.class, Alignment.class, new StringToAlignmentConverter());
 			
 			ObjectDefinitionValueResolver valueResolver = new ObjectDefinitionValueResolver(factory);
 			
-			ObjectUtils.applyPropertyValues(objectQName, type, properties, valueResolver, typeConverterResolver);
+			PropertyUtils.applyPropertyValues(objectQName, type, properties, valueResolver, typeConverterResolver);
 		}
 		
 		if (type instanceof InitializingObject) {
