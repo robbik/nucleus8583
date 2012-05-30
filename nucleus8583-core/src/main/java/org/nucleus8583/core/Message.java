@@ -207,7 +207,7 @@ public final class Message implements Serializable {
 	@SuppressWarnings("unchecked")
 	public <T> T get(int no) {
 		if (no == 0) {
-			return getMti();
+			return (T) getMti();
 		}
 
 		if ((no <= 1) || (no > 192) || (no == 65) || (no >= count)) {
