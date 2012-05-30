@@ -13,7 +13,7 @@ import rk.commons.inject.factory.config.ObjectReference;
 import rk.commons.inject.factory.support.ObjectDefinitionBuilder;
 import rk.commons.inject.factory.xml.ObjectDefinitionParserDelegate;
 import rk.commons.inject.factory.xml.SingleObjectDefinitionParser;
-import rk.commons.util.StringUtils;
+import rk.commons.util.StringHelper;
 
 public class BasicDefinitionParser extends SingleObjectDefinitionParser {
 
@@ -66,12 +66,12 @@ public class BasicDefinitionParser extends SingleObjectDefinitionParser {
 	
 	protected void doParse(Element element, ObjectDefinitionParserDelegate delegate, ObjectDefinitionBuilder builder) {
 		String stmp = element.getAttribute("no");
-		if (StringUtils.hasText(stmp)) {
+		if (StringHelper.hasText(stmp)) {
 			builder.addPropertyValue("no", Integer.parseInt(stmp));
 		}
 		
 		stmp = element.getAttribute("name");
-		if (StringUtils.hasText(stmp)) {
+		if (StringHelper.hasText(stmp)) {
 			builder.addPropertyValue("name", stmp);
 		}
 		

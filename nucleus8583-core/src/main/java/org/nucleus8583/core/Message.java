@@ -6,8 +6,8 @@ import java.util.Map;
 
 import org.nucleus8583.core.util.BitmapHelper;
 
-import rk.commons.util.BinaryUtils;
-import rk.commons.util.ObjectUtils;
+import rk.commons.util.BinaryHelper;
+import rk.commons.util.ObjectHelper;
 
 /**
  * This class represents an ISO-8583 message. You can read, manipulate, and
@@ -339,7 +339,7 @@ public final class Message implements Serializable {
 		}
 
 		Message another = (Message) object;
-		if (!ObjectUtils.equals(values[0], another.values[0])) {
+		if (!ObjectHelper.equals(values[0], another.values[0])) {
 			return false;
 		}
 
@@ -352,13 +352,11 @@ public final class Message implements Serializable {
 				Object myValue = values[i];
 				Object anotherValue = another.values[i];
 
-				if ((myValue instanceof byte[])
-						&& (anotherValue instanceof byte[])) {
-					return ObjectUtils.equals((byte[]) myValue,
-							(byte[]) anotherValue);
+				if ((myValue instanceof byte[]) && (anotherValue instanceof byte[])) {
+					return ObjectHelper.equals((byte[]) myValue, (byte[]) anotherValue);
 				}
 
-				if (!ObjectUtils.equals(values[i], another.values[i])) {
+				if (!ObjectHelper.equals(values[i], another.values[i])) {
 					return false;
 				}
 			}
@@ -406,7 +404,7 @@ public final class Message implements Serializable {
 					Object val = values[i];
 
 					if (val instanceof byte[]) {
-						sbuf.append(BinaryUtils.toHex((byte[]) val));
+						sbuf.append(BinaryHelper.toHex((byte[]) val));
 					} else {
 						sbuf.append(values[i]);
 					}
@@ -422,7 +420,7 @@ public final class Message implements Serializable {
 					Object val = values[i];
 
 					if (val instanceof byte[]) {
-						sbuf.append(BinaryUtils.toHex((byte[]) val));
+						sbuf.append(BinaryHelper.toHex((byte[]) val));
 					} else {
 						sbuf.append(values[i]);
 					}

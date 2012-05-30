@@ -18,7 +18,7 @@ import rk.commons.inject.factory.support.ObjectDefinitionValueResolver;
 import rk.commons.inject.factory.support.ObjectFactoryAware;
 import rk.commons.inject.factory.support.ObjectQNameAware;
 import rk.commons.inject.factory.type.converter.TypeConverterResolver;
-import rk.commons.inject.util.PropertyUtils;
+import rk.commons.inject.util.PropertyHelper;
 
 public class FieldFactory extends FactoryObject<Field> implements ObjectQNameAware, ObjectFactoryAware {
 
@@ -73,7 +73,7 @@ public class FieldFactory extends FactoryObject<Field> implements ObjectQNameAwa
 			
 			ObjectDefinitionValueResolver valueResolver = new ObjectDefinitionValueResolver(factory);
 			
-			PropertyUtils.applyPropertyValues(objectQName, type, properties, valueResolver, typeConverterResolver);
+			PropertyHelper.applyPropertyValues(objectQName, type, properties, valueResolver, typeConverterResolver);
 		}
 		
 		if (type instanceof InitializingObject) {

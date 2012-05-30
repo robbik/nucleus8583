@@ -9,8 +9,7 @@ import org.nucleus8583.core.field.Type;
 import org.nucleus8583.core.util.BcdPadder;
 import org.nucleus8583.core.util.BcdPrefixer;
 
-import rk.commons.util.StringEscapeUtils;
-import rk.commons.util.StringUtils;
+import rk.commons.util.StringHelper;
 
 public class BcdPrefixedBcdNumeric implements Type<String> {
 
@@ -66,18 +65,18 @@ public class BcdPrefixedBcdNumeric implements Type<String> {
 	}
 
 	public void setPadWith(String padWith) {
-		if (!StringUtils.hasText(padWith, false)) {
+		if (!StringHelper.hasText(padWith, false)) {
 			throw new IllegalArgumentException("pad-with required");
 		}
 
-		padder.setPadWith(StringEscapeUtils.escapeJava(padWith).charAt(0));
+		padder.setPadWith(StringHelper.escapeJava(padWith).charAt(0));
 	}
 	
 	public void setEmptyValue(String emptyValue) {
 		if (emptyValue == null) {
 			this.emptyValue = "";
 		} else {
-			this.emptyValue = StringEscapeUtils.escapeJava(emptyValue);
+			this.emptyValue = StringHelper.escapeJava(emptyValue);
 		}
 	}
 

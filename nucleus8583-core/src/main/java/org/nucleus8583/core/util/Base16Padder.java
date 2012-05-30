@@ -7,7 +7,7 @@ import java.util.Arrays;
 
 import org.nucleus8583.core.field.Alignment;
 
-import rk.commons.util.IOUtils;
+import rk.commons.util.IOHelper;
 
 public class Base16Padder {
 
@@ -235,7 +235,7 @@ public class Base16Padder {
 		vlen <<= 1;
 
 		byte[] bbuf = new byte[vlen];
-		IOUtils.readFully(in, bbuf, vlen);
+		IOHelper.readFully(in, bbuf, vlen);
 
 		for (int i = 0, j = off; i < vlen; i += 2, ++j) {
 			value[j] = (byte) ((hex2int((char) (bbuf[i] & 0xFF)) << 4) | hex2int((char) (bbuf[i + 1] & 0xFF)));

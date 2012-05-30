@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-import rk.commons.util.IOUtils;
+import rk.commons.util.IOHelper;
 
 public class AsciiPrefixer {
 	private static final int[][] digitsToInt;
@@ -60,7 +60,7 @@ public class AsciiPrefixer {
 		int value = 0;
 
 		byte[] bbuf = new byte[prefixLength];
-		IOUtils.readFully(in, bbuf, prefixLength);
+		IOHelper.readFully(in, bbuf, prefixLength);
 
 		for (int i = prefixLength - 1, j = 0; i >= 0; --i, ++j) {
             int digitInt = bbuf[j];

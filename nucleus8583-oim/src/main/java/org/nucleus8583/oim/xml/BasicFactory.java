@@ -14,7 +14,7 @@ import rk.commons.inject.factory.support.InitializingObject;
 import rk.commons.inject.factory.support.ObjectDefinitionValueResolver;
 import rk.commons.inject.factory.support.ObjectFactoryAware;
 import rk.commons.inject.factory.type.converter.TypeConverterResolver;
-import rk.commons.inject.util.PropertyUtils;
+import rk.commons.inject.util.PropertyHelper;
 
 public class BasicFactory extends FactoryObject<Field> implements ObjectFactoryAware {
 
@@ -63,7 +63,7 @@ public class BasicFactory extends FactoryObject<Field> implements ObjectFactoryA
 			
 			ObjectDefinitionValueResolver valueResolver = new ObjectDefinitionValueResolver(factory);
 			
-			PropertyUtils.applyPropertyValues(name, type, properties, valueResolver, typeResolver);
+			PropertyHelper.applyPropertyValues(name, type, properties, valueResolver, typeResolver);
 		}
 		
 		if (type instanceof InitializingObject) {

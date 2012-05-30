@@ -10,9 +10,8 @@ import org.nucleus8583.oim.field.type.Type;
 import org.nucleus8583.oim.util.BytesPadder;
 
 import rk.commons.inject.factory.support.InitializingObject;
-import rk.commons.util.IOUtils;
-import rk.commons.util.StringEscapeUtils;
-import rk.commons.util.StringUtils;
+import rk.commons.util.IOHelper;
+import rk.commons.util.StringHelper;
 
 public class Bytes implements Type, InitializingObject {
 	
@@ -58,18 +57,18 @@ public class Bytes implements Type, InitializingObject {
 	}
 
 	public void setPadWith(String padWith) {
-		if (!StringUtils.hasText(padWith, false)) {
+		if (!StringHelper.hasText(padWith, false)) {
 			throw new IllegalArgumentException("pad-with required");
 		}
 
-		padder.setPadWith(StringEscapeUtils.escapeJava(padWith).getBytes()[0]);
+		padder.setPadWith(StringHelper.escapeJava(padWith).getBytes()[0]);
 	}
 
 	public void setEmptyValue(String emptyValue) {
 		if (emptyValue == null) {
 			padder.setEmptyValue(new byte[0]);
 		} else {
-			padder.setEmptyValue(StringEscapeUtils.escapeJava(emptyValue).getBytes());
+			padder.setEmptyValue(StringHelper.escapeJava(emptyValue).getBytes());
 		}
 	}
 
@@ -88,11 +87,11 @@ public class Bytes implements Type, InitializingObject {
 	public Object read(InputStream in) throws Exception {
 		if (length > 0) {
 			byte[] buf = new byte[length];
-			IOUtils.readFully(in, buf, 0, length);
+			IOHelper.readFully(in, buf, 0, length);
 			
 			return padder.unpad(buf, length);
 		} else {
-			byte[] buf = IOUtils.readUntilEof(in);
+			byte[] buf = IOHelper.readUntilEof(in);
 			
 			return new String(padder.unpad(buf, buf.length));
 		}

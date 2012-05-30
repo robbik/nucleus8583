@@ -8,7 +8,7 @@ import org.w3c.dom.Element;
 
 import rk.commons.inject.factory.support.ObjectDefinitionBuilder;
 import rk.commons.inject.factory.xml.ObjectDefinitionParserDelegate;
-import rk.commons.util.StringUtils;
+import rk.commons.util.StringHelper;
 
 public class ExpressionDefinitionParser extends BasicDefinitionParser {
 
@@ -48,7 +48,7 @@ public class ExpressionDefinitionParser extends BasicDefinitionParser {
 		}
 
 		String expression = element.getTextContent();
-		if (!StringUtils.hasText(expression)) {
+		if (!StringHelper.hasText(expression)) {
 			throw new IllegalArgumentException("expression body must be set");
 		}
 

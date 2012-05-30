@@ -8,7 +8,7 @@ import org.nucleus8583.core.field.Type;
 import org.nucleus8583.core.util.AsciiPadder;
 import org.nucleus8583.core.util.BcdPrefixer;
 
-import rk.commons.util.StringEscapeUtils;
+import rk.commons.util.StringHelper;
 
 public class BcdPrefixedAsciiText implements Type<String> {
 
@@ -49,7 +49,7 @@ public class BcdPrefixedAsciiText implements Type<String> {
 		if (emptyValue == null) {
 			this.emptyValue = "";
 		} else {
-			this.emptyValue = StringEscapeUtils.escapeJava(emptyValue);
+			this.emptyValue = StringHelper.escapeJava(emptyValue);
 		}
 	}
 

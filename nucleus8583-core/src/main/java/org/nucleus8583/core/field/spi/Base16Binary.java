@@ -9,8 +9,7 @@ import org.nucleus8583.core.field.Type;
 import org.nucleus8583.core.util.Base16Padder;
 
 import rk.commons.inject.factory.support.InitializingObject;
-import rk.commons.util.StringEscapeUtils;
-import rk.commons.util.StringUtils;
+import rk.commons.util.StringHelper;
 
 public class Base16Binary implements Type<byte[]>, InitializingObject {
 	
@@ -58,18 +57,18 @@ public class Base16Binary implements Type<byte[]>, InitializingObject {
 	}
 
 	public void setPadWith(String padWith) {
-		if (!StringUtils.hasText(padWith, false)) {
+		if (!StringHelper.hasText(padWith, false)) {
 			throw new IllegalArgumentException("pad-with required");
 		}
 
-		padder.setPadWith(StringEscapeUtils.escapeJava(padWith).getBytes()[0]);
+		padder.setPadWith(StringHelper.escapeJava(padWith).getBytes()[0]);
 	}
 
 	public void setEmptyValue(String emptyValue) {
 		if (emptyValue == null) {
 			padder.setEmptyValue(new byte[0]);
 		} else {
-			padder.setEmptyValue(StringEscapeUtils.escapeJava(emptyValue).getBytes());
+			padder.setEmptyValue(StringHelper.escapeJava(emptyValue).getBytes());
 		}
 	}
 

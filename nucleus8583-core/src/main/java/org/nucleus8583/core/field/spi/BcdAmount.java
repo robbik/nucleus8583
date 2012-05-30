@@ -10,8 +10,7 @@ import org.nucleus8583.core.field.Type;
 import org.nucleus8583.core.util.BcdPadder;
 
 import rk.commons.inject.factory.support.InitializingObject;
-import rk.commons.util.StringEscapeUtils;
-import rk.commons.util.StringUtils;
+import rk.commons.util.StringHelper;
 
 public class BcdAmount implements Type<String>, InitializingObject {
 
@@ -58,18 +57,18 @@ public class BcdAmount implements Type<String>, InitializingObject {
 	}
 
 	public void setPadWith(String padWith) {
-		if (!StringUtils.hasText(padWith, false)) {
+		if (!StringHelper.hasText(padWith, false)) {
 			throw new IllegalArgumentException("pad-with required");
 		}
 
-		padder.setPadWith(StringEscapeUtils.escapeJava(padWith).charAt(0));
+		padder.setPadWith(StringHelper.escapeJava(padWith).charAt(0));
 	}
 
 	public void setEmptyValue(String emptyValue) {
 		if (emptyValue == null) {
 			padder.setEmptyValue(new char[0]);
 		} else {
-			padder.setEmptyValue(StringEscapeUtils.escapeJava(emptyValue).toCharArray());
+			padder.setEmptyValue(StringHelper.escapeJava(emptyValue).toCharArray());
 		}
 	}
 

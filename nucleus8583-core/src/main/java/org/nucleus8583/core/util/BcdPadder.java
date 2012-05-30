@@ -7,7 +7,7 @@ import java.util.Arrays;
 
 import org.nucleus8583.core.field.Alignment;
 
-import rk.commons.util.IOUtils;
+import rk.commons.util.IOHelper;
 
 public class BcdPadder {
 
@@ -190,7 +190,7 @@ public class BcdPadder {
      */
     public void read(InputStream in, char[] value, int vlen) throws IOException {
         byte[] bcd = new byte[(vlen + 1) >> 1];
-        IOUtils.readFully(in, bcd, bcd.length);
+        IOHelper.readFully(in, bcd, bcd.length);
 
         BcdUtils.bcdToStr(bcd, value, vlen);
     }

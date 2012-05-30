@@ -7,7 +7,7 @@ import java.util.Arrays;
 
 import org.nucleus8583.oim.field.Alignment;
 
-import rk.commons.util.IOUtils;
+import rk.commons.util.IOHelper;
 
 public class BytesPadder {
 
@@ -268,7 +268,7 @@ public class BytesPadder {
 	 */
 	public void read(InputStream in, byte[] value, int off, int vlen)
 			throws IOException {
-		IOUtils.readFully(in, value, off, vlen);
+		IOHelper.readFully(in, value, off, vlen);
 	}
 
 	/**

@@ -5,7 +5,7 @@ import org.w3c.dom.Element;
 import rk.commons.inject.factory.support.ObjectDefinitionBuilder;
 import rk.commons.inject.factory.xml.ObjectDefinitionParserDelegate;
 import rk.commons.inject.factory.xml.SingleObjectDefinitionParser;
-import rk.commons.util.StringUtils;
+import rk.commons.util.StringHelper;
 
 public class ListDefinitionParser extends SingleObjectDefinitionParser {
 	
@@ -18,19 +18,19 @@ public class ListDefinitionParser extends SingleObjectDefinitionParser {
 	
 	protected void doParse(Element element, ObjectDefinitionParserDelegate delegate, ObjectDefinitionBuilder builder) {
 		String stmp = element.getAttribute("no");
-		if (StringUtils.hasText(stmp)) {
+		if (StringHelper.hasText(stmp)) {
 			builder.addPropertyValue("no", Integer.parseInt(stmp));
 		}
 		
 		builder.addPropertyValue("name", element.getAttribute("name"));
 		
 		stmp = element.getAttribute("append");
-		if (StringUtils.hasText(stmp)) {
+		if (StringHelper.hasText(stmp)) {
 			builder.addPropertyValue("append", Boolean.parseBoolean(stmp));
 		}
 		
 		stmp = element.getAttribute("maxCount");
-		if (StringUtils.hasText(stmp)) {
+		if (StringHelper.hasText(stmp)) {
 			builder.addPropertyValue("maxCount", Integer.parseInt(stmp));
 		}
 		

@@ -7,7 +7,7 @@ import java.util.Arrays;
 
 import org.nucleus8583.core.field.Alignment;
 
-import rk.commons.util.IOUtils;
+import rk.commons.util.IOHelper;
 
 public class AsciiPadder {
 
@@ -154,7 +154,7 @@ public class AsciiPadder {
 	public void read(InputStream in, char[] cbuf, int off, int len)
 			throws IOException {
 		byte[] bbuf = new byte[len];
-		IOUtils.readFully(in, bbuf, len);
+		IOHelper.readFully(in, bbuf, len);
 
 		for (int i = 0, j = off; i < len; ++i, ++j) {
 			cbuf[j] = /*(char) bbuf[i];*/ (char) (bbuf[i] & 0x7F);

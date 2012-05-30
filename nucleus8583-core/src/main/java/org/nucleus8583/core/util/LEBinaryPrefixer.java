@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-import rk.commons.util.IOUtils;
+import rk.commons.util.IOHelper;
 
 /**
  * Binary prefixer (Little-Endian)
@@ -44,7 +44,7 @@ public class LEBinaryPrefixer {
 
 	public int readUint(InputStream in) throws IOException {
 		byte[] bbuf = new byte[nbytes];
-		IOUtils.readFully(in, bbuf, nbytes);
+		IOHelper.readFully(in, bbuf, nbytes);
 
 		int value = (bbuf[0] & 0xFF);
         int shlv = 8;

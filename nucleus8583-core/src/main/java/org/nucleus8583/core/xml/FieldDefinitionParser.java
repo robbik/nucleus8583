@@ -13,7 +13,7 @@ import rk.commons.inject.factory.config.ObjectReference;
 import rk.commons.inject.factory.support.ObjectDefinitionBuilder;
 import rk.commons.inject.factory.xml.ObjectDefinitionParserDelegate;
 import rk.commons.inject.factory.xml.SingleObjectDefinitionParser;
-import rk.commons.util.StringUtils;
+import rk.commons.util.StringHelper;
 
 public class FieldDefinitionParser extends SingleObjectDefinitionParser {
 
@@ -62,7 +62,7 @@ public class FieldDefinitionParser extends SingleObjectDefinitionParser {
 		builder.addPropertyValue("no", Integer.parseInt(element.getAttribute("no")));
 		builder.addPropertyReference("type", element.getAttribute("type"));
 		
-		if (StringUtils.hasText(element.getAttribute("subMessage-ref"), true)) {
+		if (StringHelper.hasText(element.getAttribute("subMessage-ref"), true)) {
 			builder.addPropertyReference("messageSerializer", element.getAttribute("subMessage-ref").trim());
 		}
 

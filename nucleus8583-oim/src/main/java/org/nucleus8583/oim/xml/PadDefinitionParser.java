@@ -7,8 +7,7 @@ import org.w3c.dom.Element;
 import rk.commons.inject.factory.support.ObjectDefinitionBuilder;
 import rk.commons.inject.factory.xml.ObjectDefinitionParserDelegate;
 import rk.commons.inject.factory.xml.SingleObjectDefinitionParser;
-import rk.commons.util.StringEscapeUtils;
-import rk.commons.util.StringUtils;
+import rk.commons.util.StringHelper;
 
 public class PadDefinitionParser extends SingleObjectDefinitionParser {
 
@@ -29,13 +28,13 @@ public class PadDefinitionParser extends SingleObjectDefinitionParser {
 	
 	protected void doParse(Element element, ObjectDefinitionParserDelegate delegate, ObjectDefinitionBuilder builder) {
 		String stmp = element.getAttribute("no");
-		if (StringUtils.hasText(stmp)) {
+		if (StringHelper.hasText(stmp)) {
 			builder.addPropertyValue("no", Integer.parseInt(stmp));
 		}
 		
 		stmp = element.getAttribute("padWith");
-		if (StringUtils.hasText(stmp, false)) {
-			builder.addPropertyValue("padWith", StringEscapeUtils.escapeJava(stmp).toCharArray());
+		if (StringHelper.hasText(stmp, false)) {
+			builder.addPropertyValue("padWith", StringHelper.escapeJava(stmp).toCharArray());
 		}
 	}
 }

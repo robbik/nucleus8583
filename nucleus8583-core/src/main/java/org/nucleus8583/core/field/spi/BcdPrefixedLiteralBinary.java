@@ -8,7 +8,7 @@ import org.nucleus8583.core.field.Type;
 import org.nucleus8583.core.util.BcdPrefixer;
 import org.nucleus8583.core.util.LiteralBinaryPadder;
 
-import rk.commons.util.StringEscapeUtils;
+import rk.commons.util.StringHelper;
 
 public class BcdPrefixedLiteralBinary implements Type<byte[]> {
 
@@ -49,7 +49,7 @@ public class BcdPrefixedLiteralBinary implements Type<byte[]> {
 		if (emptyValue == null) {
 			this.emptyValue = new byte[0];
 		} else {
-			this.emptyValue = StringEscapeUtils.escapeJava(emptyValue).getBytes();
+			this.emptyValue = StringHelper.escapeJava(emptyValue).getBytes();
 		}
 	}
 
