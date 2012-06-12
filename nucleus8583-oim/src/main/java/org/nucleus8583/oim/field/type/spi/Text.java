@@ -9,11 +9,11 @@ import org.nucleus8583.oim.field.Alignment;
 import org.nucleus8583.oim.field.type.Type;
 import org.nucleus8583.oim.util.TextPadder;
 
-import rk.commons.inject.factory.support.InitializingObject;
+import rk.commons.inject.annotation.Init;
 import rk.commons.util.IOHelper;
 import rk.commons.util.StringHelper;
 
-public class Text implements Type, InitializingObject {
+public class Text implements Type {
 
 	private static final long serialVersionUID = -5615324004502124085L;
 
@@ -74,6 +74,7 @@ public class Text implements Type, InitializingObject {
 		}
 	}
 
+	@Init
 	public void initialize() throws Exception {
 		padder.initialize();
 	}

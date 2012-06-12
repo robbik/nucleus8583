@@ -10,9 +10,9 @@ import java.util.Map;
 
 import org.nucleus8583.oim.field.Field;
 
-import rk.commons.inject.factory.support.InitializingObject;
+import rk.commons.inject.annotation.Init;
 
-public class List implements Field, InitializingObject {
+public class List implements Field {
 
 	private int no;
 
@@ -58,6 +58,7 @@ public class List implements Field, InitializingObject {
 		this.textMode = textMode;
 	}
 	
+	@Init
 	public void initialize() throws Exception {
 		countName = "transient:" + name + "____count";
 		counterName = "transient:" + name + "____i";

@@ -10,10 +10,10 @@ import org.nucleus8583.core.field.Type;
 import org.nucleus8583.core.util.EbcdicAsciiTable;
 import org.nucleus8583.core.util.EbcdicPadder;
 
-import rk.commons.inject.factory.support.InitializingObject;
+import rk.commons.inject.annotation.Init;
 import rk.commons.util.StringHelper;
 
-public class EbcdicAmount implements Type<String>, InitializingObject{
+public class EbcdicAmount implements Type<String> {
 
     private static final long serialVersionUID = -5615324004502124085L;
 
@@ -73,6 +73,7 @@ public class EbcdicAmount implements Type<String>, InitializingObject{
 		}
 	}
 
+	@Init
 	public void initialize() throws Exception {
 		padder.initialize();
 	}

@@ -9,11 +9,11 @@ import org.nucleus8583.oim.field.Alignment;
 import org.nucleus8583.oim.field.type.Type;
 import org.nucleus8583.oim.util.BytesPadder;
 
-import rk.commons.inject.factory.support.InitializingObject;
+import rk.commons.inject.annotation.Init;
 import rk.commons.util.IOHelper;
 import rk.commons.util.StringHelper;
 
-public class Bytes implements Type, InitializingObject {
+public class Bytes implements Type {
 	
 	protected final BytesPadder padder;
 	
@@ -72,6 +72,7 @@ public class Bytes implements Type, InitializingObject {
 		}
 	}
 
+	@Init
 	public void initialize() throws Exception {
 		padder.initialize();
 	}

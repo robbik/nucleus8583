@@ -57,7 +57,7 @@ public class FieldDefinitionParser extends SingleObjectDefinitionParser {
 			}
 		}
 
-		builder.setObjectQName(element.getAttribute("name"));
+		builder.setObjectName(element.getAttribute("name"));
 
 		builder.addPropertyValue("no", Integer.parseInt(element.getAttribute("no")));
 		builder.addPropertyReference("type", element.getAttribute("type"));

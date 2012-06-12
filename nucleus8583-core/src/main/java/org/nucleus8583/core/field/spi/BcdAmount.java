@@ -9,10 +9,10 @@ import org.nucleus8583.core.field.Alignment;
 import org.nucleus8583.core.field.Type;
 import org.nucleus8583.core.util.BcdPadder;
 
-import rk.commons.inject.factory.support.InitializingObject;
+import rk.commons.inject.annotation.Init;
 import rk.commons.util.StringHelper;
 
-public class BcdAmount implements Type<String>, InitializingObject {
+public class BcdAmount implements Type<String> {
 
 	private static final long serialVersionUID = -5615324004502124085L;
 
@@ -72,6 +72,7 @@ public class BcdAmount implements Type<String>, InitializingObject {
 		}
 	}
 
+	@Init
 	public void initialize() throws Exception {
 		padder.initialize();
 	}

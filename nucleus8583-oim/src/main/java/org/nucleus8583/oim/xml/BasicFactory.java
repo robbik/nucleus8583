@@ -1,5 +1,7 @@
 package org.nucleus8583.oim.xml;
 
+import java.lang.reflect.Method;
+import java.util.List;
 import java.util.Map;
 
 import org.nucleus8583.oim.field.Alignment;
@@ -7,16 +9,17 @@ import org.nucleus8583.oim.field.Field;
 import org.nucleus8583.oim.field.spi.Basic;
 import org.nucleus8583.oim.field.type.Type;
 
+import rk.commons.inject.annotation.Init;
+import rk.commons.inject.annotation.Inject;
 import rk.commons.inject.factory.ObjectFactory;
 import rk.commons.inject.factory.ObjectInstantiationException;
 import rk.commons.inject.factory.support.FactoryObject;
-import rk.commons.inject.factory.support.InitializingObject;
 import rk.commons.inject.factory.support.ObjectDefinitionValueResolver;
-import rk.commons.inject.factory.support.ObjectFactoryAware;
 import rk.commons.inject.factory.type.converter.TypeConverterResolver;
+import rk.commons.inject.util.AnnotationHelper;
 import rk.commons.inject.util.PropertyHelper;
 
-public class BasicFactory extends FactoryObject<Field> implements ObjectFactoryAware {
+public class BasicFactory extends FactoryObject<Field> {
 
 	protected int no;
 	
@@ -26,6 +29,7 @@ public class BasicFactory extends FactoryObject<Field> implements ObjectFactoryA
 
 	protected Map<String, Object> properties;
 	
+	@Inject
 	protected ObjectFactory factory;
 
 	public void setNo(int no) {
@@ -42,10 +46,6 @@ public class BasicFactory extends FactoryObject<Field> implements ObjectFactoryA
 
 	public void setProperties(Map<String, Object> properties) {
 		this.properties = properties;
-	}
-
-	public void setObjectFactory(ObjectFactory factory) {
-		this.factory = factory;
 	}
 	
 	protected Type reInitializeType() {
@@ -66,9 +66,12 @@ public class BasicFactory extends FactoryObject<Field> implements ObjectFactoryA
 			PropertyHelper.applyPropertyValues(name, type, properties, valueResolver, typeResolver);
 		}
 		
-		if (type instanceof InitializingObject) {
+		List<Method> methods = AnnotationHelper.findAnnotatedMethods(type.getClass(), Init.class);
+		for (Method m : methods) {
+			m.setAccessible(true);
+			
 			try {
-				((InitializingObject) type).initialize();
+				m.invoke(type);
 			} catch (Exception e) {
 				throw new ObjectInstantiationException(name, e);
 			}

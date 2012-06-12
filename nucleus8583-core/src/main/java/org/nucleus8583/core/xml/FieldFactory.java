@@ -3,6 +3,7 @@ package org.nucleus8583.core.xml;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Proxy;
+import java.util.List;
 import java.util.Map;
 
 import org.nucleus8583.core.MessageSerializer;
@@ -10,17 +11,17 @@ import org.nucleus8583.core.field.Alignment;
 import org.nucleus8583.core.field.Field;
 import org.nucleus8583.core.field.Type;
 
+import rk.commons.inject.annotation.Init;
+import rk.commons.inject.annotation.Inject;
 import rk.commons.inject.factory.ObjectFactory;
 import rk.commons.inject.factory.ObjectInstantiationException;
 import rk.commons.inject.factory.support.FactoryObject;
-import rk.commons.inject.factory.support.InitializingObject;
 import rk.commons.inject.factory.support.ObjectDefinitionValueResolver;
-import rk.commons.inject.factory.support.ObjectFactoryAware;
-import rk.commons.inject.factory.support.ObjectQNameAware;
 import rk.commons.inject.factory.type.converter.TypeConverterResolver;
+import rk.commons.inject.util.AnnotationHelper;
 import rk.commons.inject.util.PropertyHelper;
 
-public class FieldFactory extends FactoryObject<Field> implements ObjectQNameAware, ObjectFactoryAware {
+public class FieldFactory extends FactoryObject<Field> {
 
 	private int no;
 
@@ -30,8 +31,10 @@ public class FieldFactory extends FactoryObject<Field> implements ObjectQNameAwa
 	
 	private MessageSerializer serializer;
 	
-	private String objectQName;
+	@Inject
+	private String objectName;
 	
+	@Inject
 	private ObjectFactory factory;
 
 	public void setNo(int no) {
@@ -51,7 +54,7 @@ public class FieldFactory extends FactoryObject<Field> implements ObjectQNameAwa
 	}
 
 	public void setObjectQName(String objectQName) {
-		this.objectQName = objectQName;
+		this.objectName = objectQName;
 	}
 
 	public void setObjectFactory(ObjectFactory factory) {
@@ -73,14 +76,17 @@ public class FieldFactory extends FactoryObject<Field> implements ObjectQNameAwa
 			
 			ObjectDefinitionValueResolver valueResolver = new ObjectDefinitionValueResolver(factory);
 			
-			PropertyHelper.applyPropertyValues(objectQName, type, properties, valueResolver, typeConverterResolver);
+			PropertyHelper.applyPropertyValues(objectName, type, properties, valueResolver, typeConverterResolver);
 		}
 		
-		if (type instanceof InitializingObject) {
+		List<Method> methods = AnnotationHelper.findAnnotatedMethods(type.getClass(), Init.class);
+		for (Method m : methods) {
+			m.setAccessible(true);
+			
 			try {
-				((InitializingObject) type).initialize();
+				m.invoke(type);
 			} catch (Exception e) {
-				throw new ObjectInstantiationException(objectQName, e);
+				throw new ObjectInstantiationException(objectName, e);
 			}
 		}
 		
@@ -104,7 +110,7 @@ public class FieldFactory extends FactoryObject<Field> implements ObjectQNameAwa
 				type = (Type<?>) Proxy.newProxyInstance(typeClass.getClassLoader(), new Class<?>[] { Type.class },
 						new TypeInvocationHandlerForBytes(type, serializer));
 			} else {
-				throw new ObjectInstantiationException(objectQName, new ClassCastException(
+				throw new ObjectInstantiationException(objectName, new ClassCastException(
 						"class " + typeClass + " is not java.lang.String or byte[] based Type, it is " + valueType + " based Type"));
 			}
 		}
