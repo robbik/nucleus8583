@@ -80,8 +80,8 @@
     <xsd:complexType name="list">
         <xsd:complexContent>
             <xsd:extension base="record">
-                <xsd:attribute name="append" type="xsd:boolean" use="optional" default="false" />
-                <xsd:attribute name="maxCount" type="length" use="optional" default="2000000000" />
+                <xsd:attribute name="partial" type="xsd:boolean" use="optional" default="false" />
+                <xsd:attribute name="capacity" type="length" use="optional" default="2000000000" />
             </xsd:extension>
         </xsd:complexContent>
     </xsd:complexType>

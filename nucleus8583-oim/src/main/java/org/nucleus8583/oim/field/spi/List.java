@@ -5,7 +5,9 @@ import java.io.OutputStream;
 import java.io.Reader;
 import java.io.Writer;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 import org.nucleus8583.oim.field.Field;
@@ -20,11 +22,11 @@ public class List implements Field {
 	
 	private String countName;
 
-	private String counterName;
+	private String iteratorName;
 	
-	private boolean append;
+	private boolean partial;
 	
-	private int maxCount;
+	private int capacity;
 
 	private Field[] childFields;
 	
@@ -42,12 +44,12 @@ public class List implements Field {
 		this.name = name;
 	}
 
-	public void setAppend(boolean append) {
-		this.append = append;
+	public void setPartial(boolean partial) {
+		this.partial = partial;
 	}
 	
-	public void setMaxCount(int maxCount) {
-		this.maxCount = maxCount;
+	public void setCapacity(int capacity) {
+		this.capacity = capacity;
 	}
 
 	public void setChildFields(java.util.List<Field> childFields) {
@@ -61,7 +63,8 @@ public class List implements Field {
 	@Init
 	public void initialize() throws Exception {
 		countName = "transient:" + name + "____count";
-		counterName = "transient:" + name + "____i";
+		
+		iteratorName = "transient:" + name + "____iterator";
 	}
 
 	public boolean supportWriter() {
@@ -73,40 +76,36 @@ public class List implements Field {
 	}
 
 	@SuppressWarnings("unchecked")
-	private java.util.List<Map<String, Object>> beforeRead(Map<String, Object> root) {
-		java.util.List<Map<String, Object>> list;
+	private Collection<Map<String, Object>> beforeRead(Map<String, Object> root) {
+		Collection<Map<String, Object>> list;
 		
-		if (!append || !root.containsKey(name)) {
+		if (!partial || !root.containsKey(name)) {
 			list = new ArrayList<Map<String,Object>>();
 			root.put(name, list);
 		} else {
-			list = (java.util.List<Map<String, Object>>) root.get(name);
+			list = (Collection<Map<String, Object>>) root.get(name);
 		}
 		
 		return list;
 	}
 
 	@SuppressWarnings("unchecked")
-	private java.util.List<Map<String, Object>> beforeWrite(Map<String, Object> root) {
-		java.util.List<Map<String, Object>> list;
+	private Iterable<Map<String, Object>> beforeWrite(Map<String, Object> root) {
+		Iterable<Map<String, Object>> iterable;
 		
 		if (!root.containsKey(name)) {
 			return null;
 		} else {
-			list = (java.util.List<Map<String, Object>>) root.get(name);
+			iterable = (Iterable<Map<String, Object>>) root.get(name);
 		}
 		
-		return list;
+		return iterable;
 	}
 	
 	public void read(InputStream in, Map<String, Object> root) throws Exception {
-		java.util.List<Map<String, Object>> list = beforeRead(root);
+		Collection<Map<String, Object>> c = beforeRead(root);
 		
 		int count = ((Integer) root.get(countName)).intValue();
-		
-		if (count > maxCount) {
-			count = maxCount;
-		}
 		
 		for (int i = 0; i < count; ++i) {
 			Map<String, Object> e = new HashMap<String, Object>();
@@ -115,17 +114,14 @@ public class List implements Field {
 				childFields[j].read(in, e);
 			}
 			
-			list.add(e);
+			c.add(e);
 		}
 	}
 
 	public void read(Reader in, Map<String, Object> root) throws Exception {
-		java.util.List<Map<String, Object>> list = beforeRead(root);
+		Collection<Map<String, Object>> c = beforeRead(root);
 		
 		int count = ((Integer) root.get(countName)).intValue();
-		if (count > maxCount) {
-			count = maxCount;
-		}
 		
 		for (int i = 0; i < count; ++i) {
 			Map<String, Object> e = new HashMap<String, Object>();
@@ -134,71 +130,67 @@ public class List implements Field {
 				childFields[j].read(in, e);
 			}
 			
-			list.add(e);
+			c.add(e);
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	public void write(OutputStream out, Map<String, Object> root) throws Exception {
-		java.util.List<Map<String, Object>> list = beforeWrite(root);
-		if (list == null) {
+		Iterable<Map<String, Object>> iterable = beforeWrite(root);
+		if (iterable == null) {
 			return;
 		}
 		
-		int i;
+		Iterator<Map<String, Object>> it;
 		
-		if (append && root.containsKey(counterName)) {
-			i = ((Integer) root.get(counterName)).intValue();
-		} else {
-			i = 0;
-		}
-		
-		int count = list.size();
-		if (count > maxCount) {
-			count = maxCount;
-		}
-		
-		for (; i < count; ++i) {
-			Map<String, Object> e = (Map<String, Object>) list.get(i);
+		if (partial) {
+			it = (Iterator<Map<String, Object>>) root.get(iteratorName);
 			
-			for (int j = 0, n = childFields.length; j < n; ++j) {
-				childFields[i].write(out, e);
+			if (it == null) {
+				it = iterable.iterator();
+				
+				root.put(iteratorName, it);
 			}
-		}
-		
-		if (append) {
-			root.put(counterName, Integer.valueOf(i));
-		}
-	}
-
-	public void write(Writer out, Map<String, Object> root) throws Exception {
-		java.util.List<Map<String, Object>> list = beforeWrite(root);
-		if (list == null) {
-			return;
-		}
-		
-		int i;
-		
-		if (append && root.containsKey(counterName)) {
-			i = ((Integer) root.get(counterName)).intValue();
 		} else {
-			i = 0;
+			it = iterable.iterator();
 		}
 		
-		int count = list.size();
-		if (count > maxCount) {
-			count = maxCount;
-		}
-		
-		for (; i < count; ++i) {
-			Map<String, Object> e = (Map<String, Object>) list.get(i);
+		for (int i = 0; (i < capacity) && it.hasNext(); ++i) {
+			Map<String, Object> e = it.next();
 			
 			for (int j = 0, n = childFields.length; j < n; ++j) {
 				childFields[j].write(out, e);
 			}
 		}
+	}
+
+	@SuppressWarnings("unchecked")
+	public void write(Writer out, Map<String, Object> root) throws Exception {
+		Iterable<Map<String, Object>> iterable = beforeWrite(root);
+		if (iterable == null) {
+			return;
+		}
 		
-		if (append) {
-			root.put(counterName, Integer.valueOf(i));
+		Iterator<Map<String, Object>> it;
+		
+		if (partial) {
+			it = (Iterator<Map<String, Object>>) root.get(iteratorName);
+			
+			if (it == null) {
+				it = iterable.iterator();
+				
+				root.put(iteratorName, it);
+			}
+		} else {
+			it = iterable.iterator();
+		}
+		
+		for (int i = 0; (i < capacity) && it.hasNext(); ++i) {
+			Map<String, Object> e = it.next();
+			
+			for (int j = 0, n = childFields.length; j < n; ++j) {
+				childFields[j].write(out, e);
+			}
 		}
 	}
 }

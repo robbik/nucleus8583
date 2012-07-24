@@ -4,7 +4,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Reader;
 import java.io.Writer;
-import java.util.List;
+import java.util.Collection;
 import java.util.Map;
 
 public class ListCount extends Basic {
@@ -24,10 +24,10 @@ public class ListCount extends Basic {
 	}
 
 	public void write(OutputStream out, Map<String, Object> root) throws Exception {
-		type.write(out, ((List<?>) root.get(name)).size());
+		type.write(out, ((Collection<?>) root.get(name)).size());
 	}
 
 	public void write(Writer out, Map<String, Object> root) throws Exception {
-		type.write(out, ((List<?>) root.get(name)).size());
+		type.write(out, ((Collection<?>) root.get(name)).size());
 	}
 }

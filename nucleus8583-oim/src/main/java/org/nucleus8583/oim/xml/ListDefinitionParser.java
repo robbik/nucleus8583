@@ -24,14 +24,14 @@ public class ListDefinitionParser extends SingleObjectDefinitionParser {
 		
 		builder.addPropertyValue("name", element.getAttribute("name"));
 		
-		stmp = element.getAttribute("append");
+		stmp = element.getAttribute("partial");
 		if (StringHelper.hasText(stmp)) {
-			builder.addPropertyValue("append", Boolean.parseBoolean(stmp));
+			builder.addPropertyValue("partial", Boolean.parseBoolean(stmp));
 		}
 		
-		stmp = element.getAttribute("maxCount");
+		stmp = element.getAttribute("capacity");
 		if (StringHelper.hasText(stmp)) {
-			builder.addPropertyValue("maxCount", Integer.parseInt(stmp));
+			builder.addPropertyValue("capacity", Integer.parseInt(stmp));
 		}
 		
 		builder.addPropertyValue("childFields", delegate.parseChildElements(element));
