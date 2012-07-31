@@ -1,2 +1,3 @@
 ognl=org.nucleus8583.oim.expression.spi.OgnlExpressionHandler
 mvel=org.nucleus8583.oim.expression.spi.Mvel2ExpressionHandler
+literal=org.nucleus8583.oim.expression.spi.LiteralExpressionHandler

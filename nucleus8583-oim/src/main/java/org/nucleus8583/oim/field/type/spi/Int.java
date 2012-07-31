@@ -5,11 +5,10 @@ import java.io.Writer;
 
 import org.nucleus8583.oim.field.Alignment;
 import org.nucleus8583.oim.field.type.Type;
+import org.nucleus8583.oim.util.TypeConverter;
 
 public class Int extends Text {
 	
-	private static final Integer ZERO = Integer.valueOf(0);
-
 	protected int precision;
 
 	public Int() {
@@ -34,15 +33,19 @@ public class Int extends Text {
 	}
 	
 	public void write(Writer out, Object o) throws Exception {
-		Integer ival;
+		String str;
 		
 		if (o == null) {
-			ival = ZERO;
+			str = "0";
+		} else if (int.class.isInstance(o)) {
+			str = String.valueOf(int.class.cast(o));
+		} else if (o instanceof Integer) {
+			str = ((Integer) o).toString();
 		} else {
-			ival = (Integer) o;
+			str = String.valueOf(TypeConverter.convertToInt(o));
 		}
 		
-		super.write(out, ival.toString());
+		super.write(out, str);
 	}
 	
 	public Type clone() {

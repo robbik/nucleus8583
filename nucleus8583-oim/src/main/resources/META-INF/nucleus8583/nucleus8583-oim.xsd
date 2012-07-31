@@ -95,8 +95,8 @@
 
     <xsd:complexType name="root-expression">
         <xsd:complexContent>
-            <xsd:extension base="basic">
-                <xsd:attribute name="expression" type="fieldNo" use="required" />
+            <xsd:extension base="expression">
+                <xsd:attribute name="no" type="fieldNo" use="required" />
             </xsd:extension>
         </xsd:complexContent>
     </xsd:complexType>

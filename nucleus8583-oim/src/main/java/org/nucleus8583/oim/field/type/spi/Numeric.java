@@ -7,24 +7,28 @@ import java.math.RoundingMode;
 
 import org.nucleus8583.oim.field.Alignment;
 import org.nucleus8583.oim.field.type.Type;
+import org.nucleus8583.oim.util.TypeConverter;
 
 public class Numeric extends Text {
 
-	private static final long serialVersionUID = -5615324004502124085L;
-	
 	protected int precision;
 	
 	protected RoundingMode roundingMode;
+	
+	protected String zero;
 
 	public Numeric() {
 		padder.setAlign(Alignment.TRIMMED_RIGHT);
 		padder.setPadWith('0');
+		
+		zero = BigDecimal.ZERO.toPlainString();
 	}
 	
 	public Numeric(Numeric o) {
 		super(o);
 		
 		precision = o.precision;
+		zero = BigDecimal.ZERO.movePointRight(precision).toPlainString();
 	}
 	
 	public void setPrecision(int precision) {
@@ -33,6 +37,7 @@ public class Numeric extends Text {
 		}
 		
 		this.precision = precision;
+		zero = BigDecimal.ZERO.movePointRight(precision).toPlainString();
 	}
 	
 	public void setRoundingMode(String roundingMode) {
@@ -56,15 +61,24 @@ public class Numeric extends Text {
 	}
 
 	public void write(Writer out, Object o) throws Exception {
-		BigDecimal bd = (BigDecimal) o;
+		String str;
 		
-		if (bd == null) {
-			bd = BigDecimal.ZERO;
+		if (o == null) {
+			str = zero;
 		} else {
+			BigDecimal bd;
+			
+			if (o instanceof BigDecimal) {
+				bd = (BigDecimal) o;
+			} else {
+				bd = TypeConverter.convertToBigDecimal(o);
+			}
+			
 			bd = bd.setScale(precision, roundingMode);
+			str = bd.movePointRight(precision).toPlainString();
 		}
 		
-		super.write(out, bd.movePointRight(precision).toPlainString());
+		super.write(out, str);
 	}
 	
 	public Type clone() {

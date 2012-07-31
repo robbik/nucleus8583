@@ -15,8 +15,6 @@ import rk.commons.util.StringHelper;
 
 public class Text implements Type {
 
-	private static final long serialVersionUID = -5615324004502124085L;
-
 	protected final TextPadder padder;
 
 	protected int length;
@@ -109,10 +107,14 @@ public class Text implements Type {
 	}
 
 	public void write(Writer out, Object o) throws Exception {
-		String value = (String) o;
+		String value;
 		
-		if (value == null) {
+		if (o == null) {
 			value = "";
+		} else if (o instanceof String) {
+			value = (String) o;
+		} else {
+			value = o.toString();
 		}
 		
 		if (length > 0) {

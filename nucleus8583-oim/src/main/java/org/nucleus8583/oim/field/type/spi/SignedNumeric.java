@@ -7,16 +7,17 @@ import java.math.RoundingMode;
 
 import org.nucleus8583.oim.field.Alignment;
 import org.nucleus8583.oim.field.type.Type;
+import org.nucleus8583.oim.util.TypeConverter;
 
 public class SignedNumeric extends Text {
-
-	private static final long serialVersionUID = -5615324004502124085L;
 	
 	protected int precision;
 	
 	protected RoundingMode roundingMode;
 	
 	protected boolean signFirst;
+	
+	protected String zero;
 
 	public SignedNumeric() {
 		padder.setAlign(Alignment.TRIMMED_RIGHT);
@@ -26,6 +27,8 @@ public class SignedNumeric extends Text {
 		roundingMode = RoundingMode.CEILING;
 		
 		signFirst = false;
+		
+		zero = BigDecimal.ZERO.toPlainString();
 	}
 	
 	public SignedNumeric(SignedNumeric o) {
@@ -35,6 +38,8 @@ public class SignedNumeric extends Text {
 		roundingMode = o.roundingMode;
 		
 		signFirst = o.signFirst;
+
+		zero = BigDecimal.ZERO.movePointRight(precision).toPlainString();
 	}
 
 	public void setLength(int length) {
@@ -47,6 +52,7 @@ public class SignedNumeric extends Text {
 		}
 		
 		this.precision = precision;
+		zero = BigDecimal.ZERO.movePointRight(precision).toPlainString();
 	}
 	
 	public void setRoundingMode(String roundingMode) {
@@ -140,13 +146,21 @@ public class SignedNumeric extends Text {
 	}
 
 	public void write(Writer out, Object o) throws Exception {
-		BigDecimal bd = (BigDecimal) o;
+		String str;
 		char signchar;
 		
-		if (bd == null) {
-			bd = BigDecimal.ZERO;
+		if (o == null) {
+			str = zero;
 			signchar = '+';
 		} else {
+			BigDecimal bd;
+
+			if (o instanceof BigDecimal) {
+				bd = (BigDecimal) o;
+			} else {
+				bd = TypeConverter.convertToBigDecimal(o);
+			}
+			
 			bd = bd.setScale(precision, roundingMode).movePointRight(precision);
 			
 			if (bd.compareTo(BigDecimal.ZERO) >= 0) {
@@ -155,13 +169,15 @@ public class SignedNumeric extends Text {
 				bd = bd.negate();
 				signchar = '-';
 			}
+			
+			str = bd.toPlainString();
 		}
 		
 		if (signFirst) {
 			out.write(signchar);
-			super.write(out, bd.toPlainString());
+			super.write(out, str);
 		} else {
-			super.write(out, bd.toPlainString());
+			super.write(out, str);
 			out.write(signchar);
 		}
 	}
