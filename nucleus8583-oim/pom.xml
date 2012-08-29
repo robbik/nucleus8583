@@ -69,6 +69,7 @@
                         <Bundle-DocURL>${project.url}</Bundle-DocURL>
                         <Import-Package>
                             org.osgi.framework;resolution:=optional,
+                            javax.servlet;resolution:=optional,
                             org.slf4j;resolution:=optional,
                             org.apache.commons.logging;resolution:=optional,
                             java.util.logging;resolution:=optional,
