@@ -34,19 +34,19 @@ public class Skip implements Field {
 		return false;
 	}
 
-	public void read(InputStream in, Map<String, Object> root) throws Exception {
+	public void read(InputStream in, Map<String, Object> root, Map<String, Object> tmp) throws Exception {
 		in.skip(length);
 	}
 
-	public void read(Reader in, Map<String, Object> root) throws Exception {
+	public void read(Reader in, Map<String, Object> root, Map<String, Object> tmp) throws Exception {
 		in.skip(length);
 	}
 
-	public void write(OutputStream out, Map<String, Object> root) throws Exception {
+	public void write(OutputStream out, Map<String, Object> root, Map<String, Object> tmp) throws Exception {
 		throw new UnsupportedOperationException();
 	}
 
-	public void write(Writer out, Map<String, Object> root) throws Exception {
+	public void write(Writer out, Map<String, Object> root, Map<String, Object> tmp) throws Exception {
 		throw new UnsupportedOperationException();
 	}
 }

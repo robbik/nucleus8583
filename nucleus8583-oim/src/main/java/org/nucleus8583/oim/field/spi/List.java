@@ -62,9 +62,9 @@ public class List implements Field {
 	
 	@Init
 	public void initialize() throws Exception {
-		countName = "transient:" + name + "____count";
+		countName = "list:" + name + "____count";
 		
-		iteratorName = "transient:" + name + "____iterator";
+		iteratorName = "list:" + name + "____iterator";
 	}
 
 	public boolean supportWriter() {
@@ -102,32 +102,44 @@ public class List implements Field {
 		return iterable;
 	}
 	
-	public void read(InputStream in, Map<String, Object> root) throws Exception {
+	public void read(InputStream in, Map<String, Object> root, Map<String, Object> tmp) throws Exception {
 		Collection<Map<String, Object>> c = beforeRead(root);
 		
-		int count = ((Integer) root.get(countName)).intValue();
+		int count;
+		
+		if (tmp.containsKey(countName)) {
+			count = ((Integer) tmp.get(countName)).intValue();
+		} else {
+			count = 0;
+		}
 		
 		for (int i = 0; i < count; ++i) {
 			Map<String, Object> e = new HashMap<String, Object>();
 			
 			for (int j = 0, n = childFields.length; j < n; ++j) {
-				childFields[j].read(in, e);
+				childFields[j].read(in, e, tmp);
 			}
 			
 			c.add(e);
 		}
 	}
 
-	public void read(Reader in, Map<String, Object> root) throws Exception {
+	public void read(Reader in, Map<String, Object> root, Map<String, Object> tmp) throws Exception {
 		Collection<Map<String, Object>> c = beforeRead(root);
 		
-		int count = ((Integer) root.get(countName)).intValue();
+		int count;
+		
+		if (tmp.containsKey(countName)) {
+			count = ((Integer) tmp.get(countName)).intValue();
+		} else {
+			count = 0;
+		}
 		
 		for (int i = 0; i < count; ++i) {
 			Map<String, Object> e = new HashMap<String, Object>();
 			
 			for (int j = 0, n = childFields.length; j < n; ++j) {
-				childFields[j].read(in, e);
+				childFields[j].read(in, e, tmp);
 			}
 			
 			c.add(e);
@@ -135,7 +147,7 @@ public class List implements Field {
 	}
 
 	@SuppressWarnings("unchecked")
-	public void write(OutputStream out, Map<String, Object> root) throws Exception {
+	public void write(OutputStream out, Map<String, Object> root, Map<String, Object> tmp) throws Exception {
 		Iterable<Map<String, Object>> iterable = beforeWrite(root);
 		if (iterable == null) {
 			return;
@@ -144,12 +156,12 @@ public class List implements Field {
 		Iterator<Map<String, Object>> it;
 		
 		if (partial) {
-			it = (Iterator<Map<String, Object>>) root.get(iteratorName);
+			it = (Iterator<Map<String, Object>>) tmp.get(iteratorName);
 			
 			if (it == null) {
 				it = iterable.iterator();
 				
-				root.put(iteratorName, it);
+				tmp.put(iteratorName, it);
 			}
 		} else {
 			it = iterable.iterator();
@@ -159,13 +171,13 @@ public class List implements Field {
 			Map<String, Object> e = it.next();
 			
 			for (int j = 0, n = childFields.length; j < n; ++j) {
-				childFields[j].write(out, e);
+				childFields[j].write(out, e, tmp);
 			}
 		}
 	}
 
 	@SuppressWarnings("unchecked")
-	public void write(Writer out, Map<String, Object> root) throws Exception {
+	public void write(Writer out, Map<String, Object> root, Map<String, Object> tmp) throws Exception {
 		Iterable<Map<String, Object>> iterable = beforeWrite(root);
 		if (iterable == null) {
 			return;
@@ -174,12 +186,12 @@ public class List implements Field {
 		Iterator<Map<String, Object>> it;
 		
 		if (partial) {
-			it = (Iterator<Map<String, Object>>) root.get(iteratorName);
+			it = (Iterator<Map<String, Object>>) tmp.get(iteratorName);
 			
 			if (it == null) {
 				it = iterable.iterator();
 				
-				root.put(iteratorName, it);
+				tmp.put(iteratorName, it);
 			}
 		} else {
 			it = iterable.iterator();
@@ -189,7 +201,7 @@ public class List implements Field {
 			Map<String, Object> e = it.next();
 			
 			for (int j = 0, n = childFields.length; j < n; ++j) {
-				childFields[j].write(out, e);
+				childFields[j].write(out, e, tmp);
 			}
 		}
 	}

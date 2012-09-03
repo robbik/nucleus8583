@@ -1,5 +1,6 @@
 package org.nucleus8583.oim;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -26,6 +27,8 @@ public final class MessageEntity {
     public void persist(Message isoMsg, Map<String, Object> root) throws Exception {
         FastStringWriter sw = new FastStringWriter(1024);
         FastByteArrayOutputStream baos = new FastByteArrayOutputStream(1024);
+        
+        Map<String, Object> tmp = new HashMap<String, Object>();
 
         for (int i = 0; i < count; ++i) {
             Field f = fields[i];
@@ -33,7 +36,7 @@ public final class MessageEntity {
             if (f.supportWriter()) {
                 // persist the field
                 try {
-                    f.write(sw, root);
+                    f.write(sw, root, tmp);
                 } catch (Throwable t) {
                    throw new Exception("unable to write field #" + f.getNo(), t);
                 }
@@ -46,7 +49,7 @@ public final class MessageEntity {
             } else {
                 // persist the field
                 try {
-                    f.write(baos, root);
+                    f.write(baos, root, tmp);
                 } catch (Throwable t) {
                    throw new Exception("unable to write field #" + f.getNo(), t);
                 }
@@ -64,6 +67,8 @@ public final class MessageEntity {
         FastStringReader reader = new FastStringReader();
         FastByteArrayInputStream inputstream = new FastByteArrayInputStream();
         
+        Map<String, Object> tmp = new HashMap<String, Object>();
+        
         for (int i = 0; i < count; ++i) {
             Field f = fields[i];
             
@@ -77,7 +82,7 @@ public final class MessageEntity {
                 
                 // load the field
                 try {
-                   f.read(reader, root);
+                   f.read(reader, root, tmp);
                 } catch (Throwable t) {
                    throw new Exception("unable to read field #" + f.getNo(), t);
                 }
@@ -86,7 +91,7 @@ public final class MessageEntity {
                 
                 // load the field
                 try {
-                    f.read(inputstream, root);
+                    f.read(inputstream, root, tmp);
                 } catch (Throwable t) {
                    throw new Exception("unable to read field #" + f.getNo(), t);
                 }

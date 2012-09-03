@@ -78,35 +78,35 @@ public class Record implements Field {
 		return root;
 	}
 
-	public void read(InputStream in, Map<String, Object> root) throws Exception {
+	public void read(InputStream in, Map<String, Object> root, Map<String, Object> tmp) throws Exception {
 		root = beforeRead(root);
 		
 		for (int i = 0, n = childFields.length; i < n; ++i) {
-			childFields[i].read(in, root);
+			childFields[i].read(in, root, tmp);
 		}
 	}
 
-	public void read(Reader in, Map<String, Object> root) throws Exception {
+	public void read(Reader in, Map<String, Object> root, Map<String, Object> tmp) throws Exception {
 		root = beforeRead(root);
 		
 		for (int i = 0, n = childFields.length; i < n; ++i) {
-			childFields[i].read(in, root);
+			childFields[i].read(in, root, tmp);
 		}
 	}
 
-	public void write(OutputStream out, Map<String, Object> root) throws Exception {
+	public void write(OutputStream out, Map<String, Object> root, Map<String, Object> tmp) throws Exception {
 		root = beforeWrite(root);
 		
 		for (int i = 0, n = childFields.length; i < n; ++i) {
-			childFields[i].write(out, root);
+			childFields[i].write(out, root, tmp);
 		}
 	}
 
-	public void write(Writer out, Map<String, Object> root) throws Exception {
+	public void write(Writer out, Map<String, Object> root, Map<String, Object> tmp) throws Exception {
 		root = beforeWrite(root);
 		
 		for (int i = 0, n = childFields.length; i < n; ++i) {
-			childFields[i].write(out, root);
+			childFields[i].write(out, root, tmp);
 		}
 	}
 }

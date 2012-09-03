@@ -42,21 +42,21 @@ public class BinaryPad implements Field {
 		return true;
 	}
 
-	public void read(InputStream in, Map<String, Object> root) throws Exception {
+	public void read(InputStream in, Map<String, Object> root, Map<String, Object> tmp) throws Exception {
 		throw new UnsupportedOperationException();
 	}
 
-	public void read(Reader in, Map<String, Object> root) throws Exception {
+	public void read(Reader in, Map<String, Object> root, Map<String, Object> tmp) throws Exception {
 		throw new UnsupportedOperationException();
 	}
 
-	public void write(OutputStream out, Map<String, Object> root) throws Exception {
+	public void write(OutputStream out, Map<String, Object> root, Map<String, Object> tmp) throws Exception {
 		if (padWith != null) {
 			out.write(padWith);
 		}
 	}
 
-	public void write(Writer out, Map<String, Object> root) throws Exception {
+	public void write(Writer out, Map<String, Object> root, Map<String, Object> tmp) throws Exception {
 		throw new UnsupportedOperationException();
 	}
 }

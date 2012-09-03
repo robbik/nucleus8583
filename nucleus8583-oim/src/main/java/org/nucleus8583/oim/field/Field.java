@@ -20,11 +20,12 @@ public interface Field {
 	 * @param in
 	 *            input source. can be {@link InputStream} or {@link Reader}
 	 * @param root
+	 * @param tmp temporary variables
 	 * @throws Exception
 	 */
-	void read(InputStream in, Map<String, Object> root) throws Exception;
+	void read(InputStream in, Map<String, Object> root, Map<String, Object> tmp) throws Exception;
 	
-	void read(Reader in, Map<String, Object> root) throws Exception;
+	void read(Reader in, Map<String, Object> root, Map<String, Object> tmp) throws Exception;
 
 	/**
 	 * get corresponding value from root and write it to output.
@@ -32,9 +33,10 @@ public interface Field {
 	 * @param out
 	 *            output. can be {@link OutputStream} or {@link Writer}
 	 * @param root
+	 * @param tmp temporary variables
 	 * @throws Exception
 	 */
-	void write(OutputStream out, Map<String, Object> root) throws Exception;
+	void write(OutputStream out, Map<String, Object> root, Map<String, Object> tmp) throws Exception;
 	
-	void write(Writer out, Map<String, Object> root) throws Exception;
+	void write(Writer out, Map<String, Object> root, Map<String, Object> tmp) throws Exception;
 }

@@ -36,7 +36,6 @@ public class MessageManagerTest {
 		String strMMdd = sdfMMdd.format(dt);
 		
 		map1 = new HashMap<String, Object>();
-		map1.put("mti", "0110");
 		map1.put("cardNumber", "9939");
 		map1.put("transmissionDateTime", sdfMMddHHmmss.parse(strMMddHHmmss));
 		map1.put("stan", 37);
@@ -54,10 +53,10 @@ public class MessageManagerTest {
 		
 		map1.put("details", details);
 		
-		map1.put("transient:details____count", details.size());
+		// map1.put("transient:details____count", details.size());
 
 		isoMsg1 = new Message();
-		isoMsg1.setMti("0110");
+		isoMsg1.set(0, "");
 		isoMsg1.set(2, "9939");
 		isoMsg1.set(7, strMMddHHmmss);
 		isoMsg1.set(11, "37");

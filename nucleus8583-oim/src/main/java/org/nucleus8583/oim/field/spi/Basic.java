@@ -41,19 +41,19 @@ public class Basic implements Field {
 		return type.supportOutputStream();
 	}
 
-	public void read(InputStream in, Map<String, Object> root) throws Exception {
+	public void read(InputStream in, Map<String, Object> root, Map<String, Object> tmp) throws Exception {
 		root.put(name, type.read(in));
 	}
 
-	public void read(Reader in, Map<String, Object> root) throws Exception {
+	public void read(Reader in, Map<String, Object> root, Map<String, Object> tmp) throws Exception {
 		root.put(name, type.read(in));
 	}
 
-	public void write(OutputStream out, Map<String, Object> root) throws Exception {
+	public void write(OutputStream out, Map<String, Object> root, Map<String, Object> tmp) throws Exception {
 		type.write(out, root.get(name));
 	}
 
-	public void write(Writer out, Map<String, Object> root) throws Exception {
+	public void write(Writer out, Map<String, Object> root, Map<String, Object> tmp) throws Exception {
 		type.write(out, root.get(name));
 	}
 }

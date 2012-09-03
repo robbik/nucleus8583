@@ -5,7 +5,7 @@
                                      http://www.nucleus8583.org/schema/nucleus8583-oim.xsd">
     
 	<message name="msg1">
-		<basic no="0" name="mti" type="text" />
+		<expression no="0" type="text" language="literal">0110</expression>
 		<basic no="2" name="cardNumber" type="text" />
 		<basic no="7" name="transmissionDateTime" type="dateTime" pattern="MMddHHmmss" />
 		<basic no="11" name="stan" type="int" />
@@ -30,7 +30,6 @@
 	</message>
     
     <message name="msg1_rev">
-        <basic no="0" name="mti" type="text" />
         <basic no="2" name="cardNumber" type="text" />
         <basic no="7" name="transmissionDateTime" type="dateTime" pattern="MMddHHmmss" />
         <basic no="11" name="stan" type="int" alignment="right" padWith="0" />

@@ -12,22 +12,26 @@ public class ListCount extends Basic {
 	private String countName;
 
 	public void initialize() {
-		countName = "transient:" + name + "____count";
+		countName = "list:" + name + "____count";
 	}
 
-	public void read(InputStream in, Map<String, Object> root) throws Exception {
-		root.put(countName, type.read(in));
+	@Override
+	public void read(InputStream in, Map<String, Object> root, Map<String, Object> tmp) throws Exception {
+		tmp.put(countName, type.read(in));
 	}
 
-	public void read(Reader in, Map<String, Object> root) throws Exception {
-		root.put(countName, type.read(in));
+	@Override
+	public void read(Reader in, Map<String, Object> root, Map<String, Object> tmp) throws Exception {
+		tmp.put(countName, type.read(in));
 	}
 
-	public void write(OutputStream out, Map<String, Object> root) throws Exception {
+	@Override
+	public void write(OutputStream out, Map<String, Object> root, Map<String, Object> tmp) throws Exception {
 		type.write(out, ((Collection<?>) root.get(name)).size());
 	}
 
-	public void write(Writer out, Map<String, Object> root) throws Exception {
+	@Override
+	public void write(Writer out, Map<String, Object> root, Map<String, Object> tmp) throws Exception {
 		type.write(out, ((Collection<?>) root.get(name)).size());
 	}
 }
