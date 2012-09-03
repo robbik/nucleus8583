@@ -81,6 +81,10 @@
         <xsd:attribute name="url" type="xsd:string" use="required" />
     </xsd:complexType>
 
+    <xsd:complexType name="require">
+        <xsd:attribute name="url" type="xsd:string" use="required" />
+    </xsd:complexType>
+
     <xsd:element name="nucleus8583">
         <xsd:complexType>
             <xsd:sequence>
@@ -88,6 +92,7 @@
                     <xsd:element name="type" type="type" />
                     <xsd:element name="message" type="message" />
                     <xsd:element name="import" type="import" />
+                    <xsd:element name="require" type="require" />
                 </xsd:choice>
             </xsd:sequence>
         </xsd:complexType>
