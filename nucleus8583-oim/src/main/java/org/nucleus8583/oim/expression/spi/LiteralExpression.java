@@ -12,7 +12,7 @@ public class LiteralExpression extends Expression {
 		this.expression = expression;
 	}
 
-	public Object eval(Map<String, Object> root) throws Exception {
+	public Object eval(Map<String, Object> root, Map<String, Object> tmp) throws Exception {
 		return expression;
 	}
 }

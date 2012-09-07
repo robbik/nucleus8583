@@ -13,7 +13,7 @@ public class Mvel2Expression extends Expression {
 		this.compiled = compiled;
 	}
 
-	public Object eval(Map<String, Object> root) throws Exception {
+	public Object eval(Map<String, Object> root, Map<String, Object> tmp) throws Exception {
 		return MVEL.executeExpression(compiled, root);
 	}
 }

@@ -8,21 +8,25 @@ import java.util.Map;
 
 public abstract class Expression extends Basic {
 
-	public void read(InputStream in, Map<String, Object> root) throws Exception {
+	@Override
+	public void read(InputStream in, Map<String, Object> root, Map<String, Object> tmp) throws Exception {
 		throw new UnsupportedOperationException();
 	}
 
-	public void read(Reader in, Map<String, Object> root) throws Exception {
+	@Override
+	public void read(Reader in, Map<String, Object> root, Map<String, Object> tmp) throws Exception {
 		throw new UnsupportedOperationException();
 	}
 
-	public void write(OutputStream out, Map<String, Object> root) throws Exception {
-		type.write(out, eval(root));
+	@Override
+	public void write(OutputStream out, Map<String, Object> root, Map<String, Object> tmp) throws Exception {
+		type.write(out, eval(root, tmp));
 	}
 
-	public void write(Writer out, Map<String, Object> root) throws Exception {
-		type.write(out, eval(root));
+	@Override
+	public void write(Writer out, Map<String, Object> root, Map<String, Object> tmp) throws Exception {
+		type.write(out, eval(root, tmp));
 	}
 	
-	protected abstract Object eval(Map<String, Object> root) throws Exception;
+	protected abstract Object eval(Map<String, Object> root, Map<String, Object> tmp) throws Exception;
 }

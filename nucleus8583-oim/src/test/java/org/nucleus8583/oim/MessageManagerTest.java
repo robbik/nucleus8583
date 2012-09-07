@@ -56,7 +56,7 @@ public class MessageManagerTest {
 		// map1.put("transient:details____count", details.size());
 
 		isoMsg1 = new Message();
-		isoMsg1.set(0, "");
+		isoMsg1.set(0, "0110");
 		isoMsg1.set(2, "9939");
 		isoMsg1.set(7, strMMddHHmmss);
 		isoMsg1.set(11, "37");
