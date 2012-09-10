@@ -9,8 +9,6 @@ import org.nucleus8583.oim.util.TypeConverter;
 
 public class Int extends Text {
 	
-	protected int precision;
-
 	public Int() {
 		padder.setAlign(Alignment.TRIMMED_RIGHT);
 		padder.setPadWith('0');

@@ -24,7 +24,7 @@ public class SignedNumeric extends Text {
 		padder.setPadWith('0');
 		
 		precision = 0;
-		roundingMode = RoundingMode.CEILING;
+		roundingMode = RoundingMode.UNNECESSARY;
 		
 		signFirst = false;
 		
@@ -56,10 +56,22 @@ public class SignedNumeric extends Text {
 	}
 	
 	public void setRoundingMode(String roundingMode) {
-		this.roundingMode = RoundingMode.valueOf(roundingMode);
+		if (roundingMode == null) {
+			throw new NullPointerException("roundingMode");
+		}
+
+		try {
+			this.roundingMode = RoundingMode.valueOf(roundingMode);
+		} catch (IllegalArgumentException e) {
+			throw new IllegalArgumentException("invalid rounding mode " + roundingMode);
+		}
 	}
 	
 	public void setRoundingMode(RoundingMode roundingMode) {
+		if (roundingMode == null) {
+			throw new NullPointerException("roundingMode");
+		}
+
 		this.roundingMode = roundingMode;
 	}
 	
