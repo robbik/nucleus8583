@@ -1,0 +1,4 @@
+org.nucleus8583.core.config.Codec8583NoMtiSerializerConfig
+org.nucleus8583.core.config.Codec8583SerializerConfig
+org.nucleus8583.core.config.Codec8583LSerializerConfig
+org.nucleus8583.core.config.Sys1SerializerConfig

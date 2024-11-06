@@ -1,30 +1,51 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+                             http://maven.apache.org/maven-v4_0_0.xsd">
 
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>org.nucleus8583</groupId>
 	<artifactId>nucleus8583-oim</artifactId>
-	<version>2.3.0</version>
+	<version>3.0.0</version>
 
-	<name>nucleus8583-oim</name>
+	<name>nucleus8583 OIM</name>
 	<packaging>bundle</packaging>
 
-	<repositories>
-        <repository>
-            <id>opensymphony</id>
-            <name>OpenSymphony Maven Repository</name>
-            <url>scp://maven2.opensymphony.com/opt/repository/maven2</url>
-        </repository>
-		<repository>
-			<id>repository.codehaus.org</id>
-			<url>http://repository.codehaus.org/</url>
-			<snapshots>
-				<enabled>false</enabled>
-			</snapshots>
-		</repository>
-	</repositories>
+	<description>OSGi bundle for mapping between ISO-8583 and java class.</description>
+	<url>http://code.google.com/p/nucleus8583/</url>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<maven-surefire-plugin-version>2.12</maven-surefire-plugin-version>
+	</properties>
+
+	<licenses>
+	   <license>
+	       <name>The Apache Software License, Version 2.0</name>
+	       <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+	       <distribution>repo</distribution>
+	   </license>
+	</licenses>
+
+    <issueManagement>
+        <url>http://code.google.com/p/nucleus8583/issues/</url>
+    </issueManagement>
+
+    <scm>
+        <url>git@github.com:robbik/nucleus8583.git</url>
+        <connection>scm:git:git@github.com:robbik/nucleus8583.git</connection>
+        <developerConnection>scm:git:git@github.com:robbik/nucleus8583.git</developerConnection>
+    </scm>
+
+    <developers>
+        <developer>
+            <id>robbi.kurniawan</id>
+            <name>Robbi Kurniawan</name>
+            <email>robbi.kurniawan@gmail.com</email>
+        </developer>
+    </developers>
 
 	<build>
 		<plugins>
@@ -33,8 +54,8 @@
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>2.0.2</version>
 				<configuration>
-					<source>1.6</source>
-					<target>1.6</target>
+					<source>1.5</source>
+					<target>1.5</target>
 				</configuration>
 			</plugin>
 
@@ -45,52 +66,164 @@
 				<extensions>true</extensions>
 				<configuration>
 					<instructions>
-						<Import-Package>
-							org.nucleus8583.*,
-                            ognl,
-							org.mvel2,
-                            javax.xml.parsers.*,
-							org.w3c.dom.*,
-							org.xml.sax.*
+                        <Bundle-DocURL>${project.url}</Bundle-DocURL>
+                        <Import-Package>
+                            org.osgi.framework;resolution:=optional,
+                            javax.servlet;resolution:=optional,
+                            org.slf4j;resolution:=optional,
+                            org.apache.commons.logging;resolution:=optional,
+                            java.util.logging;resolution:=optional,
+                            javax.xml.parsers,
+                            org.w3c.dom,
+                            org.xml.sax,
+                            !org.springframework.*,
+                            org.nucleus8583.core,
+                            ognl;resolution:=optional,
+                            org.mvel2;resolution:=optional,
+                            !com.sun.jdi.*
                         </Import-Package>
-						<Export-Package>org.nucleus8583.oim</Export-Package>
-						<Private-Package>
-							org.nucleus8583.oim.component.*,
-							org.nucleus8583.oim.converter.*,
-
-							org.nucleus8583.oim.xml.*,
-							org.nucleus8583.oim.util.*,
+                        <Export-Package>
+                            org.nucleus8583.oim;version=${project.version};-noimport:=true,
+                            org.nucleus8583.oim.field;version=${project.version};-noimport:=true,
+                            org.nucleus8583.oim.field.spi;version=${project.version},
+                            org.nucleus8583.oim.field.type;version=${project.version};-noimport:=true,
+                            org.nucleus8583.oim.field.type.spi;version=${project.version},
+                            org.nucleus8583.oim.expression;version=${project.version};-noimport:=true,
+                            org.nucleus8583.oim.expression.spi;version=${project.version}
+                        </Export-Package>
+                        <Private-Package>
+                            org.nucleus8583.oim.util,
+                            org.nucleus8583.oim.xml,
+                            rk.commons.*,
+                            net.sf.cglib.core,
+                            net.sf.cglib.reflect,
+                            net.sf.cglib.util,
+                            org.objectweb.asm,
+                            javassist.*
                         </Private-Package>
 					</instructions>
 				</configuration>
 			</plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>${maven-surefire-plugin-version}</version>
+            </plugin>
 		</plugins>
 	</build>
 
+	<profiles>
+        <profile>
+            <id>snapshots</id>
+
+            <distributionManagement>
+                <repository>
+                    <id>oss-sonatype-snapshots</id>
+                    <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+                </repository>
+            </distributionManagement>
+        </profile>
+
+		<profile>
+			<id>releases</id>
+
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-gpg-plugin</artifactId>
+						<version>1.1</version>
+						<executions>
+							<execution>
+								<id>sign-artifacts</id>
+								<phase>package</phase>
+								<goals>
+									<goal>sign</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+
+            <distributionManagement>
+                <repository>
+                    <id>oss-sonatype-releases</id>
+                    <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+                </repository>
+            </distributionManagement>
+		</profile>
+
+        <profile>
+            <id>performance-test</id>
+
+            <build>
+                <plugins>
+		            <plugin>
+		                <groupId>org.apache.maven.plugins</groupId>
+		                <artifactId>maven-surefire-plugin</artifactId>
+		                <version>${maven-surefire-plugin-version}</version>
+		            </plugin>
+                </plugins>
+            </build>
+        </profile>
+	</profiles>
+
 	<dependencies>
-		<dependency>
-			<groupId>org.nucleus8583</groupId>
-			<artifactId>nucleus8583-core</artifactId>
-			<version>2.3.0</version>
-		</dependency>
+	    <!-- Dependencies -->
+        <dependency>
+            <groupId>org.nucleus8583</groupId>
+            <artifactId>nucleus8583-core</artifactId>
+            <version>3.0.0</version>
+        </dependency>
 
-		<dependency>
-			<groupId>org.mvel</groupId>
-			<artifactId>mvel2</artifactId>
-			<version>2.0.19</version>
-		</dependency>
+		<!-- ASM -->
+        <dependency>
+            <groupId>asm</groupId>
+            <artifactId>asm</artifactId>
+            <version>3.3.1</version>
+        </dependency>
 
+        <!-- OSGi -->
+        <dependency>
+            <groupId>org.osgi</groupId>
+            <artifactId>org.osgi.core</artifactId>
+            <version>4.2.0</version>
+            <optional>true</optional>
+        </dependency>
+
+        <!-- Logging Framework -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>1.6.1</version>
+            <optional>true</optional>
+        </dependency>
+        
+        <dependency>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
+            <version>1.1.1</version>
+            <optional>true</optional>
+        </dependency>
+        
+        <!-- Languages -->
         <dependency>
             <groupId>ognl</groupId>
             <artifactId>ognl</artifactId>
-            <version>3.0</version>
+            <version>3.0.5</version>
+            <optional>true</optional>
         </dependency>
+        
         <dependency>
-            <groupId>javassist</groupId>
-            <artifactId>javassist</artifactId>
-            <version>3.12.1.GA</version>
+            <groupId>org.mvel</groupId>
+            <artifactId>mvel2</artifactId>
+            <version>2.0.19</version>
+            <optional>true</optional>
         </dependency>
 
+        <!-- Test Framework -->
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>

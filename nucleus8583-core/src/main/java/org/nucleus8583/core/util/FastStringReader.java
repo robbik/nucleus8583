@@ -3,7 +3,9 @@ package org.nucleus8583.core.util;
 import java.io.IOException;
 import java.io.Reader;
 
+
 public class FastStringReader extends Reader {
+
 	private String value;
 
 	private int vlen;
@@ -11,15 +13,28 @@ public class FastStringReader extends Reader {
 	private int readIndex;
 
 	private int remaining;
+	
+	public FastStringReader() {
+		// do nothing
+	}
 
 	public FastStringReader(String value) {
 		this.value = value;
-		this.vlen = value == null ? 0 : value.length();
+		this.vlen = StringHelper.hasText(value, false) ? value.length() : 0;
+
+		this.readIndex = 0;
+		this.remaining = this.vlen;
+	}
+	
+	public void reset(String value) {
+		this.value = value;
+		this.vlen = StringHelper.hasText(value, false) ? value.length() : 0;
 
 		this.readIndex = 0;
 		this.remaining = this.vlen;
 	}
 
+	@Override
 	public int read(char[] cbuf, int off, int len) throws IOException {
 		if (remaining == 0) {
 			return -1;
@@ -81,16 +96,14 @@ public class FastStringReader extends Reader {
 	}
 
 	@Override
-	public void reset() throws IOException {
+	public void reset() {
 		this.readIndex = 0;
 		this.remaining = this.vlen;
 	}
 
-	public void close() throws IOException {
+	@Override
+	public void close() {
 		this.readIndex = 0;
 		this.remaining = 0;
-		
-		this.value = null;
-		this.vlen = 0;
 	}
 }

@@ -1,44 +1,61 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
-	                         http://maven.apache.org/maven-v4_0_0.xsd">
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+                             http://maven.apache.org/maven-v4_0_0.xsd">
 
-	<modelVersion>4.0.0</modelVersion>
+    <modelVersion>4.0.0</modelVersion>
 
-	<groupId>org.nucleus8583</groupId>
-	<artifactId>nucleus8583-core</artifactId>
-	
-    <packaging>bundle</packaging>
+    <groupId>org.nucleus8583</groupId>
+    <artifactId>nucleus8583-core</artifactId>
 
-	<name>nucleus8583 Core</name>
-    <version>2.4.0</version>
+    <packaging>jar</packaging>
 
-	<description>OSGi bundle for ISO-8583 message standard implementation.</description>
-	<url>http://code.google.com/p/nucleus8583/</url>
-	
-	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-	</properties>
-	
-	<licenses>
-	   <license>
-	       <name>The Apache Software License, Version 2.0</name>
-	       <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
-	       <distribution>repo</distribution>
-	   </license>
-	</licenses>
-	
+    <name>nucleus8583</name>
+    <version>4.0.0</version>
+
+    <description>ISO-8583 message library</description>
+    <url>https://github.com/robbik/nucleus8583/</url>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+        <java.version>17</java.version>
+        <maven.compiler.source>${java.version}</maven.compiler.source>
+        <maven.compiler.target>${java.version}</maven.compiler.target>
+        <maven.compiler.release>${java.version}</maven.compiler.release>
+
+        <junit.version>5.10.3</junit.version>
+        <hamcrest.version>2.2</hamcrest.version>
+        <mockito.version>5.12.0</mockito.version>
+        <jmh.version>1.37</jmh.version>
+
+        <versions-maven-plugin.version>2.5</versions-maven-plugin.version>
+        <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
+        <maven-dependency-plugin.version>3.1.1</maven-dependency-plugin.version>
+        <maven-surefire-plugin.version>2.22.1</maven-surefire-plugin.version>
+        <maven-failsafe-plugin.version>2.22.1</maven-failsafe-plugin.version>
+        <maven-gpg-plugin.version>3.2.7</maven-gpg-plugin.version>
+    </properties>
+
+    <licenses>
+       <license>
+           <name>The Apache Software License, Version 2.0</name>
+           <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+           <distribution>repo</distribution>
+       </license>
+    </licenses>
+
     <issueManagement>
-        <url>http://code.google.com/p/nucleus8583/issues/</url>
+        <url>https://github.com/robbik/nucleus8583/issues</url>
     </issueManagement>
-    
+
     <scm>
         <url>git@github.com:robbik/nucleus8583.git</url>
         <connection>scm:git:git@github.com:robbik/nucleus8583.git</connection>
         <developerConnection>scm:git:git@github.com:robbik/nucleus8583.git</developerConnection>
     </scm>
-    
+
     <developers>
         <developer>
             <id>robbi.kurniawan</id>
@@ -46,38 +63,101 @@
             <email>robbi.kurniawan@gmail.com</email>
         </developer>
     </developers>
-    
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<version>2.0.2</version>
-				<configuration>
-					<source>1.5</source>
-					<target>1.5</target>
-				</configuration>
-			</plugin>
-			
-			<plugin>
-				<groupId>org.apache.felix</groupId>
-				<artifactId>maven-bundle-plugin</artifactId>
-				<extensions>true</extensions>
-                <version>2.1.0</version>
-				<configuration>
-					<instructions>
-                        <Bundle-DocURL>${project.url}</Bundle-DocURL>
-						<Import-Package>*</Import-Package>
-						<DynamicImport-Package>*</DynamicImport-Package>
-						<Export-Package>org.nucleus8583.core.*</Export-Package>
-						<Private-Package></Private-Package>
-					</instructions>
-				</configuration>
-			</plugin>
-		</plugins>
-	</build>
-	
-	<profiles>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.hamcrest</groupId>
+            <artifactId>hamcrest</artifactId>
+            <version>${hamcrest.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <version>${mockito.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-junit-jupiter</artifactId>
+            <version>${mockito.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.openjdk.jmh</groupId>
+            <artifactId>jmh-core</artifactId>
+            <version>${jmh.version}</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>versions-maven-plugin</artifactId>
+                <version>${versions-maven-plugin.version}</version>
+                <configuration>
+                    <generateBackupPoms>false</generateBackupPoms>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>${maven-compiler-plugin.version}</version>
+
+                <configuration>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
+
+                    <excludes>
+                        <exclude>**/*Benchmark.java</exclude>
+                    </excludes>
+
+                    <forceJavacCompilerUse>true</forceJavacCompilerUse>
+
+                    <optimize>true</optimize>
+                    <debug>false</debug>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>${maven-surefire-plugin.version}</version>
+                <configuration>
+                    <argLine>
+                        @{argLine}
+                        --add-opens=java.base/java.lang=ALL-UNNAMED
+                        --add-opens=java.base/java.util=ALL-UNNAMED
+                        --add-opens=java.base/java.net=ALL-UNNAMED
+                        --add-opens=java.base/java.security=ALL-UNNAMED
+                    </argLine>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-failsafe-plugin</artifactId>
+                <version>${maven-failsafe-plugin.version}</version>
+            </plugin>
+        </plugins>
+    </build>
+    <repositories>
+        <repository>
+            <id>maven_central</id>
+            <name>Maven Central</name>
+            <url>https://repo.maven.apache.org/maven2/</url>
+        </repository>
+    </repositories>
+
+    <profiles>
         <profile>
             <id>snapshots</id>
 
@@ -89,27 +169,27 @@
             </distributionManagement>
         </profile>
 
-		<profile>
-			<id>releases</id>
+        <profile>
+            <id>releases</id>
 
-			<build>
-				<plugins>
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-gpg-plugin</artifactId>
-						<version>1.1</version>
-						<executions>
-							<execution>
-								<id>sign-artifacts</id>
-								<phase>package</phase>
-								<goals>
-									<goal>sign</goal>
-								</goals>
-							</execution>
-						</executions>
-					</plugin>
-				</plugins>
-			</build>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-gpg-plugin</artifactId>
+                        <version>${maven-gpg-plugin.version}</version>
+                        <executions>
+                            <execution>
+                                <id>sign-artifacts</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>sign</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
 
             <distributionManagement>
                 <repository>
@@ -117,39 +197,77 @@
                     <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
                 </repository>
             </distributionManagement>
-		</profile>
-		
-		<profile>
-			<id>jdk15</id>
+        </profile>
 
-			<activation>
-				<jdk>1.5</jdk>
-			</activation>
+        <profile>
+            <id>benchmark-test</id>
 
-			<dependencies>
-				<dependency>
-					<groupId>javax.xml.bind</groupId>
-					<artifactId>jaxb-api</artifactId>
-					<version>2.2.2</version>
-					<scope>provided</scope>
-				</dependency>
-				<dependency>
-					<groupId>com.sun.xml.bind</groupId>
-					<artifactId>jaxb-impl</artifactId>
-					<version>2.2.2</version>
-					<scope>provided</scope>
-				</dependency>
-			</dependencies>
-		</profile>
-	</profiles>
+            <dependencies>
+                <dependency>
+                    <groupId>org.openjdk.jmh</groupId>
+                    <artifactId>jmh-core</artifactId>
+                    <version>${jmh.version}</version>
+                    <scope>compile</scope>
+                </dependency>
+                <dependency>
+                    <groupId>org.openjdk.jmh</groupId>
+                    <artifactId>jmh-generator-annprocess</artifactId>
+                    <version>${jmh.version}</version>
+                    <scope>compile</scope>
+                </dependency>
+            </dependencies>
 
-	<dependencies>
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>4.8.1</version>
-			<scope>test</scope>
-		</dependency>
-	</dependencies>
+            <build>
+                <plugins>
+                    <plugin>
+                        <inherited>true</inherited>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-compiler-plugin</artifactId>
+                        <version>${maven-compiler-plugin.version}</version>
+
+                        <configuration>
+                            <release>${maven.compiler.release}</release>
+
+                            <annotationProcessors>
+                                <annotationProcessor>org.openjdk.jmh.generators.BenchmarkProcessor</annotationProcessor>
+                            </annotationProcessors>
+
+                            <includes>
+                                <include>**/*BenchmarkTest.java</include>
+                            </includes>
+                            <excludes>
+                                <exclude>**/*Test.java</exclude>
+                            </excludes>
+
+                            <forceJavacCompilerUse>true</forceJavacCompilerUse>
+
+                            <optimize>true</optimize>
+                            <debug>false</debug>
+                        </configuration>
+                    </plugin>
+
+                    <plugin>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <version>${maven-surefire-plugin.version}</version>
+                        <configuration>
+                            <includes>
+                                <include>**/*BenchmarkTest.java</include>
+                            </includes>
+                            <excludes>
+                                <exclude>**/*Test.java</exclude>
+                            </excludes>
+                            <argLine>
+                                @{argLine}
+                                --add-opens=java.base/java.lang=ALL-UNNAMED
+                                --add-opens=java.base/java.util=ALL-UNNAMED
+                                --add-opens=java.base/java.net=ALL-UNNAMED
+                                --add-opens=java.base/java.security=ALL-UNNAMED
+                                -Dm2.profile=benchmark-test
+                            </argLine>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>
-

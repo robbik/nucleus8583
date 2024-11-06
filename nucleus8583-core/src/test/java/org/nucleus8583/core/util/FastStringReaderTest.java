@@ -1,96 +1,102 @@
 package org.nucleus8583.core.util;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 
-import org.junit.Test;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
-public class FastStringReaderTest {
+class FastStringReaderTest {
 
 	@Test
-	public void markSupportedTest() throws Exception {
-		FastStringReader reader = new FastStringReader("ance");
-		assertFalse(reader.markSupported());
-	}
-
-	@Test(expected = IOException.class)
-	public void markTest() throws Exception {
-		FastStringReader reader = new FastStringReader("ance");
-		reader.mark(0);
+	void markSupportedTest() {
+		try (FastStringReader reader = new FastStringReader("ance")){
+			assertThat(reader.markSupported(), is(false));
+		}
 	}
 
 	@Test
-	public void testNull() throws Exception {
-		FastStringReader reader = new FastStringReader(null);
-		assertFalse(reader.ready());
-		assertEquals(-1, reader.read());
-		assertEquals(0, reader.skip(1));
+	void markTest() {
+		try (FastStringReader reader = new FastStringReader("ance")) {
+			assertThrows(IOException.class, () -> reader.mark(0));
+		}
 	}
 
 	@Test
-	public void testEmptyString() throws Exception {
-		FastStringReader reader = new FastStringReader("");
-		assertFalse(reader.ready());
-		assertEquals(-1, reader.read());
-		assertEquals(0, reader.skip(1));
+	void testNull() throws Exception {
+		try (FastStringReader reader = new FastStringReader(null)) {
+			assertThat(reader.ready(), is(false));
+			assertThat(reader.read(), is(-1));
+			assertThat(reader.skip(1), is(0L));
+		}
 	}
 
 	@Test
-	public void testReset() throws Exception {
-		FastStringReader reader = new FastStringReader("abcd");
-
-		assertTrue(reader.ready());
-		assertEquals('a', reader.read());
-
-		reader.reset();
-		assertEquals('a', reader.read());
+	void testEmptyString() throws Exception {
+		try (FastStringReader reader = new FastStringReader("")) {
+			assertThat(reader.ready(), is(false));
+			assertThat(reader.read(), is(-1));
+			assertThat(reader.skip(1), is(0L));
+		}
 	}
 
 	@Test
-	public void testClose() throws Exception {
-		FastStringReader reader = new FastStringReader("abcd");
-		assertTrue(reader.ready());
+	void testReset() throws Exception {
+		try (FastStringReader reader = new FastStringReader("abcd")) {
+			assertThat(reader.ready(), is(true));
+			assertThat(reader.read(), is((int) 'a'));
 
-		reader.close();
-		assertFalse(reader.ready());
+			reader.reset();
+			assertThat(reader.read(), is((int) 'a'));
+		}
 	}
 
 	@Test
-	public void testSkip() throws Exception {
-		FastStringReader reader = new FastStringReader("abcd");
+	void testClose() throws Exception {
+		try (FastStringReader reader = new FastStringReader("abcd")) {
+			assertThat(reader.ready(), is(true));
 
-		reader.skip(1);
-		assertEquals('b', reader.read());
-
-		reader.skip(7);
-		assertEquals(-1, reader.read());
-		
-		reader.reset();
-		reader.skip(2);
-		
-		char[] cbuf = new char[20];
-		
-		int readb = reader.read(cbuf);
-		assertEquals(2, readb);
-		
-		assertEquals("cd", new String(cbuf, 0, readb));
+			reader.close();
+			assertThat(reader.ready(), is(false));
+		}
 	}
 
 	@Test
-	public void testRead() throws Exception {
-		FastStringReader reader = new FastStringReader("abcd");
-		char[] cbuf = new char[20];
-		
-		int readb = reader.read(cbuf);
-		assertEquals(4, readb);
-		assertEquals("abcd", new String(cbuf, 0, readb));
-		
-		reader.reset();
-		
-		readb = reader.read(cbuf, 0, 0);
-		assertEquals(0, readb);
+	void testSkip() throws Exception {
+		try (FastStringReader reader = new FastStringReader("abcd")) {
+			reader.skip(1);
+			assertThat(reader.read(), is((int) 'b'));
+
+			reader.skip(7);
+			assertThat(reader.read(), is(-1));
+
+			reader.reset();
+			reader.skip(2);
+
+			char[] cbuf = new char[20];
+
+			int readb = reader.read(cbuf);
+			assertThat(readb, is(2));
+
+			assertThat(new String(cbuf, 0, readb), is("cd"));
+		}
+	}
+
+	@Test
+	void testRead() throws Exception {
+		try (FastStringReader reader = new FastStringReader("abcd")) {
+			char[] cbuf = new char[20];
+
+			int readb = reader.read(cbuf);
+			assertThat(readb, is(4));
+			assertThat(new String(cbuf, 0, readb), is("abcd"));
+
+			reader.reset();
+
+			readb = reader.read(cbuf, 0, 0);
+			assertThat(readb, is(0));
+		}
 	}
 }

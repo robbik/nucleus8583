@@ -1,0 +1,5 @@
+org.nucleus8583.core.config.spi.DefaultTypeConfigurer
+org.nucleus8583.core.config.spi.Iso87AsciiSerializerConfig
+org.nucleus8583.core.config.spi.Iso87BinarySerializerConfig
+org.nucleus8583.core.config.spi.Iso93AsciiSerializerConfig
+org.nucleus8583.core.config.spi.Iso93BinarySerializerConfig
