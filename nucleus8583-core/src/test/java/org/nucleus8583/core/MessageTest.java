@@ -43,41 +43,41 @@ class MessageTest {
 
 	@Test
     void testSetMtiIfNull() {
-        msg1.setMti(null);
-        assertThat(msg1.getMti(), is(""));
+        msg1.mti(null);
+        assertThat(msg1.mti(), is(""));
     }
 
     @Test
     public void testSetMtiIf1Character() {
-        msg1.setMti("1");
-        assertThat(msg1.getMti(), is("1"));
+        msg1.mti("1");
+        assertThat(msg1.mti(), is("1"));
     }
 
     @Test
     public void testSetMtiIf2Characters() {
-        msg1.setMti("11");
-        assertThat(msg1.getMti(), is("11"));
+        msg1.mti("11");
+        assertThat(msg1.mti(), is("11"));
     }
 
     @Test
     public void testSetMtiIf3Characters() {
-        msg1.setMti("111");
-        assertThat(msg1.getMti(), is("111"));
+        msg1.mti("111");
+        assertThat(msg1.mti(), is("111"));
     }
 
     @Test
     public void testSetMtiIf5Characters() {
-        msg1.setMti("12345");
-        assertThat(msg1.getMti(), is("12345"));
+        msg1.mti("12345");
+        assertThat(msg1.mti(), is("12345"));
     }
 
 	@Test
 	public void testSetMtiIfValid() {
-		msg1.setMti("0200");
-		assertThat(msg1.getMti(), is("0200"));
+		msg1.mti("0200");
+		assertThat(msg1.mti(), is("0200"));
 
 		msg1.set(0, "0300");
-		assertThat(msg1.getMti(), is("0300"));
+		assertThat(msg1.mti(), is("0300"));
 		assertThat(msg1.get(0), is("0300"));
 	}
 
@@ -174,18 +174,18 @@ class MessageTest {
 		assertThat(msg1.equals(null), is(false));
 		assertThat(msg1.equals("abcde"), is(false));
 
-		msg1.setMti("0100");
+		msg1.mti("0100");
 		assertThat(msg1.equals(msg2), is(false));
 		assertThat(msg2.equals(msg1), is(false));
 
-		msg1.setMti("0100");
-		msg2.setMti("0110");
+		msg1.mti("0100");
+		msg2.mti("0110");
 		assertThat(msg1.equals(msg2), is(false));
 		assertThat(msg2.equals(msg1), is(false));
 
-		msg1.setMti("0200");
+		msg1.mti("0200");
 		msg1.set(2, "400");
-		msg2.setMti("0200");
+		msg2.mti("0200");
 		msg2.set(2, "401");
 		assertThat(msg1.equals(msg2), is(false));
 		assertThat(msg2.equals(msg1), is(false));
@@ -193,18 +193,18 @@ class MessageTest {
 		msg1.clear();
 		msg2.clear();
 
-		msg1.setMti("0200");
+		msg1.mti("0200");
 		msg1.set(2, "400");
-		msg2.setMti("0200");
+		msg2.mti("0200");
 		assertThat(msg1.equals(msg2), is(false));
 		assertThat(msg2.equals(msg1), is(false));
 
 		msg1.clear();
 		msg2.clear();
 
-		msg1.setMti("0200");
+		msg1.mti("0200");
 		msg1.set(64, new byte[0]);
-		msg2.setMti("0200");
+		msg2.mti("0200");
 		assertThat(msg1.equals(msg2), is(false));
 		assertThat(msg2.equals(msg1), is(false));
 
@@ -214,20 +214,20 @@ class MessageTest {
         byte[] bits = BitmapHelper.create(8);
         BitmapHelper.set(bits, 1);
 
-		msg1.setMti("0200");
+		msg1.mti("0200");
 		msg1.set(64, bits);
 
         bits = BitmapHelper.create(8);
         BitmapHelper.set(bits, 1);
 
-		msg2.setMti("0200");
+		msg2.mti("0200");
 		msg2.set(64, bits);
 		assertThat(msg2, equalTo(msg1));
 		assertThat(msg1, equalTo(msg2));
 
-		msg1.setMti("0200");
+		msg1.mti("0200");
 		msg1.set(2, "400");
-		msg2.setMti("0200");
+		msg2.mti("0200");
 		msg2.set(2, "400");
 		assertThat(msg2, equalTo(msg1));
 		assertThat(msg1, equalTo(msg2));
@@ -241,7 +241,7 @@ class MessageTest {
 		Map<Integer, Object> dump = new HashMap<>();
 		Map<Integer, Object> expected = new HashMap<>();
 
-		msg1.setMti("0100");
+		msg1.mti("0100");
 		msg1.dump(dump);
 
 		expected.put(Integer.valueOf(0), "0100");
@@ -251,7 +251,7 @@ class MessageTest {
 		dump.clear();
 		msg1.clear();
 
-		msg1.setMti("0200");
+		msg1.mti("0200");
 		msg1.set(2, "400");
 		msg1.dump(dump);
 
@@ -266,7 +266,7 @@ class MessageTest {
         byte[] bits = BitmapHelper.create(8);
         BitmapHelper.set(bits, 1);
 
-		msg1.setMti("0200");
+		msg1.mti("0200");
 		msg1.set(64, bits);
 		msg1.dump(dump);
 
@@ -288,14 +288,14 @@ class MessageTest {
 	    for (int i = 0; i < 8; i += 2) {
 	        in[2] = (char) (i + '0');
 
-	        msg.setMti(new String(in));
+	        msg.mti(new String(in));
 	        assertThat(msg.isRequest(), is(true));
             assertThat(msg.isResponse(), is(false));
 
             msg.setResponseMti();
             in[2] = (char) (i + '1');
 
-            assertThat(msg.getMti(), is(new String(in)));
+            assertThat(msg.mti(), is(new String(in)));
 
             assertThat(msg.isRequest(), is(false));
             assertThat(msg.isResponse(), is(true));
@@ -311,12 +311,12 @@ class MessageTest {
         for (int i = 0; i < 8; i += 2) {
             in[2] = (char) (i + '1');
 
-            msg.setMti(new String(in));
+            msg.mti(new String(in));
             assertThat(msg.isRequest(), is(false));
             assertThat(msg.isResponse(), is(true));
 
             msg.setResponseMti();
-            assertThat(msg.getMti(), is(new String(in)));
+            assertThat(msg.mti(), is(new String(in)));
 
             assertThat(msg.isRequest(), is(false));
             assertThat(msg.isResponse(), is(true));

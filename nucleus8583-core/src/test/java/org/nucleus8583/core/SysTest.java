@@ -13,7 +13,7 @@ class SysTest {
 	@Test
 	void sys1() throws Exception {
 		Message msg = new Message();
-		msg.setMti("0330");
+		msg.mti("0330");
 		msg.set(2, "suka2 ");
 		msg.set(4, "89");
 

@@ -31,7 +31,6 @@ public final class Message implements Serializable {
 
 	/**
 	 * create a new instance of this class with 192 number of fields defined.
-	 * 
 	 * same as <code>Message(192)</code>.
 	 */
 	public Message() {
@@ -71,7 +70,7 @@ public final class Message implements Serializable {
 	 * @param mti
 	 *            new MTI field value
 	 */
-	public void setMti(Object mti) {
+	public void mti(Object mti) {
 		if (mti == null) {
 			values[0] = "";
 		} else {
@@ -85,7 +84,7 @@ public final class Message implements Serializable {
 	 * @return MTI field value
 	 */
 	@SuppressWarnings("unchecked")
-	public <T> T getMti() {
+	public <T> T mti() {
 		return (T) values[0];
 	}
 
@@ -104,7 +103,7 @@ public final class Message implements Serializable {
 	 */
 	public void set(int no, Object value) {
 		if (no == 0) {
-			setMti(value);
+			mti(value);
 			return;
 		}
 
@@ -128,7 +127,6 @@ public final class Message implements Serializable {
 
 	/**
 	 * set field value.
-	 * 
 	 * this is unsafe method since no range checking performed so <b>PLEASE USE
 	 * THIS METHOD WITH CARE</b>.
 	 * 
@@ -176,7 +174,6 @@ public final class Message implements Serializable {
 
 	/**
 	 * clear field value.
-	 * 
 	 * this is unsafe method since no range checking performed so <b>PLEASE USE
 	 * THIS METHOD WITH CARE</b>.
 	 * 
@@ -209,7 +206,7 @@ public final class Message implements Serializable {
 	@SuppressWarnings("unchecked")
 	public <T> T get(int no) {
 		if (no == 0) {
-			return (T) getMti();
+			return mti();
 		}
 
 		if ((no <= 1) || (no > 192) || (no == 65) || (no >= count)) {
@@ -222,7 +219,6 @@ public final class Message implements Serializable {
 
 	/**
 	 * retrieve data element field value.
-	 * 
 	 * this is unsafe method since no range checking performed so <b>PLEASE USE
 	 * THIS METHOD WITH CARE</b>.
 	 * 
@@ -259,7 +255,7 @@ public final class Message implements Serializable {
 		Object mti = values[0];
 
 		if (mti != null) {
-			map.put(Integer.valueOf(0), mti);
+			map.put(0, mti);
 		}
 
 		for (int i = 2, iMin1 = 1, iMin129 = -127; i < count; ++i, ++iMin1, ++iMin129) {
@@ -267,11 +263,11 @@ public final class Message implements Serializable {
 				// do nothing
 			} else if (i < 129) {
 				if (BitmapHelper.get(bits1To128, iMin1)) {
-					map.put(Integer.valueOf(i), values[i]);
+					map.put(i, values[i]);
 				}
 			} else {
 				if (BitmapHelper.get(bits129To192, iMin129)) {
-					map.put(Integer.valueOf(i), values[i]);
+					map.put(i, values[i]);
 				}
 			}
 		}
@@ -281,12 +277,12 @@ public final class Message implements Serializable {
 	 * set MTI to become a response one if and only-if the MTI is a request MTI
 	 */
 	public void setResponseMti() {
-		char[] chars = ((String) getMti()).toCharArray();
+		char[] chars = ((String) mti()).toCharArray();
 
 		int num = Character.getNumericValue(chars[2]);
 		if ((num & 0x01) == 0x00) {
 			chars[2] = (char) (num + '1');
-			setMti(new String(chars));
+			mti(new String(chars));
 		}
 	}
 
@@ -294,12 +290,12 @@ public final class Message implements Serializable {
 	 * set MTI to become a request one if and only-if the MTI is a response MTI
 	 */
 	public void setRequestMti() {
-		char[] chars = ((String) getMti()).toCharArray();
+		char[] chars = ((String) mti()).toCharArray();
 
 		int num = Character.getNumericValue(chars[2]);
 		if ((num & 0x01) != 0x00) {
 			chars[2] = (char) ((num - 1) + '1');
-			setMti(new String(chars));
+			mti(new String(chars));
 		}
 	}
 
@@ -310,7 +306,7 @@ public final class Message implements Serializable {
 	 *         <code>false</code>
 	 */
 	public boolean isRequest() {
-		char[] chars = ((String) getMti()).toCharArray();
+		char[] chars = ((String) mti()).toCharArray();
 
 		return (Character.getNumericValue(chars[2]) & 0x01) == 0x00;
 	}
@@ -336,12 +332,11 @@ public final class Message implements Serializable {
 			return false;
 		}
 
-		if (!(object instanceof Message)) {
+		if (!(object instanceof Message another)) {
 			return false;
 		}
 
-		Message another = (Message) object;
-		if (!ObjectHelper.equals(values[0], another.values[0])) {
+        if (!ObjectHelper.equals(values[0], another.values[0])) {
 			return false;
 		}
 
@@ -384,7 +379,7 @@ public final class Message implements Serializable {
 	 */
 	@Override
 	public String toString() {
-		StringBuffer sbuf = new StringBuffer();
+		StringBuilder sbuf = new StringBuilder();
 
 		sbuf.append("<iso-message>\n");
 

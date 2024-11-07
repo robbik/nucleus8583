@@ -58,7 +58,7 @@ public class MessageSerializerBenchmarkTest {
 		for (int i = 0; i < 1_000; ++i) {
 			Message msg = new Message();
 
-			msg.setMti("0200");
+			msg.mti("0200");
 			msg.set(2, "3125");
 			msg.set(7, "0104132431");
 			msg.set(11, "1");

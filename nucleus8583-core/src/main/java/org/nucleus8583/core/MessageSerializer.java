@@ -138,7 +138,7 @@ public class MessageSerializer {
 		try {
 			if (hasMti) {
 				// read bit-0
-				out.setMti(serializers[0].read(in));
+				out.mti(serializers[0].read(in));
 			}
 
 			// read bit-1
@@ -246,7 +246,7 @@ public class MessageSerializer {
 		try {
 			// write bit 0
 			if (hasMti) {
-				serializers[0].write(out, msg.getMti());
+				serializers[0].write(out, msg.mti());
 			}
 
 			// write bit 1 (primary + secondary bitmap)

@@ -27,7 +27,7 @@ class MessageSerializer192Test {
 		packed = "0200C000000000010000800000000000000006030000004999800000000100000043301002000000000000000000000000000000000000000000000";
 
 		unpacked = new Message();
-		unpacked.setMti("0200");
+		unpacked.mti("0200");
 		unpacked.set(2, "030000");
 		unpacked.set(48, "9998");
 		unpacked.set(164, "301");

@@ -54,7 +54,7 @@ class MessageSerializer64Test {
         bpacked2 = packed2.getBytes();
 
 		unpacked = new Message();
-		unpacked.setMti("0200");
+		unpacked.mti("0200");
 		unpacked.set(2, "030000");
 		unpacked.set(48, "9998");
 		unpacked.set(64, BitmapHelper.create(128));

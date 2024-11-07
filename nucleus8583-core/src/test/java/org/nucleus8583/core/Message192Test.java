@@ -26,8 +26,8 @@ class Message192Test {
 
 	@Test
 	public void testManipulateMti() {
-		msg1.setMti("0200");
-		assertThat(msg1.getMti(), is("0200"));
+		msg1.mti("0200");
+		assertThat(msg1.mti(), is("0200"));
 	}
 
 	@Test
@@ -135,18 +135,18 @@ class Message192Test {
 		assertThat(msg1.equals(null), is(false));
 		assertThat(msg1.equals("abcde"), is(false));
 
-		msg1.setMti("0100");
+		msg1.mti("0100");
 		assertThat(msg1.equals(msg2), is(false));
 		assertThat(msg2.equals(msg1), is(false));
 
-		msg1.setMti("0100");
-		msg2.setMti("0110");
+		msg1.mti("0100");
+		msg2.mti("0110");
 		assertThat(msg1.equals(msg2), is(false));
 		assertThat(msg2.equals(msg1), is(false));
 
-		msg1.setMti("0200");
+		msg1.mti("0200");
 		msg1.set(163, "400");
-		msg2.setMti("0200");
+		msg2.mti("0200");
 		msg2.set(163, "401");
 		assertThat(msg1.equals(msg2), is(false));
 		assertThat(msg2.equals(msg1), is(false));
@@ -157,21 +157,21 @@ class Message192Test {
         byte[] bits = BitmapHelper.create(8);
         BitmapHelper.set(bits, 0);
 
-		msg1.setMti("0200");
+		msg1.mti("0200");
 		msg1.set(190, bits);
 
         bits = BitmapHelper.create(8);
         BitmapHelper.set(bits, 0);
 
-		msg2.setMti("0200");
+		msg2.mti("0200");
 		msg2.set(190, bits);
 
 		assertThat(msg2, equalTo(msg1));
 		assertThat(msg1, equalTo(msg2));
 
-		msg1.setMti("0200");
+		msg1.mti("0200");
 		msg1.set(163, "400");
-		msg2.setMti("0200");
+		msg2.mti("0200");
 		msg2.set(163, "400");
 		assertThat(msg2, equalTo(msg1));
 		assertThat(msg1, equalTo(msg2));
@@ -185,7 +185,7 @@ class Message192Test {
 		Map<Integer, Object> dump = new HashMap<>();
 		Map<Integer, Object> expected = new HashMap<>();
 
-		msg1.setMti("0100");
+		msg1.mti("0100");
 		msg1.dump(dump);
 
 		expected.put(Integer.valueOf(0), "0100");
@@ -195,7 +195,7 @@ class Message192Test {
 		dump.clear();
 		msg1.clear();
 
-		msg1.setMti("0200");
+		msg1.mti("0200");
 		msg1.set(163, "400");
 		msg1.dump(dump);
 
@@ -210,7 +210,7 @@ class Message192Test {
 		byte[] bits = BitmapHelper.create(8);
 		BitmapHelper.set(bits, 0);
 
-		msg1.setMti("0200");
+		msg1.mti("0200");
 		msg1.set(190, bits);
 		msg1.dump(dump);
 
