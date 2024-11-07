@@ -16,7 +16,7 @@ import org.nucleus8583.core.util.ObjectHelper;
  * @author Robbi Kurniawan
  * 
  */
-public final class Message implements Serializable {
+public class Message implements Serializable {
 
 	@Serial
 	private static final long serialVersionUID = -1503040549193848604L;
@@ -51,8 +51,7 @@ public final class Message implements Serializable {
 	 */
 	public Message(int count) {
 		if ((count < 64) || (count > 192)) {
-			throw new IllegalArgumentException(
-					"number of fields must in range 64-192");
+			throw new IllegalArgumentException("number of fields must in range 64-192");
 		}
 
 		this.count = count + 1;
@@ -61,6 +60,19 @@ public final class Message implements Serializable {
 		bits129To192 = BitmapHelper.create(64);
 
 		values = new Object[this.count];
+	}
+
+	protected Message(Message o) {
+		this.count = o.count;
+
+		this.bits1To128 = new byte[o.bits1To128.length];
+		System.arraycopy(o.bits1To128, 0, this.bits1To128, 0, o.bits1To128.length);
+
+		this.bits129To192 = new byte[o.bits129To192.length];
+		System.arraycopy(o.bits129To192, 0, this.bits129To192, 0, o.bits129To192.length);
+
+		this.values = new Object[o.values.length];
+		System.arraycopy(o.values, 0, this.values, 0, o.values.length);
 	}
 
 	/**
@@ -233,6 +245,10 @@ public final class Message implements Serializable {
 		return (T) values[no];
 	}
 
+	public Message copy() {
+		return new Message(this);
+	}
+
 	/**
 	 * clear all fields value
 	 */
@@ -242,7 +258,7 @@ public final class Message implements Serializable {
 		BitmapHelper.clear(bits1To128);
 		BitmapHelper.clear(bits129To192);
 	}
-
+	
 	/**
 	 * dump active fields value to a map. The map key is the field number and
 	 * the map value is the field value. This method <b>WILL NOT</b> clear the

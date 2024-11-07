@@ -1,8 +1,10 @@
 package org.nucleus8583.core.util;
 
+import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.BufferOverflowException;
 
 public class AsciiPrefixer {
 
@@ -24,8 +26,7 @@ public class AsciiPrefixer {
             }
         }
 
-        intToDigits = new byte[] { '0', '1', '2', '3', '4', '5', '6', '7', '8',
-				'9' };
+        intToDigits = new byte[] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
 	}
 
 	private int prefixLength;
@@ -43,33 +44,49 @@ public class AsciiPrefixer {
 	}
 
 	public void writeUint(OutputStream out, int value) throws IOException {
-		int rem = value;
-
 		byte[] buf = new byte[prefixLength];
 
-		for (int i = prefixLength - 1; i >= 0; --i) {
-			buf[i] = intToDigits[rem % 10];
-			rem = rem / 10;
-		}
+		writeUint(buf, 0, value);
 
 		out.write(buf);
 	}
 
 	public int readUint(InputStream in) throws IOException {
-		int value = 0;
-
 		byte[] bbuf = new byte[prefixLength];
 		IOHelper.readFully(in, bbuf, prefixLength);
 
-		for (int i = prefixLength - 1, j = 0; i >= 0; --i, ++j) {
-            int digitInt = bbuf[j];
-            if ((digitInt < '0') || (digitInt > '9')) {
-                throw new NumberFormatException((char) bbuf[i] + " is not a number.");
-            }
+		return readUint(bbuf, 0);
+	}
 
-            value += digitsToInt[digitInt - '0'][i];
+	public int readUint(byte[] in, int start) throws IOException {
+		if (in.length - start < prefixLength) {
+			throw new EOFException();
+		}
+
+		int value = 0;
+
+		for (int i = prefixLength - 1, j = start; i >= 0; --i, ++j) {
+			int digitInt = in[j] & 0xFF;
+			if ((digitInt < '0') || (digitInt > '9')) {
+				throw new NumberFormatException((char) in[i] + " is not a number.");
+			}
+
+			value += digitsToInt[digitInt - '0'][i];
 		}
 
 		return value;
+	}
+
+	public void writeUint(byte[] out, int start, int value) throws IOException {
+		if (out.length - start < prefixLength) {
+			throw new ArrayIndexOutOfBoundsException();
+		}
+
+		int rem = value;
+
+		for (int i = start + prefixLength - 1; i >= 0; --i) {
+			out[i] = intToDigits[rem % 10];
+			rem = rem / 10;
+		}
 	}
 }

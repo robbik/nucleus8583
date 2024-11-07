@@ -30,17 +30,6 @@ public class BEBinaryPrefixer {
         this.nbytes = nbytes;
 	}
 
-	public void writeUint(OutputStream out, int value) throws IOException {
-		byte[] buf = new byte[nbytes];
-
-		for (int i = nbytes - 1; i >= 0; --i) {
-			buf[i] = (byte) (value & 0xFF);
-			value >>= 8;
-		}
-
-		out.write(buf);
-	}
-
 	public int readUint(InputStream in) throws IOException {
 		byte[] bbuf = new byte[nbytes];
 		IOHelper.readFully(in, bbuf, nbytes);
@@ -52,6 +41,35 @@ public class BEBinaryPrefixer {
 		}
 
 		return value;
+	}
+
+	public void writeUint(OutputStream out, int value) throws IOException {
+		byte[] buf = new byte[nbytes];
+
+		writeUint(buf, 0, value);
+
+		out.write(buf);
+	}
+
+	public int readUint(byte[] in, int start) throws IOException {
+		int value = 0;
+
+		for (int i = 0, j = start; i < nbytes; ++i, ++j) {
+			value = (value << 8) | (in[j] & 0xFF);
+		}
+
+		return value;
+	}
+
+	public void writeUint(byte[] out, int start, int value) throws IOException {
+		if (out.length - start < nbytes) {
+			throw new ArrayIndexOutOfBoundsException();
+		}
+
+		for (int i = start + nbytes - 1; i >= start; --i) {
+			out[i] = (byte) (value & 0xFF);
+			value >>= 8;
+		}
 	}
 }
 
